@@ -20,3 +20,5 @@ This file has been extended with ADQL-based x-matches with 2MASS, <i>Gaia</i> DR
 ![alt text](input/figures/parallax_uncertainties.png "Overview of parallax quality as well as importance of use of Bayesian distances" )
 
 **Dynamics**:
+
+![alt text](dynamics/figures/action_overview_clean_all.png "Toomre diagram and Action plot for (clean) GALAH sample")
