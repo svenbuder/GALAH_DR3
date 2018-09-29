@@ -19,19 +19,33 @@ This file has been extended with ADQL-based x-matches with 2MASS, <i>Gaia</i> DR
 
 ![alt text](input/figures/parallax_uncertainties.png "Overview of parallax quality as well as importance of use of Bayesian distances" )
 
-** Performance for Gaia FGK Benchmark stars (Jofre+2018) and stars with asteroseismic information**:
+**Performance for Gaia FGK Benchmark stars (Jofre+2018) and stars with asteroseismic information**:
 
 We compare with the values from Vizier/III/281/gbs (Jofre+2018, arXiv:1808.09778) as well as the difference in the performance for stars when also nu_max values are available to constrain logg:
 
+We do not see any significant biases for Teff and logg, but had to correct and [Fe/H] bias of -0.1 (underestimated [Fe/H]).
+
 ![alt text](gbs/figures/gbs_performance_lbol.png "Performance of the GALAH bolometric pipeline for the Gaia FGK benchmark stars")
 
+The overlap of the stars with asteroseismic parameters and parallaxes show that the bolometric pipeline (middle panels) performs significantly better than the pipeline without additional non-spectroscopic information (left panels). Especially the Red Clump stars show an outstanding agreement with the pipeline results which also used nu_max values.
+
 ![alt text](seis/figures/seis_comparison_3setups.png "Performence of 3 different pipelines for asteroseismic sample")
+
+The scatter in the differences between asteroseismic and bolometric pipeline for logg is mainly driven by the red clump stars, which have to be further investigated, but are significantly better than for GALAH DR2.
+
 ![alt text](seis/figures/seismic_sample_delta_lbol.png "Performance of bolometric pipeline for asteroseismic sample (w.r.t. asteroseismic pipeline)")
+
+The biases between asteroseismic and bolometric pipelines for the stellar parameters are not significant but show a trend of lower Teff (-21K), lower logg (-0.03dex), and lower [Fe/H] (-0.03dex) than the values from the pipeline using asteroseismic values/relations for logg.
+
 ![alt text](seis/figures/seis_setup_difference_lbol.png "Histogram of differences for stellar parameters of bolometric and asteroseismic pipeline")
 
-** Clusters**:
+**Clusters**:
+
+Plotted are all globular and open clusters members (based on the membership analysis by Janez Kos from 180507 and if SME parameters available):
 
 ![alt text](clusters/figures/CMD_Kiel_FehAge.png "Overview of open and globular clusters")
+
+Left: CMD, middle: Kiel diagram, right: 2D-histogram of ages and [Fe/H] of all cluster stars
 
 **Dynamics**:
 
