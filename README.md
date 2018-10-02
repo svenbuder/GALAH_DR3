@@ -39,6 +39,12 @@ The biases between asteroseismic and bolometric pipelines for the stellar parame
 
 ![alt text](seis/figures/seis_setup_difference_lbol.png "Histogram of differences for stellar parameters of bolometric and asteroseismic pipeline")
 
+**Abundance zeropoints**
+
+The current abundance zeropoints for the Sun and Arcturus are very small for light elements but need further analyses for the heavy elements.
+
+![alt text](abundance_zeropoints/figures/abundance_zeropoints.png "Abundance zeropoints for the Sun and Arcturus")
+
 **Clusters**:
 
 Plotted are all globular and open clusters members (based on the membership analysis by Janez Kos from 180507 and if SME parameters available):
