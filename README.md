@@ -51,6 +51,8 @@ Plotted are all globular and open clusters members (based on the membership anal
 
 ![alt text](clusters/figures/CMD_Kiel_FehAge.png "Overview of open and globular clusters")
 
+![alt text](clusters/figures/CMD_Kiel_FehAge_M67.png "Overview for M 67")
+
 Left: CMD, middle: Kiel diagram, right: 2D-histogram of ages and [Fe/H] of all cluster stars
 
 **Dynamics**:
