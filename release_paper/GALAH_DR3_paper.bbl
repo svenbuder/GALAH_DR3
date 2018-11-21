@@ -1,0 +1,65 @@
+\begin{thebibliography}{}
+\makeatletter
+\relax
+\def\mn@urlcharsother{\let\do\@makeother \do\$\do\&\do\#\do\^\do\_\do\%\do\~}
+\def\mn@doi{\begingroup\mn@urlcharsother \@ifnextchar [ {\mn@doi@}
+  {\mn@doi@[]}}
+\def\mn@doi@[#1]#2{\def\@tempa{#1}\ifx\@tempa\@empty \href
+  {http://dx.doi.org/#2} {doi:#2}\else \href {http://dx.doi.org/#2} {#1}\fi
+  \endgroup}
+\def\mn@eprint#1#2{\mn@eprint@#1:#2::\@nil}
+\def\mn@eprint@arXiv#1{\href {http://arxiv.org/abs/#1} {{\tt arXiv:#1}}}
+\def\mn@eprint@dblp#1{\href {http://dblp.uni-trier.de/rec/bibtex/#1.xml}
+  {dblp:#1}}
+\def\mn@eprint@#1:#2:#3:#4\@nil{\def\@tempa {#1}\def\@tempb {#2}\def\@tempc
+  {#3}\ifx \@tempc \@empty \let \@tempc \@tempb \let \@tempb \@tempa \fi \ifx
+  \@tempb \@empty \def\@tempb {arXiv}\fi \@ifundefined
+  {mn@eprint@\@tempb}{\@tempb:\@tempc}{\expandafter \expandafter \csname
+  mn@eprint@\@tempb\endcsname \expandafter{\@tempc}}}
+
+\bibitem[\protect\citeauthoryear{{Astropy Collaboration} et~al.,}{{Astropy
+  Collaboration} et~al.}{2013}]{Robitaille2013}
+{Astropy Collaboration} et~al., 2013, \mn@doi [\aap]
+  {10.1051/0004-6361/201322068}, \href
+  {http://adsabs.harvard.edu/abs/2013A%26A...558A..33A} {558, A33}
+
+\bibitem[\protect\citeauthoryear{{Bovy}}{{Bovy}}{2015}]{Bovy2015}
+{Bovy} J.,  2015, \mn@doi [\apjs] {10.1088/0067-0049/216/2/29}, \href
+  {http://adsabs.harvard.edu/abs/2015ApJS..216...29B} {216, 29}
+
+\bibitem[\protect\citeauthoryear{Mckinney}{Mckinney}{2011}]{McKinney2011}
+Mckinney W.,  2011, in Python High Performance Science Computer.
+
+\bibitem[\protect\citeauthoryear{{Miszalski}, {Shortridge}, {Saunders},
+  {Parker}  \& {Croom}}{{Miszalski} et~al.}{2006}]{Miszalski2006}
+{Miszalski} B.,  {Shortridge} K.,  {Saunders} W.,  {Parker} Q.~A.,   {Croom}
+  S.~M.,  2006, \mn@doi [\mnras] {10.1111/j.1365-2966.2006.10777.x}, \href
+  {http://adsabs.harvard.edu/abs/2006MNRAS.371.1537M} {371, 1537}
+
+\bibitem[\protect\citeauthoryear{{Robitaille} \& {Bressert}}{{Robitaille} \&
+  {Bressert}}{2012}]{Robitaille2012}
+{Robitaille} T.,  {Bressert} E.,  2012, {APLpy: Astronomical Plotting Library
+  in Python}, Astrophysics Source Code Library (\mn@eprint {ascl} {1208.017})
+
+\bibitem[\protect\citeauthoryear{{Taylor}}{{Taylor}}{2005}]{Taylor2005}
+{Taylor} M.~B.,  2005, in {Shopbell} P.,  {Britton} M.,   {Ebert} R.,  eds,
+  Astronomical Society of the Pacific Conference Series Vol. 347, Astronomical
+  Data Analysis Software and Systems XIV. p.~29
+
+\bibitem[\protect\citeauthoryear{{The Astropy Collaboration} et~al.,}{{The
+  Astropy Collaboration} et~al.}{2018}]{PriceWhelan2018}
+{The Astropy Collaboration} et~al., 2018, preprint, \href
+  {http://adsabs.harvard.edu/abs/2018arXiv180102634T} {} (\mn@eprint {arXiv}
+  {1801.02634})
+
+\bibitem[\protect\citeauthoryear{{Tody}}{{Tody}}{1986}]{Tody1986}
+{Tody} D.,  1986, in {Crawford} D.~L.,  ed.,  \procspie Vol. 627,
+  Instrumentation in astronomy VI. p.~733, \mn@doi{10.1117/12.968154}
+
+\bibitem[\protect\citeauthoryear{{Tody}}{{Tody}}{1993}]{Tody1993}
+{Tody} D.,  1993, in {Hanisch} R.~J.,  {Brissenden} R.~J.~V.,   {Barnes} J.,
+  eds,  Astronomical Society of the Pacific Conference Series Vol. 52,
+  Astronomical Data Analysis Software and Systems II. p.~173
+
+\makeatother
+\end{thebibliography}
