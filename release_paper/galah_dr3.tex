@@ -11,20 +11,20 @@
 \usepackage{pdflscape}	% Landscape pages
 \usepackage{enumitem}	% Including figure files
 \usepackage{multirow}   % Allow multi-row cells in tables
+\usepackage{xspace}
 \usepackage{CJK}
 \usepackage{longtable}
 \usepackage{etoolbox}
 \makeatletter
  \makeatother
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\newcommand{\teff}{$T_\mathrm{eff}$}
-\newcommand{\logg}{$\log g$}
-\newcommand{\feh}{$\mathrm{[Fe/H]}$}
-\newcommand{\vmic}{$v_\mathrm{mic}$}
-\newcommand{\vbroad}{$v_\mathrm{broad}$}
-\newcommand{\vrad}{$v_\mathrm{rad}$}
-\newcommand{\Gaia}{\textit{Gaia}}
-\newcommand{\TF}{T_{\rm{eff}}}
+\newcommand{\teff}{$T_\mathrm{eff}$\xspace}
+\newcommand{\logg}{$\log g$\xspace}
+\newcommand{\feh}{$\mathrm{[Fe/H]}$\xspace}
+\newcommand{\vmic}{$v_\mathrm{mic}$\xspace}
+\newcommand{\vbroad}{$v_\mathrm{broad}$\xspace}
+\newcommand{\vrad}{$v_\mathrm{rad}$\xspace}
+\newcommand{\Gaia}{\textit{Gaia}\xspace}
 \newcommand\SB[1]{\textcolor{blue}{SB: #1}}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \usepackage[T1]{fontenc}
@@ -89,6 +89,15 @@ stars: abundances
 %________________________________________________________________
 \section{Target selection, observation, reduction} \label{sec:selection_observation_reduction}
 
+The selection was based on 2MASS \citep{Skrutskie2006} magnitudes and due to their brightness, almost all stars of the GALAH observations have well measured 5D information from \Gaia \citep{Brown2018, Lindegren2018}. An overview of the astro- and photometric information of the observed spectra can be found in Fig.~\ref{fig:plot_parallax_quality_and_cmds}
+
+\begin{figure*}
+\centering
+\includegraphics[width=\textwidth]{figures/plot_parallax_quality_and_cmds.pdf}
+\caption{Overview of astro- and photometric information of the stars observed by GALAH until \SB{February 2019}. Panel a) shows the unprecedented parallax ($\varpi$) uncertainty provided by \Gaia DR2 with 702945 (91\%) spectra below 15\% (blue) and 71204 (9\%) spectra with uncertainties above 15\% (red, truncated). Panel b) shows a color-magnitude diagram as observed with the optical \Gaia passbands, whereas panel c) shows a color-magnitude diagram as observed with the infra-red 2MASS passbands. \SB{Note that not all of these stars are included in GALAH DR3}.}
+\label{fig:plot_parallax_quality_and_cmds}
+\end{figure*}
+
 %________________________________________________________________
 \section{Data analysis} \label{sec:analysis}
 
@@ -98,7 +107,7 @@ stars: abundances
 \begin{itemize}
 \item SME only, no use of \textit{The Cannon} in this DR
 \item Lay this out and motivate that by a figure, which shows 3 panels in the top for DR2 (Teff-logg, [Fe/H]-[alpha/Fe], [Fe/H]-A(Li)) and DR3 in the bottom
-\item SME536, including changes as introduced by \citet{Piskunov2018}, but also with additional differences in the use of SME
+\item SME536, including changes as introduced by \citet{Piskunov2017}, but also with additional differences in the use of SME
 \item using fundamental relation of surface gravity $\log g$ with available, non-spectroscopic information ($\varpi$ and $K_S$)
 \item Workflow: 
 \begin{enumerate}
