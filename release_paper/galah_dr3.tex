@@ -21,6 +21,7 @@
 \newcommand{\teff}{$T_\mathrm{eff}$\xspace}
 \newcommand{\logg}{$\log g$\xspace}
 \newcommand{\feh}{$\mathrm{[Fe/H]}$\xspace}
+\newcommand{\alphafe}{$\mathrm{[\upalpha/Fe]}$\xspace}
 \newcommand{\vmic}{$v_\mathrm{mic}$\xspace}
 \newcommand{\vbroad}{$v_\mathrm{broad}$\xspace}
 \newcommand{\vrad}{$v_\mathrm{rad}$\xspace}
@@ -91,6 +92,7 @@ stars: abundances
 
 The selection was based on 2MASS \citep{Skrutskie2006} magnitudes and due to their brightness, almost all stars of the GALAH observations have well measured 5D information from \Gaia \citep{Brown2018, Lindegren2018}. An overview of the astro- and photometric information of the observed spectra can be found in Fig.~\ref{fig:plot_parallax_quality_and_cmds}
 
+% This figure was created with the notebook GALAH_DR3/input/galah_dr3_input.ipynb
 \begin{figure*}
 \centering
 \includegraphics[width=\textwidth]{figures/plot_parallax_quality_and_cmds.pdf}
@@ -116,6 +118,15 @@ The selection was based on 2MASS \citep{Skrutskie2006} magnitudes and due to the
 	\item Keep stellar parameters fixed and then estimate A(X) for element X. These can be done combined (write elements for which that was done) or on a line-by-line basis (write elements for which that was done).
 \end{enumerate}
 \end{itemize}
+
+% This figure was created with the notebook GALAH_DR3/validation/comparisons/comparison_galah_dr2/galah_dr3_comparison_dr2.ipynb
+\begin{figure*}
+\centering
+\includegraphics[width=\textwidth]{figures/galah_dr3_comparison_dr2.pdf}
+\caption{Comparison of GALAH DR2 (upper panels) and GALAH DR3 (lower panels, this release). Pale blue contours indicate all measurements, whereas the colors as part of the colormaps indicate the unflagged measurements. Left panels show Kiel diagrams, i.e. \teff-\logg, for stars of DR2 (a) and DR3 (d). Middle panels show the abundance pattern of iron vs. $\upalpha$-process elements, i.e. \feh-\alphafe, for DR2 (b) and DR3 (e). Right panels show the absolute Li abundance as a function of iron abundance, i.e. \feh-A(Li), for DR2 (c) and DR3 (f). Note that the stars are not only the overlapping ones, but all measurements of the particular release.}
+\label{fig:galah_dr3_comparison_dr2}
+\end{figure*}
+
 
 %________________________________________________________________
 \subsection{Validation of stellar parameters} \label{sec:validation_sp}
