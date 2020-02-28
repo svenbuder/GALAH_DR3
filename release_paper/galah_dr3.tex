@@ -1,0 +1,300 @@
+% v3.0 released 22 May 2015
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass[fleqn,usenatbib,useAMS]{mnras}
+
+\usepackage{graphicx}	% Including figure files
+\usepackage{amsmath}	% Advanced maths commands
+\usepackage{amssymb}	% Extra maths symbols
+\usepackage{multicol}        % Multi-column entries in tables
+\usepackage{bm}		% Bold maths symbols, including upright Greek
+\usepackage{pdflscape}	% Landscape pages
+\usepackage{enumitem}	% Including figure files
+\usepackage{multirow}   % Allow multi-row cells in tables
+\usepackage{xspace}
+\usepackage{CJK}
+\usepackage{longtable}
+\usepackage{etoolbox}
+\makeatletter
+ \makeatother
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\teff}{$T_\mathrm{eff}$\xspace}
+\newcommand{\logg}{$\log g$\xspace}
+\newcommand{\feh}{$\mathrm{[Fe/H]}$\xspace}
+\newcommand{\vmic}{$v_\mathrm{mic}$\xspace}
+\newcommand{\vbroad}{$v_\mathrm{broad}$\xspace}
+\newcommand{\vrad}{$v_\mathrm{rad}$\xspace}
+\newcommand{\Gaia}{\textit{Gaia}\xspace}
+\newcommand\SB[1]{\textcolor{blue}{SB: #1}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage[T1]{fontenc}
+\usepackage{ae,aecompl}
+\usepackage{newtxtext,newtxmath}
+
+%@arxiver{galah_rzxy_bstep.pdf, DR2_example_spectra.pdf, Abundance_overview_flag_0_snr_0.pdf}
+
+\begin{document}
+\begin{CJK*}{UTF8}{gbsn}
+\label{firstpage}
+\pagerange{\pageref{firstpage}--\pageref{lastpage}}
+
+%%%%%%%%%%%%%%%%%%% TITLE PAGE %%%%%%%%%%%%%%%%%%%
+
+\title{The GALAH Survey: Third Data Release}
+
+% The list of authors, and the short list which is used in the headers.
+% If you need two or more lines of authors, add an extra line using \newauthor
+\author[Buder et al.]{Sven Buder$^{1,2,3}$\thanks{Contact e-mail: \href{mailto:buder@mpia.de}{buder@mpia.de}},
+and~the~GALAH~collaboration \newauthor
+(co-author order TBD in agreement with the SOFA)
+\\
+\\
+(Affiliations listed after the references)}
+
+% These dates will be filled out by the publisher
+\date{Accepted 2020 Month Day. Received 2020 June 30}
+
+% Enter the current year, for the copyright statements etc.
+\pubyear{2020}
+
+% Don't change these lines
+\maketitle
+\end{CJK*}
+
+% Abstract of the paper
+\begin{abstract}
+This is the current draft of the accompanying paper for GALAH Data Release 3. \\
+Please feel free to give feedback regarding both the analysis and the manuscript.
+%
+\end{abstract}
+
+% Select between one and six entries from the list of approved keywords.
+% Don't make up new ones.
+\begin{keywords}
+Surveys -- 
+the Galaxy --
+methods: observational --
+methods: data analysis --
+stars: fundamental parameters -- 
+stars: abundances
+\end{keywords}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%% BODY OF PAPER %%%%%%%%%%%%%%%%%%
+
+%________________________________________________________________
+\section{Introduction} \label{sec:introduction}
+
+%________________________________________________________________
+\section{Target selection, observation, reduction} \label{sec:selection_observation_reduction}
+
+The selection was based on 2MASS \citep{Skrutskie2006} magnitudes and due to their brightness, almost all stars of the GALAH observations have well measured 5D information from \Gaia \citep{Brown2018, Lindegren2018}. An overview of the astro- and photometric information of the observed spectra can be found in Fig.~\ref{fig:plot_parallax_quality_and_cmds}
+
+\begin{figure*}
+\centering
+\includegraphics[width=\textwidth]{figures/plot_parallax_quality_and_cmds.pdf}
+\caption{Overview of astro- and photometric information of the stars observed by GALAH until \SB{February 2019}. Panel a) shows the unprecedented parallax ($\varpi$) uncertainty provided by \Gaia DR2 with 702945 (91\%) spectra below 15\% (blue) and 71204 (9\%) spectra with uncertainties above 15\% (red, truncated). Panel b) shows a color-magnitude diagram as observed with the optical \Gaia passbands, whereas panel c) shows a color-magnitude diagram as observed with the infra-red 2MASS passbands. \SB{Note that not all of these stars are included in GALAH DR3}.}
+\label{fig:plot_parallax_quality_and_cmds}
+\end{figure*}
+
+%________________________________________________________________
+\section{Data analysis} \label{sec:analysis}
+
+%________________________________________________________________
+\subsection{Analysis flow and changes with respect to DR2} \label{sec:analysis_flow}
+
+\begin{itemize}
+\item SME only, no use of \textit{The Cannon} in this DR
+\item Lay this out and motivate that by a figure, which shows 3 panels in the top for DR2 (Teff-logg, [Fe/H]-[alpha/Fe], [Fe/H]-A(Li)) and DR3 in the bottom
+\item SME536, including changes as introduced by \citet{Piskunov2017}, but also with additional differences in the use of SME
+\item using fundamental relation of surface gravity $\log g$ with available, non-spectroscopic information ($\varpi$ and $K_S$)
+\item Workflow: 
+\begin{enumerate}
+	\item Estimate stellar parameters (\teff, \feh, \vbroad, \vrad from spectra, \logg via fundamental relation, \vmic via empirical relation)
+	\item Validation of stellar parameters (see Sec.\ref{sec:validation_sp}), leading to an adjustment of the estimated atmospheric [Fe/H] (\textsc{sme.feh}) by adding $0.1\,\mathrm{dex}$\footnote{NB: This is not the final [Fe/H] as reported in this data release, but a pseudo iron abundance, estimated from H, Sc, Ti, and Fe lines.}
+	\item Keep stellar parameters fixed and then estimate A(X) for element X. These can be done combined (write elements for which that was done) or on a line-by-line basis (write elements for which that was done).
+\end{enumerate}
+\end{itemize}
+
+%________________________________________________________________
+\subsection{Validation of stellar parameters} \label{sec:validation_sp}
+
+To assess the quality of the stellar parameters, we resort to the commonly used comparison samples for accuracy, that is the GBS and the stars with asteroseismic information. For the precision assessment we use the internal uncertainty estimates and repeat observations of the same stars.  We calculate the final stellar parameter errors for a given parameter $X$ via 
+\begin{equation}
+e_\text{final}^2 (X) = e_\text{accuracy}^2(X) + e_\text{fit}^2(X) + e_\text{repeats}^2(X). \label{eq:final_error}
+\end{equation}
+
+We note that $e_\text{fit}^2(X)$ and $e_\text{repeats}^2(X)$ are typically expected to be the same tracer of precision and hence only their maximum value should be used, that is
+\begin{equation}
+e_\text{final}^2 (X) = e_\text{accuracy}^2(X) + \text{max} \left(e_\text{fit}^2(X) + e_\text{repeats}^2(X) \right).
+\end{equation}
+
+We elaborate on the choice of error combination when we assess the precision of the stellar parameters.
+
+\subsubsection{Accuracy of stellar parameters}
+
+\paragraph*{\Gaia FGK benchmark stars (GBS)}
+
+\paragraph*{IRFM temperatures}
+
+\paragraph*{Stars with asteroseismic information}
+
+\subsubsection{Precision of stellar parameters}
+
+- repeat observations and fitting uncertainties
+
+\section{Validation of element abundances} \label{sec:validation_ab}
+
+\subsubsection{Accuracy of element abundances}
+
+\paragraph*{Abundances of the Sun}
+
+\paragraph*{Abundances of Arcturus}
+
+\paragraph*{Abundances of the GBS stars}
+
+\paragraph*{TBD: Abundances of cluster stars?}
+
+\subsubsection{Precision of element abundances}
+
+\paragraph*{Abundances of repeat observations}
+
+\paragraph*{TBD: Abundances of cluster stars?}
+
+\subsection{The complexity and importance of flagging (and using them)}
+
+\subsubsection{Flagging of stellar parameters}
+
+\subsubsection{Flagging of element abundances}
+
+We expect less trends without the influence of the training set selection or data-model flexibilities, but we still expect trends for several reasons:
+\begin{itemize}
+\item Given the model- and setup-imperfections, excluding \logg as a free fitting parameter might lead to systematic trends. This can be the case for those stars where the true \logg of the star and our estimated \logg differ significantly (e.g. binaries where the (unidentified) second component is contributing to the flux of the system) or the synthetic spectrum with the true \logg does not match the observation (e.g. due to shortcomings of the 1D model atmospheres and synthesis).
+\item For stars with more lines, our pipeline will perform worse several ways. Firstly, estimating the continuum will be less reliable. Secondly, we will run into issues of strong blending, where our estimate is limited to how close the synthesis of the blending lines is to the true observation. If for example a star has scaled solar abundances, our estimates of the element abundances will still be good even for blended cases. If the compositions differs, and the line that we want to measure is blended by a line of a significantly over- or under-abundant element (relative to scaled-solar), our measurement might be corrupted. We try to limit this by performing a blending test, but setting the limit on how much blending is still acceptable is both non-trivial but also hard to flag during post-processing.
+\item Due to time/computation restrictions, we were running several elements in a combined rather than line-by-line basis, which can decrease the precision as outlined in Sec.~\ref{sec:analysis_flow}, although we have tried to ensure that the abundance zero points of the individual lines were similar for those elements that were run with the combined setup.
+\end{itemize}
+
+\subsubsection{Expect the (un-)expected, but be cautious: Analysis shortcoming or physical correlation?}
+
+\section{Catalogs included in this release}  \label{sec:catalogs}
+
+%________________________________________________________________
+\subsection{Main catalog} \label{sec:main_catalog}
+\begin{enumerate}
+\item Stellar paramaters (see Fig.~\ref{fig:hrd_galah_dr3})
+\item Stellar parameter flags (both warning and flags)
+\item Precision uncertainties and final uncertainties for each parameter (including accuracy, precision, and parameter node uncertainties)
+\item Combined alpha-abundance (for unflagged measurements), see Fig.~\ref{fig:fe_h_alpha_fe}
+\item Individual element abundances (including flagged measurements)
+\item individual abundance flags
+\item Precision uncertainties for each abundance
+\item x-matches with Gaia DR2, Bailer-Jones2018, RUWE, 2MASS, WISE
+\end{enumerate}
+
+%________________________________________________________________
+\subsection{Value-Added-Catalogs} \label{sec:value_added_catalogs}
+
+The third Data Release of GALAH is accompanied by two value-added-catalogs and we explain them in this section. One value-added-catalog includes extended abundance measurement information, another one stellar ages as well as masses and a third one kinematic as well as dynamic information for each star.
+
+\subsubsection{Extended abundance measurement information}
+
+\subsubsection{Stellar age and mass estimates}
+
+\subsubsection{Kinematic and dynamic information}
+
+%________________________________________________________________
+\section{GALAH DR3 in context} \label{sec:galah_in_context}
+
+\subsection{Galactic archaeology on a global scale}  \label{sec:global_ga}
+
+\subsection{Chemodynamical evolution}  \label{sec:cde}
+
+Combining chemistry, dynamics, and ages of stars
+
+- plot Galactic $v_R$ vs. $v_\phi$ (Belokurov)
+- plot Toomre diagram
+- plot actions
+- plot \cite{Vasiliev2019} overview of $J_i$
+
+%________________________________________________________________
+\section{Conclusions} \label{sec:conclusions}
+
+
+%________________________________________________________________
+\section*{Acknowledgements}
+
+Based on data acquired through the Australian Astronomical Observatory, under programmes: A/2013B/13 (The GALAH pilot survey); A/2014A/25, A/2015A/19, A2017A/18 (The GALAH survey phase 1), A2018 A/18 (Open clusters with HERMES), A2019A/1 (Hierarchical star formation in Ori OB1),  A2019A/15 (The GALAH survey phase 2), A/2015B/19, A/2016A/22, A/2016B/10, A/2017B/16, A/2018B/15 (The HERMES-TESS program), and A/2015A/3, A/2015B/1, A/2015B/19, A/2016A/22, A/2016B/12, A/2017A/14, (The HERMES K2-follow-up program). \SB{Are we missing programs?} We acknowledge the traditional owners of the land on which the AAT stands, the Gamilaraay people, and pay our respects to elders past and present.
+
+This work has made use of data from the European Space Agency (ESA) mission \Gaia (http://www.cosmos.esa.int/gaia), processed by the \Gaia Data Processing and Analysis Consortium (DPAC, http://www.cosmos.esa.int/web/gaia/dpac/consortium). Funding for the DPAC has been provided by national institutions, in particular the institutions participating in the \Gaia Multilateral Agreement. 
+
+The following software and programming languages made this research possible: \textsc{IRAF} \citep{Tody1986,Tody1993}, \textsc{configure} \citep{Miszalski2006}, \textsc{topcat} \citep[version 4.4;][]{Taylor2005}; Python (version 2.7) and its packages {\textsc{astropy}} \citep[version 2.0;][]{Robitaille2013,PriceWhelan2018}, {\textsc{matplotlib}} \citep{matplotlib}, {\textsc{pandas}} \citep[version 0.20.2;][]{McKinney2011}, {\textsc{NumPy}} \citep{numpy}, {\textsc{IPython}} \citep{ipython}, and  \textsc{galpy} \citep[version 1.3;][]{Bovy2015}. This research has made use of the VizieR catalogue access tool, CDS, Strasbourg, France. The original description of the VizieR service was published in A\&AS 143, 23. This research mad use of the TOPCAT tool, described in \citet{Taylor2005}. This publication makes use of data products from the Two Micron All Sky Survey, which is a joint project of the University of Massachusetts and the Infrared Processing and Analysis Center/California Institute of Technology, funded by the National Aeronautics and Space Administration and the National Science Foundation.
+
+SB and acknowledges funds from the Alexander von Humboldt Foundation in the framework of the Sofja Kovalevskaja Award endowed by the Federal Ministry of Education and Research. SB acknowledges travel support from Universities Australia and Deutsche Akademische Austauschdienst.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%% REFERENCES %%%%%%%%%%%%%%%%%%
+
+% The best way to enter references is to use BibTeX:
+
+\bibliographystyle{mnras}
+\bibliography{bib} % if your bibtex file is called example.bib
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newpage
+\noindent \rule{8.5cm}{1pt}
+
+\noindent
+% List of institutions
+$^{1}$Max Planck Institute  for Astronomy (MPIA), Koenigstuhl 17, 69117 Heidelberg, Germany\\
+$^{2}$Research School of Astronomy \& Astrophysics, Australian National University, ACT 2611, Australia\\
+$^{3}$Center of Excellence for Astrophysics in Three Dimensions (ASTRO-3D), Australia\\
+
+%%%%%%%%%%%%%%%%% APPENDICES %%%%%%%%%%%%%%%%%%%%%
+
+\appendix
+
+\section{Linelist}\label{sec:linelist}
+
+\begin{table*}
+\caption{Selected lines for the elemental abundance analysis.}\label{linelist}
+  \label{tab:linelist}
+\centering
+\begin{tabular}{l l l l l p{2.8cm} l l}
+\hline
+\input{tables/GALAH_DR3_line_info_table_short.tex}
+%\input{tables/GALAH_DR3_line_info_table.tex}
+\dots & \dots & \dots & \dots & \dots & \dots & \dots & \dots \\
+\hline \\
+\end{tabular}
+\newline
+\footnotetext{p{2.8cm}}{References: 1982ApJ...260..395C: \cite{1982ApJ...260..395C},  1983MNRAS.204..883B|1989A\&A...208..157G: \cite{1983MNRAS.204..883B,1989A&A...208..157G},  1990JQSRT..43..207C: \cite{1990JQSRT..43..207C}, 
+1992A\&A...255..457D: \cite{1992A&A...255..457D},  1993A\&AS...99..179H: \cite{1993A&AS...99..179H},  1993PhyS...48..297N: \cite{1993PhyS...48..297N},  1998PhRvA..57.1652Y: \cite{1998PhRvA..57.1652Y}, 
+1999ApJS..122..557N: \cite{1999ApJS..122..557N},  2008JPCRD..37..709K: \cite{2008JPCRD..37..709K},  2009A\&A...497..611M: \cite{2009A&A...497..611M},  2009A\&A...497..611M:solar-gf: \cite{2009A&A...497..611M}, 
+2014ApJS..211...20W: \cite{2014ApJS..211...20W},  2014ApJS..215...20L: \cite{2014ApJS..215...20L},  2014ApJS..215...23D: \cite{2014ApJS..215...23D},  2014MNRAS.441.3127R: \cite{2014MNRAS.441.3127R}, 
+2015ApJS..220...13L: \cite{2015ApJS..220...13L},  2015ApJS..220...13L\_1982ApJ...260..395C: \cite{2015ApJS..220...13L,1982ApJ...260..395C},  2017MNRAS.471..532P: \cite{2017MNRAS.471..532P}, 
+2017PhRvA..95e2507T: \cite{2017PhRvA..95e2507T},  BGHL: \cite{BGHL},  BIPS: \cite{BIPS},  BK: \cite{BK},  BK+BWL: \cite{BK,BWL},  BK+GESB82d+BWL: \cite{BK,GESB82d,BWL},  BKK: \cite{BKK}, 
+BKK+GESB82c+BWL: \cite{BKK,GESB82c,BWL},  BLNP: \cite{BLNP},  BWL: \cite{BWL},  BWL+2014MNRAS.441.3127R: \cite{BWL,2014MNRAS.441.3127R},  BWL+GESHRL14: \cite{BWL,GESHRL14},  CB: \cite{CB},  DLSSC: \cite{DLSSC}, 
+FMW: \cite{FMW},  GARZ|BL: \cite{GARZ,BL},  GESB82c+BWL: \cite{GESB82c,BWL},  GESB86: \cite{GESB86},  GESB86+BWL: \cite{GESB86,BWL},  GESMCHF: \cite{GESMCHF},  Grevesse2015: \cite{Grevesse2015},  HLSC: \cite{HLSC}, 
+K06: \cite{K06},  K07: \cite{K07},  K08: \cite{K08},  K09: \cite{K09},  K10: \cite{K10},  K13: \cite{K13},  K14: \cite{K14},  KL-astro: astrophysical,  KR|1989ZPhyD..11..287C: \cite{KR,1989ZPhyD..11..287C}, 
+LBS: \cite{LBS},  LD: \cite{LD},  LD-HS: \cite{LD-HS},  LGWSC: \cite{LGWSC},  LSCI: \cite{LSCI},  LWHS: \cite{LWHS},  MA-astro: astrophysical,  MC: \cite{MC},  MFW: \cite{MFW},  MRW: \cite{MRW},  NIST: \cite{NIST10}, 
+NWL: \cite{NWL},  PQWB: \cite{PQWB},  RU: \cite{RU},  S: \cite{S},  SLS: \cite{SLS},  SR: \cite{SR},  VGH: \cite{VGH},  WLSC: \cite{WLSC},  WSL: \cite{WSL}.
+}
+\end{table*}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+% Don't change these lines
+\bsp	% typesetting comment
+\label{lastpage}
+\end{document}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
