@@ -11,7 +11,8 @@ This directory includes the information that WG4 has received from WG3 (Reductio
 
 ![alt text](https://github.com/svenbuder/GALAH_DR3/tree/master/release_paper/figuresplot_parallax_quality_and_cmds.png "Astro- and photometric overview of the observed stars")
 
-- Do not forget the t-SNE input for flagging!
+**Do not forget the t-SNE input for flagging!**
+**figures not fully migrated yet!**
 
 ### 2) analysis
 
@@ -44,6 +45,9 @@ This directory includes the information that WG4 has received from WG3 (Reductio
 #### create_main_catalog.ipynb
 - This notebook takes the *processed_files*, combines them, and post-processes them to create the final GALAH_DR3_main.fits catalog.
 - formerly known as combine_10k_subsets.ipynb
+
+**data_products not fully migrated yet!**
+**figures not fully migrated yet!**
 
 ### 4) validation
 
