@@ -64,6 +64,7 @@ and~the~GALAH~collaboration \newauthor
 
 % Abstract of the paper
 \begin{abstract}
+Our journey to discover the chemodynamic evolution continues. With this third data release of the Galactic Archaeology with HERMES (GALAH) survey, we are publishing up to 30 abundances for XXXXX spectra taken of YYYYY stars. This release includes observations of the main survey as well as the K2-HERMES and TESS-HERMES surveys. \\
 This is the current draft of the accompanying paper for GALAH Data Release 3. \\
 Please feel free to give feedback regarding both the analysis and the manuscript.
 %
@@ -159,9 +160,13 @@ We elaborate on the choice of error combination when we assess the precision of 
 
 \subsubsection{Accuracy of element abundances}
 
-\paragraph*{Abundances of the Sun}
+\paragraph*{Abundance zeropoints}
 
-\paragraph*{Abundances of Arcturus}
+Final values: create script based on abundance_zeropoints.ipynb, which creates a tex-table automatically:
+see GALAH_DR3_abundances_lines.tex and GALAH_DR3_Fe_lines.tex in directory release_paper/tables as well as validation/abundances
+- solar abundances
+- Arcturus abundances
+- zeropoints are also saved in a FITS file. this is put into release_paper/tables as well (galahdr3_abundance_zeropoints.fits)
 
 \paragraph*{Abundances of the GBS stars}
 
