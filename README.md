@@ -11,6 +11,8 @@ This directory includes the information that WG4 has received from WG3 (Reductio
 
 ![alt text](https://github.com/svenbuder/GALAH_DR3/tree/master/release_paper/figuresplot_parallax_quality_and_cmds.png "Astro- and photometric overview of the observed stars")
 
+The final FITS file with input data is called "sobject_iraf_53_2MASS_GaiaDR2_WISE_PanSTARRSDR1_BailerJones_K2seis_small.fits"
+
 **Do not forget the t-SNE input for flagging!**
 **figures not fully migrated yet!**
 
@@ -85,3 +87,37 @@ This directory includes either links to VAC descriptions or the direct scripts t
 
 ### 5) spectra
 This directory includes tools to plot spectra, identified via **sobject_id**. This includes both *observed* as well as *synthetic* spectra (if available).
+
+## Processing the data from beginning to end:
+
+1) You need the GALAH-SME pipeline. Ask me or Karin for access. For the DR3 analysis, we use RSAA's AVATAR.
+    a) SME files Directory: /avatar/buder/trunk, including GALAH/DATA/sobject_iraf_53_2MASS_GaiaDR2_WISE_PanSTARRSDR1_BailerJones_K2seis_small.fits, GALAH/DATA/DR3_Segm.dat, GALAH/DATA/DR3_Sp.dat, GALAH/IDL/galah_sp.pro, GALAH/IDL/galah_ab.pro, GALAH/IDL/galah_collect.pro
+    b) You need to copy GALAH spectra into GALAH/SPECTRA/dr5.3, sorted by date (YYMMDD/standard/com or YYMMDD/standard/com2 for repeat observations)
+    c) You need to create the specific FIELDS to run, e.g. GALAH/GALAH_190209_lbol
+2) Run the files through the SP pipeline:
+    a) create the PBS routines:
+        idl>> create_pbs_avatar,'190209_lbol',mode='Sp',runs_per_node=10000
+    b) run SP pipeline:
+        >> idl -rt=galah_sp.sav -args GALAH_190209_lbol 190209000101123 DR3
+    c) Collect those results:
+        idl>> galah_collect,'GALAH_190209_lbol',sp='Sp',/offset_lbol,dir='OUTPUT_190209_lbol'
+        This will also create a 'GALAH_190209_lbol_NoTech' file with converged SP runs (safety copy: GALAH_DR3/processing/NoTech_Sp)
+3) Run the files through the AB pipeline:
+    a) create the PBS routines:
+        idl>> create_pbs_avatar,'190209_lbol',mode='all',runs_per_node=10000
+    b) run AB pipeline:
+        >> idl -rt=galah_ab.sav -args GALAH_190209_lbol 190209000101123 DR3 Li6708
+    c) Collect all results:
+        idl>> galah_collect,'GALAH_190209_lbol',/offset_lbol,dir='OUTPUT_190209_lbol',/silent
+    c) Run upper limit routine:
+        idl>> galah_limits,'190209'
+4) Process SME results:
+    a) Copy SME result files (GALAH_190209_lbol_final.fits) to GALAH_DR3/processing/sme_result_files/
+    b) If not done already, create the file GALAH_DR3/validation/abundances/galahdr3_abundance_zeropoints.fits:
+        jupyter notebook>> GALAH_DR3/validation/abundances/abundance_zeropoints.ipynb
+    c) If not done already, create the galah_dr3_output_structure.fits:
+        jupyter notebook>> GALAH_DR3/processing/galah_output_structure.ipynb
+    c) Process individual SME result FITS:
+        jupyter notebook>> process_sme_results.ipynb
+    d) Combine processed files:
+        jupyter notebook>> create_main_catalog.ipynb
