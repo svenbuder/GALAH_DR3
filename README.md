@@ -9,7 +9,7 @@ If you are only looking for the catalog, please go here: [GALAH DR2 (not yet DR3
 ### 1) input  
 This directory includes the information that WG4 has received from WG3 (Reduction) as well as additional information on performed crossmatches and external information (such as asteroseismic values). Here we also plot a first overview of the data:
 
-![alt text](release_paper/figures/plot_parallax_quality_and_cmds.pdf "Astro- and photometric overview of the observed stars")
+![alt text](release_paper/figures/plot_parallax_quality_and_cmds.png "Astro- and photometric overview of the observed stars")
 
 The final FITS file with input data is called "sobject_iraf_53_2MASS_GaiaDR2_WISE_PanSTARRSDR1_BailerJones_K2seis_small.fits".
 
