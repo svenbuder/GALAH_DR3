@@ -13,8 +13,11 @@ This directory includes the information that WG4 has received from WG3 (Reductio
 
 The final FITS file with input data is called "sobject_iraf_53_2MASS_GaiaDR2_WISE_PanSTARRSDR1_BailerJones_K2seis_small.fits"
 
-**Do not forget the t-SNE input for flagging!**
-**figures not fully migrated yet!**
+The X-MATCH with Skymapper DR3 was performed by Chris Onken via gaia_dr2.source_id.
+
+From WG3, we also received numerous catalogs with t-SNE flags. These are saved at [input/tSNE/](https://github.com/svenbuder/GALAH_DR3/tree/master/input/tSNE/)
+
+We also have a list of [neglected_sobject_ids](https://github.com/svenbuder/GALAH_DR3/tree/master/input/neglected_sobject_ids), for which either reduction output or Gaia data were not useful
 
 ### 2) analysis
 
@@ -32,8 +35,9 @@ The final FITS file with input data is called "sobject_iraf_53_2MASS_GaiaDR2_WIS
 - The IDL script used to collect SME output files into FITS files, [galah_collect.pro](https://github.com/svenbuder/GALAH_DR3/tree/master/analysis/galah_collect.pro)
 
 #### c) tests used to improve the setup
-- Which lines should be used and which continuum regions should be selected. A test was performed for 10000 randomly chosen spectra, see [select_masks](https://github.com/svenbuder/GALAH_DR3/tree/master/analysis/abundances/tests/select_masks), see **plot_abundance_masks_for_10k_spectra.ipynb**
-
+- Which lines should be used and which continuum regions should be selected. A test was performed for 10000 randomly chosen spectra, see [select_masks](https://github.com/svenbuder/GALAH_DR3/tree/master/analysis/abundances/tests/select_masks)
+- Is the linelist data correct? We plotted the individual lines and their [linelist_data](https://github.com/svenbuder/GALAH_DR3/tree/master/analysis/abundances/linelist_data)
+- We did performance tests on the computational performance in order to estimate runtimes. [performance_tests](https://github.com/svenbuder/GALAH_DR3/tree/master/analysis/performance_tests)
 
 ### 3) Processing
 
@@ -48,12 +52,7 @@ The final FITS file with input data is called "sobject_iraf_53_2MASS_GaiaDR2_WIS
 - This notebook takes the *processed_files*, combines them, and post-processes them to create the final GALAH_DR3_main.fits catalog.
 - formerly known as combine_10k_subsets.ipynb
 
-**data_products not fully migrated yet!**
-**figures not fully migrated yet!**
-
 ### 4) validation
-
-**CHECK WHICH FILES FROM GALAH_iDR3 MUST BE COPIED**
 
 #### a) repeat_observations
 - estimate_repeat_uncertainty.ipynb
@@ -92,33 +91,54 @@ This directory includes tools to plot spectra, identified via **sobject_id**. Th
 
 **1) You need the GALAH-SME pipeline.**  
 Ask me or Karin for access. For the DR3 analysis, we use RSAA's AVATAR.  
-    a) SME files Directory: /avatar/buder/trunk, including GALAH/DATA/sobject_iraf_53_2MASS_GaiaDR2_WISE_PanSTARRSDR1_BailerJones_K2seis_small.fits, GALAH/DATA/DR3_Segm.dat, GALAH/DATA/DR3_Sp.dat, GALAH/IDL/galah_sp.pro, GALAH/IDL/galah_ab.pro, GALAH/IDL/galah_collect.pro  
+    a) SME files Directory: /avatar/buder/trunk, including GALAH/DATA/sobject_iraf_53_2MASS_GaiaDR2_WISE_PanSTARRSDR1_BailerJones_K2seis_small.fits, [GALAH/DATA/DR3_Sp.dat](https://github.com/svenbuder/GALAH_DR3/tree/master/analysis/stellar_parameters/DR3_Sp.dat), [GALAH/DATA/DR3_Segm.dat](https://github.com/svenbuder/GALAH_DR3/tree/master/analysis/stellar_parameters/DR3_Segm.dat), [GALAH/IDL/galah_sp.pro](https://github.com/svenbuder/GALAH_DR3/tree/master/analysis/stellar_parameters/galah_sp.pro), [GALAH/IDL/galah_ab.pro](https://github.com/svenbuder/GALAH_DR3/tree/master/analysis/abundances/galah_ab.pro), [GALAH/IDL/galah_collect.pro](https://github.com/svenbuder/GALAH_DR3/tree/master/analysis/galah_collect.pro)
     b) You need to copy GALAH spectra into GALAH/SPECTRA/dr5.3, sorted by date (YYMMDD/standard/com or YYMMDD/standard/com2 for repeat observations)  
     c) You need to create the specific FIELDS to run, e.g. GALAH/GALAH_190209_lbol  
 **2) Run the files through the SP pipeline:**  
     a) create the PBS routines:  
-        idl>> create_pbs_avatar,'190209_lbol',mode='Sp',runs_per_node=10000  
+        ```idl
+        create_pbs_avatar,'190209_lbol',mode='Sp',runs_per_node=10000
+        ```  
     b) run SP pipeline:  
-        >> idl -rt=galah_sp.sav -args GALAH_190209_lbol 190209000101123 DR3  
+        ```idl
+        -rt=galah_sp.sav -args GALAH_190209_lbol 190209000101123 DR3  
+        ```  
     c) Collect those results:  
-        idl>> galah_collect,'GALAH_190209_lbol',sp='Sp',/offset_lbol,dir='OUTPUT_190209_lbol'  
-        This will also create a 'GALAH_190209_lbol_NoTech' file with converged SP runs (safety copy: GALAH_DR3/processing/NoTech_Sp)  
+        ```idl galah_collect,'GALAH_190209_lbol',sp='Sp',/offset_lbol,dir='OUTPUT_190209_lbol'  
+        ```  
+        This will also create a 'GALAH_190209_lbol_NoTech' file with converged SP runs (safety copy: GALAH_DR3/processing/NoTech_Sp)
 **3) Run the files through the AB pipeline:**  
     a) create the PBS routines:  
-        idl>> create_pbs_avatar,'190209_lbol',mode='all',runs_per_node=10000  
+        ```idl
+        create_pbs_avatar,'190209_lbol',mode='all',runs_per_node=10000  
+        ```  
     b) run AB pipeline:  
-        >> idl -rt=galah_ab.sav -args GALAH_190209_lbol 190209000101123 DR3 Li6708  
+        ```idl
+        -rt=galah_ab.sav -args GALAH_190209_lbol 190209000101123 DR3 Li6708  
+        ```  
     c) Collect all results:  
-        idl>> galah_collect,'GALAH_190209_lbol',/offset_lbol,dir='OUTPUT_190209_lbol',/silent  
+        ```idl
+        galah_collect,'GALAH_190209_lbol',/offset_lbol,dir='OUTPUT_190209_lbol',/silent  
+        ```  
     c) Run upper limit routine:  
-        idl>> galah_limits,'190209'  
+        ```idl
+        galah_limits,'190209'  
+        ```  
 **4) Process SME results:**
     a) Copy SME result files (GALAH_190209_lbol_final.fits) to GALAH_DR3/processing/sme_result_files/  
     b) If not done already, create the file GALAH_DR3/validation/abundances/galahdr3_abundance_zeropoints.fits:   
-        jupyter notebook>> GALAH_DR3/validation/abundances/abundance_zeropoints.ipynb  
+        ```jupyter notebook:
+        GALAH_DR3/validation/abundances/abundance_zeropoints.ipynb  
+        ```  
     c) If not done already, create the galah_dr3_output_structure.fits:  
-        jupyter notebook>> GALAH_DR3/processing/galah_output_structure.ipynb  
+        ```jupyter notebook:
+        GALAH_DR3/processing/galah_output_structure.ipynb  
+        ```  
     c) Process individual SME result FITS:  
-        jupyter notebook>> process_sme_results.ipynb  
+        ```jupyter notebook: 
+        process_sme_results.ipynb  
+        ```  
     d) Combine processed files:  
-        jupyter notebook>> create_main_catalog.ipynb  
+        ```jupyter notebook:
+        create_main_catalog.ipynb  
+        ```
