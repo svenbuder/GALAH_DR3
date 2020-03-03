@@ -96,6 +96,7 @@ Ask Sven Buder or Karin Lind for access. NB: We are working on a non-IDL/Python 
     a) SME files Directory: /avatar/buder/trunk, including GALAH/DATA/sobject_iraf_53_2MASS_GaiaDR2_WISE_PanSTARRSDR1_BailerJones_K2seis_small.fits, [GALAH/DATA/DR3_Sp.dat](https://github.com/svenbuder/GALAH_DR3/tree/master/analysis/stellar_parameters/DR3_Sp.dat), [GALAH/DATA/DR3_Segm.dat](https://github.com/svenbuder/GALAH_DR3/tree/master/analysis/stellar_parameters/DR3_Segm.dat), [GALAH/IDL/galah_sp.pro](https://github.com/svenbuder/GALAH_DR3/tree/master/analysis/stellar_parameters/galah_sp.pro), [GALAH/IDL/galah_ab.pro](https://github.com/svenbuder/GALAH_DR3/tree/master/analysis/abundances/galah_ab.pro), [GALAH/IDL/galah_collect.pro](https://github.com/svenbuder/GALAH_DR3/tree/master/analysis/galah_collect.pro)
     b) You need to copy GALAH spectra into GALAH/SPECTRA/dr5.3, sorted by date (YYMMDD/standard/com or YYMMDD/standard/com2 for repeat observations)  
     c) You need to create the specific FIELDS to run, e.g. GALAH/GALAH_190209_lbol  
+  
 **2) Run the files through the SP pipeline:**  
     a) create the PBS routines:  
         ```idl
@@ -109,6 +110,7 @@ Ask Sven Buder or Karin Lind for access. NB: We are working on a non-IDL/Python 
         ```idl galah_collect,'GALAH_190209_lbol',sp='Sp',/offset_lbol,dir='OUTPUT_190209_lbol'  
         ```  
         This will also create a 'GALAH_190209_lbol_NoTech' file with converged SP runs (safety copy: GALAH_DR3/processing/NoTech_Sp)
+
 **3) Run the files through the AB pipeline:**  
     a) create the PBS routines:  
         ```idl
