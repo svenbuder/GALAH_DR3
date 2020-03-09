@@ -64,9 +64,11 @@ and~the~GALAH~collaboration \newauthor
 
 % Abstract of the paper
 \begin{abstract}
-Our journey to discover the chemodynamic evolution continues. With this third data release of the Galactic Archaeology with HERMES (GALAH) survey, we are publishing up to 30 abundances for XXXXX spectra taken of YYYYY stars. This release includes observations of the main survey as well as the K2-HERMES and TESS-HERMES surveys. \\
 This is the current draft of the accompanying paper for GALAH Data Release 3. \\
-Please feel free to give feedback regarding both the analysis and the manuscript.
+Please feel free to give feedback regarding both the analysis and the manuscript. \\
+Our journey to discover the chemodynamic evolution of our Galaxy continues. With this third data release of the Galactic Archaeology with HERMES (GALAH) survey, we are publishing up to 30 abundances for XXXXX spectra taken of YYYYY stars with the HERMES spectrograph at AAT in Australia. This release includes observations of the main survey as well as the K2-HERMES, TESS-HERMES surveys, and additional projects of the bulge and open clusters. \\
+Since the publication of GALAH DR2, we have been able to improve our spectrum analysis in several ways. We have updated our spectrum synthesis routines to take non-LTE departures into account for 11 elements, incorporate the astrometric information from the \Gaia satellite and photometric information from the 2MASS catalog and estimate element abundances line-by-line for as many elements as were feasible. Contrary to GALAH DR2, we are analysing all spectra only with the spectrum synthesis code Spectroscopy Made Easy (SME) to increase our accuracy throughout the parameter space. \\
+Several Value-Added-Catalogs for stellar ages, stellar dynamics, and detailed abundance measurements accompany this data release. Together they provide a high-dimensional dataset to study the chemodynamic evolution of the local () Milky Way.
 %
 \end{abstract}
 
@@ -88,10 +90,15 @@ stars: abundances
 %________________________________________________________________
 \section{Introduction} \label{sec:introduction}
 
+The field of Galactic Archaeology is in an transformation from single-star population studies towards large-scale structure analyses. Due to the limited information on the distances of stars, studies of the chemodynamic evolution of our Milky Way were previously limited to the nearby stars, but in the era of the \Gaia satellite, we can know use astrometric and photometric observables and their physical relations with spectroscopic quantities to improve the analyses of spectra and thus estimation of element abundances.
+
+For the second data release of the GALAH survey \citep{Buder2018} we made use of data-driven approaches to improve both speed and precision of the spectrum analysis. These were performed almost entirely without non-spectroscopic information for individual spectra. The publication of \Gaia DR2 \citep{Brown2018, Lindegren2018} provided 5-parameter astrometry for 1.3 billion stars and can be understood as a game changer for stellar analysis.
+
+
 %________________________________________________________________
 \section{Target selection, observation, reduction} \label{sec:selection_observation_reduction}
 
-The selection was based on 2MASS \citep{Skrutskie2006} magnitudes and due to their brightness, almost all stars of the GALAH observations have well measured 5D information from \Gaia \citep{Brown2018, Lindegren2018}. An overview of the astro- and photometric information of the observed spectra can be found in Fig.~\ref{fig:plot_parallax_quality_and_cmds}
+\subsection{Target selection}
 
 % This figure was created with the notebook GALAH_DR3/input/galah_dr3_input.ipynb
 \begin{figure*}
@@ -101,11 +108,46 @@ The selection was based on 2MASS \citep{Skrutskie2006} magnitudes and due to the
 \label{fig:plot_parallax_quality_and_cmds}
 \end{figure*}
 
+Parallaxes are now available for almost all stars observed by GALAH and a vast majority of them are very precise, see Fig~\ref{fig:plot_parallax_quality_and_cmds}. Overall, currently \SB{728651} spectra have matched parallax measurements, \SB{$85\,\%$ (619333)} even with parallax uncertainty $<10\,\%$. When dividing the sample into giants ($\textsc{teff} < 5500\,\mathrm{K}$ and $M_{K_S} < 2\,\mathrm{mag}$), \SB{$93\,\%$ (454406/488192)} of the observed dwarf spectra have parallax uncertainties below $10\,\%$ and \SB{$69\,\%$ (164927/240459)} of the observed giant spectra have parallax uncertainties below $10\,\%$. The use of inferred distance estimates by \citet{BailerJones2018} delivers even more reliable distance estimates.
+
+Additionally, the progress in the analyses of observations of the K2 campaigns is providing more and more asteroseismic information. The overlap between GALAH targets and K2 targets from campaign C1-C8 and C10-C13 has increased the number of stars with measured asteroseismic $\nu_\mathrm{max}$ values to almost 15,000 and covers almost the entire giant branch, that is $1.5 < \log g < 3.5$, with its various evolutionary stages.
+
+The selection was based on 2MASS \citep{Skrutskie2006} magnitudes and due to their brightness, almost all stars of the GALAH observations have well measured 5D information from \Gaia \citep{Brown2018, Lindegren2018}. An overview of the astro- and photometric information of the observed spectra can be found in Fig.~\ref{fig:plot_parallax_quality_and_cmds}
+
+Mention Fig.~\ref{fig:distance}
+
+\begin{figure}
+  \includegraphics[width=\columnwidth]{figures/distance.png}
+  \caption{Caption} 
+  \label{fig:distance}
+\end{figure}
+
+Mention Fig.~\ref{fig:lb_overview_colored}
+
+\begin{figure*}
+\centering
+\includegraphics[width=\textwidth]{figures/lb_overview_colored.png}
+\caption{Caption.}
+\label{fig:lb_overview_colored}
+\end{figure*}
+
+\subsection{Observations}
+
+Describe the observations from the beginning until the latest observations that will be included in 
+
+\subsection{Reductions}
+
+Short review of what was done.
+
+Point out important changes since GALAH DR2 (was done with IRAF DR5.2 reduction).
+
 %________________________________________________________________
 \section{Data analysis} \label{sec:analysis}
 
 %________________________________________________________________
 \subsection{Analysis flow and changes with respect to DR2} \label{sec:analysis_flow}
+
+\subsubsection{General workflow}
 
 \begin{itemize}
 \item SME only, no use of \textit{The Cannon} in this DR
@@ -128,6 +170,29 @@ The selection was based on 2MASS \citep{Skrutskie2006} magnitudes and due to the
 \label{fig:galah_dr3_comparison_dr2}
 \end{figure*}
 
+\subsubsection{Element abundance estimation}
+
+Coincidentally with the significant improvements of stellar parameters, we have improved the determination of individual chemical abundances. Contrary to the previous GALAH analyses, we are now analysing element abundances as a simple error-weighted combination of all individual element line measurements. This approach has several advantages and we discuss several of them by looking at the combined and individual line abundances for Si in Fig.~\ref{fig:Si_abundance_zeropoint_differences}.
+
+\begin{figure*}
+\centering
+\includegraphics[width=\textwidth]{figures/old/Si_compilation.pdf}
+\caption[{Abundance trends for the Si I.}]{Abundance trends for the Si I. The top left panel shows the final combination of all Si I lines, whereas the other panels show the abundance trends for individual lines (indicated in the bottom left of each panel), when a global value $A(\mathrm{Si}) = 7.51$ is assumed for all lines. The black lines indicate the global solar value, whereas the black dotted lines indicate the individual solar value estimated from each line independently.}
+\label{fig:Si_abundance_zeropoint_differences}
+\end{figure*}
+
+By using individual lines, we are less prone to unreliable line data, such as $\log gf$ values. Wrong oscillator strengths introduce a bias in the absolute abundance for each line. The Si lines at $5666\,\mathrm{\AA}$ is for example less accurate than the rest of the lines, because the oscillator strength that was measured in the laboratory \citep{GARZ,BL} is contaminated by a theoretically estimated lines by \citet{K07}. When such a line would be used for a global synthetic fit of [Si/Fe], they would introduce both a bias in the final abundance and parameter- as well as $S/N$-depending systematic trends. When the Solar abundance for these lines are however estimated independently from the others, they can still be used for the combined [Si/Fe] abundance, after applying individual Sun-based corrections to the absolute abundances.
+
+The use of individual lines also allows to identify less reliable lines in terms of blending, reduction problems, and saturation. The Si lines at $6722$ and $7680\,\mathrm{\AA}$ are two line that display a significant amount of outliers towards higher and lower abundances than the other lines. In a global fit for [Si/Fe], they would hence introduce a higher scatter for the abundance.
+
+We provide an simple error-weighted combination of the Mg, Si, Ca, and Ti lines as [$\upalpha$/Fe], see Fig.~\ref{fig:fe_h_alpha_fe}
+
+\begin{figure*}
+\centering
+\includegraphics[width=\textwidth]{figures/old/fe_h_alpha_fe.pdf}
+\caption[{[$\upalpha$/Fe] as a function of [Fe/H].}]{Error-weighted [$\upalpha$/Fe] estimated from individual measurements of Mg, Si, Ca, and Ti lines as a function of [Fe/H].}
+\label{fig:fe_h_alpha_fe}
+\end{figure*}
 
 %________________________________________________________________
 \subsection{Validation of stellar parameters} \label{sec:validation_sp}
@@ -144,17 +209,54 @@ e_\text{final}^2 (X) = e_\text{accuracy}^2(X) + \text{max} \left(e_\text{fit}^2(
 
 We elaborate on the choice of error combination when we assess the precision of the stellar parameters.
 
+To identify those stars and spectra with less or unreliable information, we have implemented a combination of the flagging algorithms already applied to GALAH DR2 \citep[see][]{Buder2019} and new algorithms.
+
 \subsubsection{Accuracy of stellar parameters}
 
 \paragraph*{\Gaia FGK benchmark stars (GBS)}
+
+When comparing the estimated stellar parameters (blue error bars) for the observed GBS with those from \citet{Jofre2018a}, we do not find any significant biases regarding $T_\text{eff}$ and $\log g$, but had to correct a bias of $\mathrm{[Fe/H]}  = -0.10$ (underestimated [Fe/H]), see Fig.~\ref{fig:gbs_performance}. Underestimated temperatures for the hottest stars are still likely, but more testing is needed as the continuum normalisation has been improved and hydrogen has been implemented in non-LTE now. More importantly, the scatter with respect to the GBS values by \citet{Jofre2018a} has decreased significantly for $\log g$ and noticeably for $T_\text{eff}$ and $\mathrm{[Fe/H]}$ as can be seen in the diagram, where also results from a purely spectroscopic analysis are shown in black for the same stars.
+
+\begin{figure*}
+\centering
+\includegraphics[width=0.8\textwidth]{figures/old/gbs_performance_free_lbol.png}
+\caption[{Performance of GALAH synthesis pipeline with the `free' (black) and `bolometric' (blue) pipeline.}]{Performance of GALAH synthesis pipeline with the `free' (black) and `bolometric' (blue) pipeline. Difference as stated as GALAH - GBS.}
+\label{fig:gbs_performance}
+\end{figure*}
+
+In addition, we have been able to show that the pipeline can now also estimate stellar parameters of core-helium burning stars, including horizontal branch stars. Horizontal branch stars have not been included in the training set used for the analysis of GALAH DR2. We have noted however, that for very distant stars (e.g. the bright stars in the LMC), the inferred distances by \citet{BailerJones2018} are too low and lead to an overestimated $\log g$.
 
 \paragraph*{IRFM temperatures}
 
 \paragraph*{Stars with asteroseismic information}
 
+The biases between the `asteroseismic' and `bolometric' pipeline for the stellar parameters are minor as discussed in Sec.~\ref{sec:analysis_gaia}. However, we find systematic differences between photometric (isochrone) and asteroseismic masses of RC stars, in particular for the most metal-rich isochrones. The isochrone grid is very dense in this regime and and spectroscopic parameters of the RC stars overlap strongly with those of RGB stars. \citet{An2019}, however, found similar differences and suggest that standard RC isochrone models need to be re-examined. Additionally, we suggest that the validity of the asteroseismic scaling relations \citep[see e.g.][]{Epstein2014, Huber2017, Viani2017, Pinsonneault2018} for the most metal-poor and metal-rich stars should be examined further. 
+
+\begin{figure*}
+\centering
+\includegraphics[width=\textwidth]{figures/old/logg_seis_validation_largesample.pdf}
+\caption[{All stars with asteroseismic information from the K2 asteroseismic analyses (Sharma and Stello, priv. communication).}]{All stars with asteroseismic information from the K2 asteroseismic analyses (Sharma and Stello, priv. communication). The colorbar indicates spectra with good asteroseismic information. Misclassifications, that is clear dwarfs with underestimated $\nu_\text{max}$ values are shown in orange, an overdensity with wrong $\nu_\text{max}$ values at $\log g = 3$ is shown in blue and significant outliers are shown in green.}
+\label{fig:all_seismic}
+\end{figure*}
+
+In addition to the sample of 3175 spectra that we analysed with different pipelines, we have examined the accuracy of our surface gravities for an even larger sample of stars with asteroseismic information from the complete K2 analysis (Sharma and Stello, priv. communication). We compare the $\log g$ estimated from $T_\text{eff}$ and $\nu_\text{max}$ with the $\log g$ from the `bolometric' pipeline in the left panel of Fig.~\ref{fig:all_seismic}. As stated in Sec.~\ref{sec:analysis_gaia}, the K2 data is expected to currently only allow reliable asteroseismic results for giants with $1.5 < \log g < 3.0$. The comparison of the `asteroseismic' and `bolometric' pipeline showed that the K2 pipelines also estimate wrong $\nu_\text{max}$ value for 7.5\% of the sample (orange misclassifications), that is $\nu_\text{max}$ values that are too low for the actual $\log $. We identify such wrong classifications in Fig.~\ref{fig:all_seismic} in orange and blue. The latter color indicates an overdensity of wrong $\nu_\text{max}$ values suggesting $\log g = 3.0$, although the actual $\log g \sim 3.5$ is beyond the expected detection limit. Orange colors indicate all other misclassified stars, that is mainly dwarfs with significantly underestimated $\nu_\text{max}$ values. After cleaning the sample from these outliers, we estimate the systematic difference between the $\log g$ from the `bolometric' pipeline and $\log g$ from $T_\text{eff}$ and $\nu_\text{max}$ (see color coded distribution in Fig.~\ref{fig:all_seismic}) and find the same small bias as for the 3175 spectra, that is $-0.03 \pm 0.12$. The lower standard error of this measurements is $0.001$ indicates that this bias is even more significant.
+
 \subsubsection{Precision of stellar parameters}
 
-- repeat observations and fitting uncertainties
+To estimate the precision of stellar parameters, we use both internal SME covariance errors and repeated observations of the same star. We have estimated the standard deviations of repeated observations for the same fiber, different fibers, and irrespective of the fibre and plot their standard deviations as a function of $S/N$ in CCD2 together with the median SME covariance errors in Fig.~\ref{fig:precision_sp} for the fitted stellar parameters $T_\text{eff}$, $\log g$, iron line abundance [Fe/H], the atmosphere iron abundance [Fe/H], rotational broadening $v_\text{broad}$, and radial velocity $r_\text{rad}$. 
+
+\begin{figure*}
+\centering
+\includegraphics[width=0.9\textwidth]{figures/old/repeat_uncertainties_snr_flag0.pdf}
+\caption[{Precision estimates for stellar parameters.}]{Precision estimates from internal SME covariance uncertainties (blue) as well as standard deviations from all (orange), same fibre (green), and different fibre (violet) repeat observations. The numbers in each panel indicate the uncertainties estimated for $S/N = 40$ per pixel, similar Fig. 15 from \citet{Buder2019}.}
+\label{fig:precision_sp}
+\end{figure*}
+
+The trends of internal and repeat precision are expected to be similar, but we find that the uncertainties from the internal SME covariance uncertainties are typically significantly lower than those from repeat observations (with exception of $\log g$, which we discuss subsequently). As discussed when introducing the final error estimation with Eq.~\ref{eq:final_error}, the two precision estimates should be the same and a rescaling of the internal SME-based uncertainties would lead to a consistent precision measure. First estimates suggest that a rescaling with a factor of 2.5 yields an agreement of repeat observations and internal uncertainties for $T_\text{eff}$. For the other parameters, however, also an the uncertainty floors of the two precision estimates are different and we thus need to still explore more complex scaling relations. For the purposes of the internal data release, we hence decide to calculate the precision as a combination of both estimates. This allows to combine the individual estimate of the fit quality (through the internal SME-based uncertainty) with the general precision expected for a given $S/N$, which would otherwise be underestimated when only using to the internal uncertainty. In order to allow the estimation of the repeat precision $e_\text{repeats}$ for each spectrum, we fit an exponentially decreasing function to the orange repeat uncertainty distribution (shown as black line in Fig.~\ref{fig:precision_sp}).
+
+We stress that $\log g$ values are not optimised from the $\chi^2$-determination of the spectra like the other parameters, but from Eq.~\ref{eq:bolometric_logg}. We thus sample the parameters used for Eq.~\ref{eq:bolometric_logg} via MC sampling to estimate the `internal' uncertainties for $\log g$. We note that in the current MC sampling, the parameters are sampled from fixed Gaussian distributions with $\sigma (M) = 0.1\cdot M$ as well as $\sigma (BC) = 0.1\,\mathrm{mag}$. $\sigma (T_\text{eff})$, $\sigma (D_\varpi)$, $\sigma (K_s)$, and $\sigma (A_{K_s})$ are sampled from their uncertainties. The internal standard deviation for $\log g$ is hence almost $S/N$ independent.
+
+The comparison of the GALAH DR3 precision estimates with those from GALAH DR2 \citep{Buder2018} shows that the precision (for the median $S/N \sim 40$ of all spectra) has marginally improved, for example from $34\,\mathrm{K}$ for $T_\text{eff}$ of same fiber repeats to $27\,\mathrm{K}$. We note that for $\log g$ the repeat observation precision is significantly better by construction, that is it decreased from 0.060 for GALAH DR2 to 0.012 for GALAH DR3.
 
 \section{Validation of element abundances} \label{sec:validation_ab}
 
@@ -162,17 +264,36 @@ We elaborate on the choice of error combination when we assess the precision of 
 
 \paragraph*{Abundance zeropoints}
 
-Final values: create script based on abundance_zeropoints.ipynb, which creates a tex-table automatically:
-see GALAH_DR3_abundances_lines.tex and GALAH_DR3_Fe_lines.tex in directory release_paper/tables as well as validation/abundances
+For several lines of the GALAH wavelength range, we are facing a different issue, that is that we can not use a Solar or sky flat spectrum for the accuracy assessment of the abundance, because the line is too weak in these spectra. We are hence also using Arcturus as a different standard star with well studied absolute abundances to estimate the abundance accuracy (see Fig.~\ref{fig:abundance_zeropoints}). We see differences for several elements both with respect to the literature (e.g. K) and between dwarf and giants (e.g. V). More work is needed to scrutinise the line selection and abundance zeropoints. The line-by-line analysis of element abundances has also been shown to been important for several elements (e.g. Al, Ca, and Ba) and has to be done to improve the accuracy and precision of abundance measurements. Whenever possible, we use the estimate from the sky flat spectrum for the accuracy assessment, but resort to a manual assessment from Arcturus as well as literature samples.
+
+\begin{figure*}
+\centering
+\includegraphics[width=\textwidth]{figures/old/abundance_zeropoints.png}
+\caption[{Abundance offsets between the GALAH pipeline for a skyflat (150405000901378) and Arcturus (150210005801171).}]{Abundance offsets between GALAH pipeline for a skyflat (150405000901378) and Arcturus (150210005801171). Reference values are taken from \citet{Grevesse2007} and the APOGEE collaboration (priv. communication).}
+\label{fig:abundance_zeropoints}
+\end{figure*}
+
+Final values: create script based on abundance\_zeropoints.ipynb, which creates a tex-table automatically:
+see GALAH\_DR3\_abundances\_lines.tex and GALAH\_DR3\_Fe\_lines.tex in directory release\_paper/tables as well as validation/abundances
 - solar abundances
 - Arcturus abundances
-- zeropoints are also saved in a FITS file. this is put into release_paper/tables as well (galahdr3_abundance_zeropoints.fits)
+- zeropoints are also saved in a FITS file. this is put into release\_paper/tables as well (galahdr3\_abundance\_zeropoints.fits)
 
 \paragraph*{Abundances of the GBS stars}
 
 \paragraph*{TBD: Abundances of cluster stars?}
 
 \subsubsection{Precision of element abundances}
+
+We assess the precision by comparing the internal SME covariance uncertainties with those from repeat observations of the same star in Fig.~\ref{fig:precision_ab}. Contrary to the stellar parameter estimation, we see that the covariance errors from the individual line measurements are in excellent agreement for almost all lines. The standard deviations of the measurements are also consistent irrespective of the fibre combination. In the chosen example of Si lines, only the Si line at $7680\,\mathrm{\AA}$  shows a slightly lower trend than the repeat observations. When combining the individual Si abundances to the error-weighted mean [Si/Fe], we see the expected improvement of precision down to $0.041\,\mathrm{dex}$ at $S/N = 40$ per pixel. We note however that the finally estimated internal SME-based errors are lower than the those from the repeat observations. This seems to illustrate that the SME-internal method has problems to estimate realistic errors when many pixels are involved, likely reflecting on the many imperfections of the models. Contrary to the stellar parameter estimation, we only report the final abundance error from the internal covariance error.
+
+\begin{figure*}
+\centering
+\includegraphics[width=0.85\textwidth]{figures/old/repeat_uncertainties_silicon.pdf}
+\caption[{Precision estimates from internal SME covariance for selected element abundances.}]{Precision estimates from internal SME covariance uncertainties (blue) as well as standard deviations from all (orange), same fibre (green), and different fibre (violet) repeat observations for the combined $\upalpha$-abundances (top left), the combined Si abundances (top right) as well as six individual Si lines.}
+\label{fig:precision_ab}
+\end{figure*}
+
 
 \paragraph*{Abundances of repeat observations}
 
@@ -181,6 +302,48 @@ see GALAH_DR3_abundances_lines.tex and GALAH_DR3_Fe_lines.tex in directory relea
 \subsection{The complexity and importance of flagging (and using them)}
 
 \subsubsection{Flagging of stellar parameters}
+
+After all stellar parameters have been estimated, the results are vetted and flags raised for the individual criteria listed in Table~\ref{tab:flag_sp_galah_dr3}. Fig.~\ref{fig:hrd_galah_dr3_not0} shows all those spectra with raised flags. It can be seen that our flagging algorithm is rather conservative, because the plot resembles Fig.~\ref{fig:hrd_galah_dr3} quite well. The most used flags are 8 (7\%), 1 (6\%) and 4 (3\%). 
+
+\begin{figure*}
+\centering
+\includegraphics[width=\textwidth]{figures/old/Kiel_Diagram_GALAH_flag_not0.pdf}
+\caption[{Kiel diagrams ($T_\text{eff}$ vs. $\log g$) color coded by the density of stars per bin (left panel) and mean iron abundance [Fe/H] within a bin (right panel) for those stars of the GALAH data release 3 at least have estimated stellar parameters, but have been flagged ($\texttt{flag\_sp} > 0$).}]{Kiel diagrams ($T_\text{eff}$ vs. $\log g$) color coded by the density of stars per bin (left panel) and mean iron abundance [Fe/H] within a bin (right panel) for those 129369 spectra of the GALAH data release 3 at least have estimated stellar parameters, but have been flagged ($\texttt{flag\_sp} > 0$), contrary to the unflagged spectra in Fig.~\ref{fig:hrd_galah_dr3}. The total number of spectra and those below the quality threshold are annotated in the upper left corner of the left panels. In the same panels, red lines indicate the grid limit of the MARCS atmosphere grid, which marks the limits of the synthesis computations.}
+\label{fig:hrd_galah_dr3_not0}
+\end{figure*}
+
+We have identified astrometric binaries (\texttt{flag\_sp} = 64) by selecting the oldest isochrones for the particular iron abundance of each star and selecting all stars with surface gravity lower by $\Delta \log g = 0.15$ and cooler by $\Delta T_\text{eff} = 150\,\mathrm{K}$. This selection is most effective for the identification of binaries on the secondary main-sequence (with slightly lower $\log g$). For stars with equal bolometric luminosity, for example a binary system with the same stellar parameters, the estimated $\log g$ can be smaller by up to $\sim 0.3$. This deviation can be approximated via Eq.~\ref{eq:bolometric_logg} when assuming that the bolometric luminosity of the system is twice that of a single star and the mass is estimated to be that of a single star, so that $\Delta \log g \sim - \log L_\text{bol, binary} + \log L_\text{bol, single} = - \log \left( 2 \cdot L_\text{bol, single} \right) + \log L_\text{bol, single} = - \log 2 $. We have also identified unreliable parameter estimates for the coolest bright giants, for which unreasonably low iron abundances have been estimated (see tip of the RGB in right panel of Fig.~\ref{fig:hrd_galah_dr3_not0}).
+
+\begin{table}
+ \caption{Flags used for GALAH DR3 to estimate the final bit-flag \texttt{flag\_sp} via summation of the individual flags.}
+ \label{tab:flag_sp_galah_dr3}
+ \begin{tabular}{rl}
+  \hline \hline
+Flag		&	Description	\\
+\hline
+   1	&	\Gaia RUWE > 1.4 \\
+   	&	\citep[bad astrometric solution, see][]{Lindegren2018b} \\
+   2	&	Unreliable broadening \\
+   4	&	Low S/N (10 for CCD 2) \\
+   8	&	Reduction issues \\
+	&	a) Wavelength solution (propagating of \texttt{red\_flag} ) \\
+	&	b) t-SNE projected reduction issues: \\
+	&	Negative/positive fluxes, spikes, etc. \\
+  16	&	t-SNE projected emission features \\
+  32	&	t-SNE projected binaries \\
+  64	&	Binary sequence/pre-main sequence flag \\
+ 128	&	SNR-dependent high SME chi2 (bad fit) \\
+ 256	&	Problems with Fe lines, where line flux is \\
+ 	&	not between 0.03 and 1.00 \\
+ 512	&	SME did not finish \\
+     	&	a) No convergence == non-finite stellar parameters \\
+   	&	b) Gaussian RV fit failed \\
+     	&	c) Timeout on ISAAC \\
+1024	&	MARCS grid limit reached or \\
+	&	outside of reasonable parameter range \\
+  \hline
+ \end{tabular}
+\end{table}
 
 \subsubsection{Flagging of element abundances}
 
@@ -192,6 +355,46 @@ We expect less trends without the influence of the training set selection or dat
 \end{itemize}
 
 \subsubsection{Expect the (un-)expected, but be cautious: Analysis shortcoming or physical correlation?}
+
+\paragraph*{Am/Fm stars}
+
+We and others (e.g. \citet{Xiang2020}) have found them and our pipeline estimates abundance patterns very \citet{Fossati2008}, see their Figs. 11 and 12.
+However, we want to stress that our pipeline is not adjusted for the analysis of such stars, and our approach of assuming ionisation equilibrium might fail in these stars and their abundances might thus be wrongly measured.
+
+\paragraph*{Isochrone choice for mass estimation} We could select better isochrone sets in terms of 1) finer sampling (especially for younger stars), 2) treatment of alpha-enhancement (expanding the isochrones by those which have been calculated with alpha-enhancement) 3) stellar physics treatment like atomic diffusion 4) age choices beyond the age of the universe (for more reliable age uncertainty estimates)
+
+\paragraph*{Binarity}
+
+Price-Whelan: \url{https://arxiv.org/pdf/2002.00014.pdf} We expect way more binaries for the hot stars (see their Fig. 5).
+
+\paragraph*{Microturbulence} In the future it is worth to test implementing $v_\text{mic}$ as a free parameter or use the relations estimated by \citet{DutraFerreira2016} based on 3D atmosphere calculations. Whereas these agree with the empirical GALAH iDR3 relations for the majority of the stars within $20\%$, they differ significantly for the hottest and most luminous stars, for which GALAH iDR3 is currently not estimating the most reliable stellar parameters anyway.
+
+Using $v_\text{mic}$ as a free parameter showed significant improvements of trends with $T_\text{eff}$ for the APOGEE survey \citep{Holtzman2018} and will be tested for the next data releases
+
+\begin{figure*}
+\centering
+\includegraphics[width=\textwidth]{figures/Vmic_comparisons.png}
+\caption[{Comparison of $v_\text{mic}$ calculated via relations used for GALAH iDR3 and \citet{DutraFerreira2016}}]{Relations of $v_\text{mic}$ as a function of $T_\text{eff}$ calculated via relations used for GALAH iDR3 and \citet{DutraFerreira2016} in the left and middle panels, respectively. A comparison of the two $v_\text{mic}$ values as a function of temperature is plotted in the right panel and shows good agreement for the majority of stars, i.e. cool and warm dwarfs and stars around the RC. However, the two relations disagree strongly for the most luminous and hottest stars. For the latter, GALAH iDR3 $v_\text{mic}$ values are up to two times higher.}
+\label{fig:vmic_comparison}
+\end{figure*}
+
+\paragraph*{Metallicity trends in clusters} In clusters, we see a strong trend of temperature with metallicity. Could this be caused by our prescription of vmic? See paper by Bartella et al. (\url{https://arxiv.org/pdf/2001.03179.pdf}) who find that vmic is overestimated and thus [Fe/H] is underestimated when using Fe lines in clusters.
+
+\paragraph*{Extinction} we could estimate $A_X$ via SED fitting rather than just relying on the RJCE method or $R_{K_s}$*E(B-V)
+
+\paragraph*{Over-/underdensities around atmosphere grid points} Overdensities at 3500 and 4750..(250)..8000K. Underdensities below 4750
+
+\paragraph*{Scattering in Potassium} Due to interstellar Potassium? include flagging (if not done for DR3) by checking expected equivalent width via $W = f(E(B-V))$ relation from \citet{Munari1997} High [K/Fe] especially for RC stars. Systematics or physical effect (does not seem to be correlated with high A(Li)?
+
+\paragraph*{Cool RC end} This issue was identified via clumps in element abundances (e.g. two low [O/Fe] clumps) at the cool end of the RC. In this area, we might mis-identify RC stars as RGB stars due to a lack of appropriate RC clump isochrone entries. The underestimated mass might thus lead to an underestimated $\log g$.
+
+\paragraph*{Stars with high extinction} Stars with high extinction will have uncertain logg. Flag them?
+
+\paragraph*{Overdensity around 4650K, 4.7dex} Isochrone issue
+
+\paragraph*{Noding in ages and masses} in ages due to chosen linear age grid 0.5..(0.5)..13.5 Gyr. This effects the hot stars and secondary RC. But why nodes in masses (for cool main sequence)
+
+\paragraph*{Young star parameters} mass estimates possibly poor due to isochrone grid selection? vmic is not free, but tied to a relation. rotational broadening. Deviates strongly from true vmic? Line shape strongly influenced by activity?
 
 \section{Catalogs included in this release}  \label{sec:catalogs}
 
@@ -215,9 +418,71 @@ The third Data Release of GALAH is accompanied by two value-added-catalogs and w
 
 \subsubsection{Extended abundance measurement information}
 
+This VAC includes:
+\begin{enumerate}
+\item A(X) for each line of an element
+\item Precision uncertainties for each abundance
+\item flag for each line of an element
+\item line flux estimates for each line of an element
+\end{enumerate}
+
 \subsubsection{Stellar age and mass estimates}
 
+As part of the stellar parameter estimation (see Secs.~\ref{sec:3_applied_analyses}), both stellar masses and ages have been estimated and are added to the data release in a value-added-catalog. In Fig.~\ref{fig:mass_age_sanders}, we compare the mass and age difference to the study by \citet{Sanders2018}, who estimated both values based on GALAH DR2   as well as \Gaia DR2 in a Bayesian framework. We only compare those 215493 stars with \texttt{flag\_sp=0} from GALAH DR3 and  \texttt{flag=0} as well as \texttt{log10\_age>-1} (expected binaries) from \citet{Sanders2018} and find a good agreement between both analyses. For the masses we find an agreement in $\log_{10} (M)$ within 0.1 for 95\% of the stars and even within 0.05 for 82\% of the stars. The largest deviations are found both for massive stars (where GALAH masses are higher) and the metal-rich RC stars (where GALAH masses are lower). Regarding stellar ages we find a generally good agreement as well, with 73\% of the ages agreeing within 30\%. We note however, that especially for the young main-sequence and secondary RC stars  (on the GALAH scale), \citet{Sanders2018} tend to estimate even lower ages, whereas they estimate higher ages for cool main-sequence and metal-rich RC stars than our algorithm. Both regimes are prone to systematic trends, because the isochrone grids are very dense, that is tracks for very different masses and metallicities are very close.
+
+\begin{figure*}
+\centering
+\includegraphics[width=0.49\textwidth]{figures/old/DS18_mass.pdf}
+\includegraphics[width=0.49\textwidth]{figures/old/DS18_age.pdf}
+  \caption[{Comparison of mass (left) and age (right) estimates from GALAH DR3 and \citet{Sanders2018}.}]{Comparison of mass (left) and age (right) estimates from GALAH DR3 and \citet{Sanders2018}.}
+  \label{fig:mass_age_sanders}
+\end{figure*}
+
+We have further tested how well our algorithm can reproduce stellar ages from mock data, by selecting isochrone points of the 4 stellar ages (4.5, 8.0, 10.0, and $13.5\,\mathrm{Gyr}$), 4 different iron abundances ($\mathrm{[Fe/H]} \in [-2.0,-1.1,-.07,0.0]$), and 5 evolutionary stages, that is main-sequence ($T_\text{eff} \sim 5250\,\mathrm{K}$), turn-off (hottest around $\log g \sim 4.1$), RGB ($\log g \sim 3.25$), tip of the RGB ($\log g \sim 1.0$), and core helium burning RC (hottest for $2.0 < \log g < 3.0$). Each mock star is fed into the the mass and age estimation algorithm with generic uncertainties for the input parameters of $\Delta T_\text{eff} = 100\,\mathrm{K}$, $\Delta \log g = 0.5$, $\Delta \mathrm{[Fe/H]} = 0.2$, and $\Delta L_\text{bol} = 10\%$. We compare the retrieved age with the input age in Fig.~\ref{fig:Age_deviation_trends} and find that the age estimation tends to recover the stellar ages very well for turn-off stars as well as intermediate age stars around $8-10\,\mathrm{Gyr}$. For younger stars, the code tends to overestimate the age by up to $75\%$ for main-sequence stars and those at the tip of the RGB. The age of the oldest is typically underestimated, but RC and RGB star ages are better recovered than those of the tip of the RGB and the main-sequence. This means that the age of the oldest stars are typically underestimated and those of the youngest stars overestimated, resulting in an artificially tighter age distribution towards intermediate age stars. The code can, however, identify truly young stars and truly old stars.
+
+\begin{figure*}
+\centering
+\includegraphics[width=\textwidth]{figures/old/Age_deviation_trends_rel.pdf}
+  \caption[{Relative deviation of estimated stellar age from stellar ages as chosen from isochrone points.}]{Relative deviation of estimated stellar age from stellar ages as chosen from isochrone points at different $\mathrm{[Fe/H]} \in [-2.0, -1.1, -.07, 0.0]$ (as indicated in lower right of each panel), different stellar $\mathrm{ages} \in [4.5, 8.0, 10.0, 13.5]\,\mathrm{Gyr}$ (different bars with same colours as indicated by axis labels) and different evolutionary stages (different colours as indicated by plot legend in upper left panel).}
+  \label{fig:Age_deviation_trends}
+\end{figure*}
+
 \subsubsection{Kinematic and dynamic information}
+
+The second value-added-catalog includes coordinates as well as kinematic and dynamic information for each star. We use the astrometric information from \Gaia DR2 \citep{Brown2018}, that is \texttt{ra}, \texttt{dec}, \texttt{parallax} \citep[converted into distances by][]{BailerJones2018}, \texttt{pmra}, and \texttt{pmdec} as well as the radial velocities this third data release of the GALAH collaboration, that is  \texttt{rv\_galah}.
+
+We use \textsc{galpy} \citep{Bovy2015} to transform these 6D information into the same Galactocentric reference frames (both cartesian and cylindrical) as stated in Table~\ref{tab:xyz_uvw}, that is with a circular velocity of $229.0\,\mathrm{km\,s^{-1}}$ \citep{Eilers2019}. We place the Sun at $R_\odot = 8.178\,\mathrm{kpc}$ \citep{Abuter2019} and $z_\odot = 0.025\,\mathrm{kpc}$ \citep{Juric2008} with a Solar motion relative to the local standard of rest of $(U_\odot,V_\odot,W_\odot) = (11.1, 12.24, 7.25)\,\mathrm{km\,s^{-1}}$ \citep{Schoenrich2010}.
+
+The distribution in Galactocentric cylindrical coordinates ($R,z$) is shown in panel a) and a top view ($X,Y$) in panel b) of Fig.~\ref{fig:coords_overview}. The vast majority of targets are distributed within less than $4\,\mathrm{kpc}$ from the Sun and covers a large fraction of the disk. The distribution shows an asymmetry along $R$ as well as in the $(X,Y)$ plane due fact that the observations are carried out from Australia. Because of the target selection of the GALAH main program ($\vert b \vert > 10\,\mathrm{deg}$), no stars are observed close to the Galactic plane. We note, however, that GALAH DR3 includes also observations from TESS-HERMES, K2-HERMES, and several smaller projects that targeted the Galactic bulge and clusters. The distribution in the panel a) is hence also including observations with $\vert b \vert < 10\,\mathrm{deg}$ especially towards the Galactic center at ($R,z$) = 0. A combination of distance uncertainties and special targeting of clusters and K2/TESS fields is causing finger-of-god effects in both panels.
+
+\begin{figure*}
+\centering
+\includegraphics[width=\textwidth]{figures/old/coords_overview_clean_all.png}
+  \caption[{Overview of space information of GALAH DR3 with ($R,z$) in left panel and ($X,Y$) in right panel.}]{Overview of space information of GALAH DR3 with ($R,z$) in left panel and ($X,Y$) in right panel.}
+  \label{fig:coords_overview}
+\end{figure*}
+
+The space velocities $(U,V,W)$ in the Galactocentric cartesian coordinate frame are shown in a Toomre diagram in panel a) of Fig.~\ref{fig:actions_overview}. Most of the stars observed as part of GALAH DR3 have disk-like kinematics similar to the local standard of rest, but an extension of stars with lower rotational velocity than the disk ($V \ll 0\,\mathrm{km\,s^{-1}}$) are shown and indicate that also several stars with halo-like kinematic properties are part of GALAH DR3.
+
+\begin{figure*}
+\centering
+\includegraphics[width=\textwidth]{figures/old/action_overview_clean_all.png}
+  \caption[{Overview of kinematic/dynamic information of GALAH DR3 with Toomre diagram (left) and Action diagram (right).}]{Overview of kinematic/dynamic information of GALAH DR3 with Toomre diagram (left) and Action diagram (right).}
+  \label{fig:actions_overview}
+\end{figure*}
+
+We compute stellar dynamic properties, that is actions $J_R, L_z, J_z$, eccentricities $e$, and orbit boundary information such as $z_\text{max}$, $R_\text{peri}$, and $R_\text{apo}$ with \textsc{galpy} \citep{Bovy2015} in the \textsc{MWPotential2014} and a Staeckel fudge with 0.45 as focal length of confocal coordinate system.
+
+The distribution of stars in action space is shown in a view of vertical angular momentum (normalised to the Solar value) and radial action in panel b) of Fig.~\ref{fig:actions_overview}. Most of the stars in this diagram show a similar vertical angular momentum radial action as the Sun. Similar to the analyses by \citet{Trick2019}, a rich substructure along $J_R$ can be seen. Similar to the extensions seen in the left panel of that figure, an extension of stars with lower vertical angular momentum is visible. We also note an overdensity close to $(L_Z,J_R) = (0,0)\,\mathrm{kpc\,km\,s^{-1}}$, that is an overdensity of stars with near-circular orbits close to the Galactic center and bulge. The overdensity of stars around $L_Z \sim 0 \,\mathrm{kpc\,km\,s^{-1}}$ with higher radial actions is typical for stars of the Galactic halo and is assessed in Chapter~\ref{sec:halo}.
+
+For each of the computed phase space and dynamic properties, we report a variety of statistical values. In addition to the best-value, that is computed by using the best values as input, we also sample the distribution for each property within the uncertainties via Monte Carlo sampling with size 10000 and report the 5th, 50th, and 95th percentiles of these distributions. An example of the sampling of parameters for 100 randomly selected stars is shown in Fig.~\ref{fig:MC_output}.  We also provide the code to perform this sampling with different sampling choices. Whereas we currently sample the properties by assuming their input parameters are uncorrelated, we also provide the code to sample with the \Gaia correlation matrices. The latter are currently not applying a distance prior and are thus problematic for large distances. However, we stress, that the vast majority of the stars from GALAH DR3 have very precise parallax measurements, for which the sampling choice is negligible (see Fig.~\ref{fig:parallax_overview}).
+
+\begin{figure*}
+\centering
+\includegraphics[width=\textwidth]{figures/old/MC_output.pdf}
+  \caption[{Overview of phase space and dynamic stellar properties for randomly chosen stars from GALAH DR3, including their sampling within the measurement uncertainties.}]{Overview of phase space and dynamic stellar properties for randomly chosen stars from GALAH DR3, including their sampling within the measurement uncertainties. The black points indicate the values calculated from the best 6D information. Blue points indicate 10000 samples from the 6D information per star within the uncertainties. Red error bars indicate the distribution between 50th percentile (middle of the cross) and the 5th and 95th percentile, respectively.}
+  \label{fig:MC_output}
+\end{figure*}
 
 %________________________________________________________________
 \section{GALAH DR3 in context} \label{sec:galah_in_context}
@@ -247,6 +512,10 @@ This work has made use of data from the European Space Agency (ESA) mission \Gai
 The following software and programming languages made this research possible: \textsc{IRAF} \citep{Tody1986,Tody1993}, \textsc{configure} \citep{Miszalski2006}, \textsc{topcat} \citep[version 4.4;][]{Taylor2005}; Python (version 2.7) and its packages {\textsc{astropy}} \citep[version 2.0;][]{Robitaille2013,PriceWhelan2018}, {\textsc{matplotlib}} \citep{matplotlib}, {\textsc{pandas}} \citep[version 0.20.2;][]{McKinney2011}, {\textsc{NumPy}} \citep{numpy}, {\textsc{IPython}} \citep{ipython}, and  \textsc{galpy} \citep[version 1.3;][]{Bovy2015}. This research has made use of the VizieR catalogue access tool, CDS, Strasbourg, France. The original description of the VizieR service was published in A\&AS 143, 23. This research mad use of the TOPCAT tool, described in \citet{Taylor2005}. This publication makes use of data products from the Two Micron All Sky Survey, which is a joint project of the University of Massachusetts and the Infrared Processing and Analysis Center/California Institute of Technology, funded by the National Aeronautics and Space Administration and the National Science Foundation.
 
 SB and acknowledges funds from the Alexander von Humboldt Foundation in the framework of the Sofja Kovalevskaja Award endowed by the Federal Ministry of Education and Research. SB acknowledges travel support from Universities Australia and Deutsche Akademische Austauschdienst.
+
+We would like to thank Chris Onken for crossmatching GALAH and SkyMapper DR3 data. \SB{Put SkyMapper REF here or up in the main text}
+
+We would like to thank the SDSS and APOGEE collaboration for their efforts in documentation, which greatly benefited our efforts in documentation and validation.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
