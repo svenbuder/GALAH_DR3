@@ -1,0 +1,438 @@
+SIMPLE  =                    T / Standard FITS format                           BITPIX  =                    8 / Character data                                 NAXIS   =                    1 / Text string                                    NAXIS1  =                14024 / Number of characters                           VOTMETA =                    T / Table metadata in VOTable format               EXTEND  =                    T / There are standard extensions                  COMMENT                                                                         COMMENT The data in this primary HDU consists of bytes which                    COMMENT comprise a VOTABLE document.                                            COMMENT The VOTable describes the metadata of the table contained               COMMENT in the following BINTABLE extension.                                    COMMENT Such a BINTABLE extension can be used on its own as a perfectly         COMMENT good table, but the information from this HDU may provide some          COMMENT useful additional metadata.                                             COMMENT There is one following BINTABLE.                                        NTABLE  =                    1 / Number of following BINTABLE HDUs              END                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             <?xml version='1.0' encoding='UTF-8'?>
+<VOTABLE version='1.1'>
+<!--
+ !  VOTable written by uk.ac.starlink.votable.FitsPlusTableWriter
+ !  Describes BINTABLE extensions in following HDUs
+ !-->
+<RESOURCE>
+<TABLE name="Joined" nrows="29">
+<PARAM arraysize="7" datatype="char" name="CDS-CAT" value="III/281">
+<DESCRIPTION>Catalogue designation in CDS nomenclature</DESCRIPTION>
+</PARAM>
+<PARAM arraysize="11" datatype="char" name="CDS-NAME" value="III/281/gbs">
+<DESCRIPTION>Table name in METAtab</DESCRIPTION>
+</PARAM>
+<PARAM arraysize="9" datatype="char" name="UCD__1" value="pos.eq.ra">
+<DESCRIPTION>................................byte#0</DESCRIPTION>
+</PARAM>
+<PARAM arraysize="10" datatype="char" name="UCD__2" value="pos.eq.dec">
+<DESCRIPTION>................................byte#8</DESCRIPTION>
+</PARAM>
+<PARAM arraysize="12" datatype="char" name="UCD__3" value="meta.ref.url">
+<DESCRIPTION>................................byte#16</DESCRIPTION>
+</PARAM>
+<PARAM arraysize="12" datatype="char" name="UCD__4" value="meta.ref.url">
+<DESCRIPTION>................................byte#18</DESCRIPTION>
+</PARAM>
+<PARAM arraysize="12" datatype="char" name="UCD__5" value="meta.ref.url">
+<DESCRIPTION>................................byte#20</DESCRIPTION>
+</PARAM>
+<PARAM arraysize="12" datatype="char" name="UCD__6" value="meta.ref.url">
+<DESCRIPTION>................................byte#22</DESCRIPTION>
+</PARAM>
+<PARAM arraysize="17" datatype="char" name="UCD__7" value="meta.id;meta.main">
+<DESCRIPTION>................................byte#24</DESCRIPTION>
+</PARAM>
+<PARAM arraysize="7" datatype="char" name="UCD__8" value="meta.id">
+<DESCRIPTION>................................byte#33</DESCRIPTION>
+</PARAM>
+<PARAM arraysize="7" datatype="char" name="UCD__9" value="meta.id">
+<DESCRIPTION>................................byte#41</DESCRIPTION>
+</PARAM>
+<PARAM arraysize="7" datatype="char" name="UCD__10" value="meta.id">
+<DESCRIPTION>................................byte#50</DESCRIPTION>
+</PARAM>
+<PARAM arraysize="19" datatype="char" name="UCD__11" value="pos.eq.ra;meta.main">
+<DESCRIPTION>...............................byte#58</DESCRIPTION>
+</PARAM>
+<PARAM arraysize="20" datatype="char" name="UCD__12" value="pos.eq.dec;meta.main">
+<DESCRIPTION>..............................byte#66</DESCRIPTION>
+</PARAM>
+<PARAM arraysize="10" datatype="char" name="UCD__13" value="src.spType">
+<DESCRIPTION>................................byte#74</DESCRIPTION>
+</PARAM>
+<PARAM arraysize="26" datatype="char" name="UCD__14" value="phys.temperature.effective">
+<DESCRIPTION>........................byte#89</DESCRIPTION>
+</PARAM>
+<PARAM arraysize="37" datatype="char" name="UCD__15" value="stat.error;phys.temperature.effective">
+<DESCRIPTION>.............byte#91</DESCRIPTION>
+</PARAM>
+<PARAM arraysize="12" datatype="char" name="UCD__16" value="phys.gravity">
+<DESCRIPTION>................................byte#93</DESCRIPTION>
+</PARAM>
+<PARAM arraysize="10" datatype="char" name="UCD__17" value="stat.error">
+<DESCRIPTION>................................byte#97</DESCRIPTION>
+</PARAM>
+<PARAM arraysize="10" datatype="char" name="UCD__18" value="phys.abund">
+<DESCRIPTION>................................byte#101</DESCRIPTION>
+</PARAM>
+<PARAM arraysize="24" datatype="char" name="UCD__19" value="stat.error;phys.abund.Fe">
+<DESCRIPTION>..........................byte#105</DESCRIPTION>
+</PARAM>
+<PARAM arraysize="10" datatype="char" name="UCD__20" value="phys.abund">
+<DESCRIPTION>................................byte#109</DESCRIPTION>
+</PARAM>
+<PARAM arraysize="10" datatype="char" name="UCD__21" value="stat.error">
+<DESCRIPTION>................................byte#113</DESCRIPTION>
+</PARAM>
+<PARAM arraysize="10" datatype="char" name="UCD__22" value="phys.abund">
+<DESCRIPTION>................................byte#117</DESCRIPTION>
+</PARAM>
+<PARAM arraysize="10" datatype="char" name="UCD__23" value="stat.error">
+<DESCRIPTION>................................byte#121</DESCRIPTION>
+</PARAM>
+<PARAM arraysize="10" datatype="char" name="UCD__24" value="phys.abund">
+<DESCRIPTION>................................byte#125</DESCRIPTION>
+</PARAM>
+<PARAM arraysize="10" datatype="char" name="UCD__25" value="stat.error">
+<DESCRIPTION>................................byte#129</DESCRIPTION>
+</PARAM>
+<PARAM arraysize="10" datatype="char" name="UCD__26" value="phys.abund">
+<DESCRIPTION>................................byte#133</DESCRIPTION>
+</PARAM>
+<PARAM arraysize="10" datatype="char" name="UCD__27" value="stat.error">
+<DESCRIPTION>................................byte#137</DESCRIPTION>
+</PARAM>
+<PARAM arraysize="10" datatype="char" name="UCD__28" value="phys.abund">
+<DESCRIPTION>................................byte#141</DESCRIPTION>
+</PARAM>
+<PARAM arraysize="10" datatype="char" name="UCD__29" value="stat.error">
+<DESCRIPTION>................................byte#145</DESCRIPTION>
+</PARAM>
+<PARAM arraysize="10" datatype="char" name="UCD__30" value="phys.abund">
+<DESCRIPTION>................................byte#149</DESCRIPTION>
+</PARAM>
+<PARAM arraysize="10" datatype="char" name="UCD__31" value="stat.error">
+<DESCRIPTION>................................byte#153</DESCRIPTION>
+</PARAM>
+<PARAM arraysize="10" datatype="char" name="UCD__32" value="phys.abund">
+<DESCRIPTION>................................byte#157</DESCRIPTION>
+</PARAM>
+<PARAM arraysize="10" datatype="char" name="UCD__33" value="stat.error">
+<DESCRIPTION>................................byte#161</DESCRIPTION>
+</PARAM>
+<PARAM arraysize="10" datatype="char" name="UCD__34" value="phys.abund">
+<DESCRIPTION>................................byte#165</DESCRIPTION>
+</PARAM>
+<PARAM arraysize="10" datatype="char" name="UCD__35" value="stat.error">
+<DESCRIPTION>................................byte#169</DESCRIPTION>
+</PARAM>
+<PARAM arraysize="10" datatype="char" name="UCD__36" value="phys.abund">
+<DESCRIPTION>................................byte#173</DESCRIPTION>
+</PARAM>
+<PARAM arraysize="10" datatype="char" name="UCD__37" value="stat.error">
+<DESCRIPTION>................................byte#177</DESCRIPTION>
+</PARAM>
+<PARAM arraysize="10" datatype="char" name="UCD__38" value="phys.abund">
+<DESCRIPTION>................................byte#181</DESCRIPTION>
+</PARAM>
+<PARAM arraysize="10" datatype="char" name="UCD__39" value="stat.error">
+<DESCRIPTION>................................byte#185</DESCRIPTION>
+</PARAM>
+<PARAM arraysize="10" datatype="char" name="UCD__40" value="phys.abund">
+<DESCRIPTION>................................byte#189</DESCRIPTION>
+</PARAM>
+<PARAM arraysize="21" datatype="char" name="UCD__41" value="stat.error;phys.abund">
+<DESCRIPTION>.............................byte#193</DESCRIPTION>
+</PARAM>
+<PARAM arraysize="10" datatype="char" name="UCD__42" value="phys.abund">
+<DESCRIPTION>................................byte#197</DESCRIPTION>
+</PARAM>
+<PARAM arraysize="21" datatype="char" name="UCD__43" value="stat.error;phys.abund">
+<DESCRIPTION>.............................byte#201</DESCRIPTION>
+</PARAM>
+<PARAM arraysize="10" datatype="char" name="UCD__44" value="phys.abund">
+<DESCRIPTION>................................byte#205</DESCRIPTION>
+</PARAM>
+<PARAM arraysize="21" datatype="char" name="UCD__45" value="stat.error;phys.abund">
+<DESCRIPTION>.............................byte#209</DESCRIPTION>
+</PARAM>
+<PARAM arraysize="10" datatype="char" name="UCD__46" value="phys.abund">
+<DESCRIPTION>................................byte#213</DESCRIPTION>
+</PARAM>
+<PARAM arraysize="21" datatype="char" name="UCD__47" value="stat.error;phys.abund">
+<DESCRIPTION>.............................byte#217</DESCRIPTION>
+</PARAM>
+<PARAM arraysize="10" datatype="char" name="UCD__48" value="phys.abund">
+<DESCRIPTION>................................byte#221</DESCRIPTION>
+</PARAM>
+<PARAM arraysize="21" datatype="char" name="UCD__49" value="stat.error;phys.abund">
+<DESCRIPTION>.............................byte#225</DESCRIPTION>
+</PARAM>
+<PARAM arraysize="10" datatype="char" name="UCD__50" value="phys.abund">
+<DESCRIPTION>................................byte#229</DESCRIPTION>
+</PARAM>
+<PARAM arraysize="21" datatype="char" name="UCD__51" value="stat.error;phys.abund">
+<DESCRIPTION>.............................byte#233</DESCRIPTION>
+</PARAM>
+<PARAM arraysize="10" datatype="char" name="UCD__52" value="phys.abund">
+<DESCRIPTION>................................byte#237</DESCRIPTION>
+</PARAM>
+<PARAM arraysize="21" datatype="char" name="UCD__53" value="stat.error;phys.abund">
+<DESCRIPTION>.............................byte#241</DESCRIPTION>
+</PARAM>
+<PARAM arraysize="10" datatype="char" name="UCD__54" value="phys.abund">
+<DESCRIPTION>................................byte#245</DESCRIPTION>
+</PARAM>
+<PARAM arraysize="21" datatype="char" name="UCD__55" value="stat.error;phys.abund">
+<DESCRIPTION>.............................byte#249</DESCRIPTION>
+</PARAM>
+<PARAM arraysize="10" datatype="char" name="UCD__56" value="phys.abund">
+<DESCRIPTION>................................byte#253</DESCRIPTION>
+</PARAM>
+<PARAM arraysize="21" datatype="char" name="UCD__57" value="stat.error;phys.abund">
+<DESCRIPTION>.............................byte#257</DESCRIPTION>
+</PARAM>
+<PARAM arraysize="10" datatype="char" name="UCD__58" value="phys.abund">
+<DESCRIPTION>................................byte#261</DESCRIPTION>
+</PARAM>
+<PARAM arraysize="21" datatype="char" name="UCD__59" value="stat.error;phys.abund">
+<DESCRIPTION>.............................byte#265</DESCRIPTION>
+</PARAM>
+<PARAM arraysize="7" datatype="char" name="UCD__60" value="meta.id">
+<DESCRIPTION>................................byte#269</DESCRIPTION>
+</PARAM>
+<PARAM arraysize="43" datatype="char" name="Match type" value="Pair match; Best match for each Table 1 row">
+<DESCRIPTION>Type of match which created this table</DESCRIPTION>
+</PARAM>
+<PARAM arraysize="11" datatype="char" name="Match algorithm" value="Exact Value">
+<DESCRIPTION>Matching algorithm which created this table</DESCRIPTION>
+</PARAM>
+<PARAM arraysize="82" datatype="char" name="Join Type" value="1 and 2 (An output row for each row represented in both input tables (INNER JOIN))">
+<DESCRIPTION>Determines which rows appear in output table</DESCRIPTION>
+</PARAM>
+<PARAM arraysize="18" datatype="char" name="First input table" value="10: GALAH_gbs_lbol"/>
+<PARAM arraysize="14" datatype="char" name="Second input table" value="5: GBS2.1.fits"/>
+<FIELD datatype="long" name="sobject_id">
+<VALUES null='-9223372036854775808'/>
+</FIELD>
+<FIELD arraysize="2" datatype="char" name="P2"/>
+<FIELD arraysize="2" datatype="char" name="P3"/>
+<FIELD arraysize="2" datatype="char" name="P4"/>
+<FIELD arraysize="2" datatype="char" name="P5"/>
+<FIELD arraysize="9" datatype="char" name="StarID1"/>
+<FIELD arraysize="8" datatype="char" name="StarID2"/>
+<FIELD arraysize="9" datatype="char" name="StarID3"/>
+<FIELD datatype="long" name="StarID4">
+<VALUES null='-9223372036854775808'/>
+</FIELD>
+<FIELD datatype="double" name="RAJ2000" unit="deg"/>
+<FIELD datatype="double" name="DEJ2000" unit="deg"/>
+<FIELD arraysize="15" datatype="char" name="SpType"/>
+<FIELD datatype="short" name="Teff" unit="K">
+<VALUES null='-32768'/>
+</FIELD>
+<FIELD datatype="short" name="e_Teff" unit="K">
+<VALUES null='-32768'/>
+</FIELD>
+<FIELD datatype="float" name="logg" unit="[cm/s2]"/>
+<FIELD datatype="float" name="e_logg" unit="[cm/s2]"/>
+<FIELD datatype="float" name="__Fe_H_" unit="[Sun]"/>
+<FIELD datatype="float" name="e__Fe_H_" unit="[Sun]"/>
+<FIELD datatype="float" name="logeps_Mg_" unit="[-]"/>
+<FIELD datatype="float" name="e_logeps_Mg_" unit="[-]"/>
+<FIELD datatype="float" name="logeps_Si_" unit="[-]"/>
+<FIELD datatype="float" name="e_logeps_Si_" unit="[-]"/>
+<FIELD datatype="float" name="logeps_Ca_" unit="[-]"/>
+<FIELD datatype="float" name="e_logeps_Ca_" unit="[-]"/>
+<FIELD datatype="float" name="logeps_Ti_" unit="[-]"/>
+<FIELD datatype="float" name="e_logeps_Ti_" unit="[-]"/>
+<FIELD datatype="float" name="logeps_Sc_" unit="[-]"/>
+<FIELD datatype="float" name="e_logeps_Sc_" unit="[-]"/>
+<FIELD datatype="float" name="logeps_V_" unit="[-]"/>
+<FIELD datatype="float" name="e_logeps_V_" unit="[-]"/>
+<FIELD datatype="float" name="logeps_Cr_" unit="[-]"/>
+<FIELD datatype="float" name="e_logeps_Cr_" unit="[-]"/>
+<FIELD datatype="float" name="logeps_Mn_" unit="[-]"/>
+<FIELD datatype="float" name="e_logeps_Mn_" unit="[-]"/>
+<FIELD datatype="float" name="logeps_Co_" unit="[-]"/>
+<FIELD datatype="float" name="e_logeps_Co_" unit="[-]"/>
+<FIELD datatype="float" name="logeps_Ni_" unit="[-]"/>
+<FIELD datatype="float" name="e_logeps_Ni_" unit="[-]"/>
+<FIELD datatype="float" name="__Mg_H_" unit="[Sun]"/>
+<FIELD datatype="float" name="e__Mg_H_" unit="[Sun]"/>
+<FIELD datatype="float" name="__Si_H_" unit="[Sun]"/>
+<FIELD datatype="float" name="e__Si_H_" unit="[Sun]"/>
+<FIELD datatype="float" name="__Ca_H_" unit="[Sun]"/>
+<FIELD datatype="float" name="e__Ca_H_" unit="[Sun]"/>
+<FIELD datatype="float" name="__Ti_H_" unit="[Sun]"/>
+<FIELD datatype="float" name="e__Ti_H_" unit="[Sun]"/>
+<FIELD datatype="float" name="__Sc_H_" unit="[Sun]"/>
+<FIELD datatype="float" name="e__Sc_H_" unit="[Sun]"/>
+<FIELD datatype="float" name="__V_H_" unit="[Sun]"/>
+<FIELD datatype="float" name="e__V_H_" unit="[Sun]"/>
+<FIELD datatype="float" name="__Cr_H_" unit="[Sun]"/>
+<FIELD datatype="float" name="e__Cr_H_" unit="[Sun]"/>
+<FIELD datatype="float" name="__Mn_H_" unit="[Sun]"/>
+<FIELD datatype="float" name="e__Mn_H_" unit="[Sun]"/>
+<FIELD datatype="float" name="__Co_H_" unit="[Sun]"/>
+<FIELD datatype="float" name="e__Co_H_" unit="[Sun]"/>
+<FIELD datatype="float" name="__Ni_H_" unit="[Sun]"/>
+<FIELD datatype="float" name="e__Ni_H_" unit="[Sun]"/>
+<FIELD arraysize="9" datatype="char" name="SimbadName"/>
+<FIELD datatype="int" name="GroupID">
+<DESCRIPTION>ID for match group</DESCRIPTION>
+<VALUES null='-2147483648'/>
+</FIELD>
+<FIELD datatype="int" name="GroupSize">
+<DESCRIPTION>Number of rows in match group</DESCRIPTION>
+<VALUES null='-2147483648'/>
+</FIELD>
+<!-- Dummy VOTable - no DATA element -->
+</TABLE>
+</RESOURCE>
+</VOTABLE>                                                                                                                                                                                                                                                                                                                                                                                        XTENSION= 'BINTABLE'           / binary table extension                         BITPIX  =                    8 / 8-bit bytes                                    NAXIS   =                    2 / 2-dimensional table                            NAXIS1  =                  278 / width of table in bytes                        NAXIS2  =                   29 / number of rows in table                        PCOUNT  =                    0 / size of special data area                      GCOUNT  =                    1 / one data group                                 TFIELDS =                   61 / number of columns                              EXTNAME = 'Joined  '           / table name                                     TTYPE1  = 'sobject_id'         / label for column 1                             TFORM1  = 'K       '           / format for column 1                            TNULL1  = -9223372036854775808 / blank value for column 1                       TTYPE2  = 'P2      '           / label for column 2                             TFORM2  = '2A      '           / format for column 2                            TTYPE3  = 'P3      '           / label for column 3                             TFORM3  = '2A      '           / format for column 3                            TTYPE4  = 'P4      '           / label for column 4                             TFORM4  = '2A      '           / format for column 4                            TTYPE5  = 'P5      '           / label for column 5                             TFORM5  = '2A      '           / format for column 5                            TTYPE6  = 'StarID1 '           / label for column 6                             TFORM6  = '9A      '           / format for column 6                            TTYPE7  = 'StarID2 '           / label for column 7                             TFORM7  = '8A      '           / format for column 7                            TTYPE8  = 'StarID3 '           / label for column 8                             TFORM8  = '9A      '           / format for column 8                            TTYPE9  = 'StarID4 '           / label for column 9                             TFORM9  = 'K       '           / format for column 9                            TTYPE10 = 'RAJ2000 '           / label for column 10                            TFORM10 = 'D       '           / format for column 10                           TUNIT10 = 'deg     '           / units for column 10                            TTYPE11 = 'DEJ2000 '           / label for column 11                            TFORM11 = 'D       '           / format for column 11                           TUNIT11 = 'deg     '           / units for column 11                            TTYPE12 = 'SpType  '           / label for column 12                            TFORM12 = '15A     '           / format for column 12                           TTYPE13 = 'Teff    '           / label for column 13                            TFORM13 = 'I       '           / format for column 13                           TUNIT13 = 'K       '           / units for column 13                            TNULL13 =               -32768 / blank value for column 13                      TTYPE14 = 'e_Teff  '           / label for column 14                            TFORM14 = 'I       '           / format for column 14                           TUNIT14 = 'K       '           / units for column 14                            TNULL14 =               -32768 / blank value for column 14                      TTYPE15 = 'logg    '           / label for column 15                            TFORM15 = 'E       '           / format for column 15                           TUNIT15 = '[cm/s2] '           / units for column 15                            TTYPE16 = 'e_logg  '           / label for column 16                            TFORM16 = 'E       '           / format for column 16                           TUNIT16 = '[cm/s2] '           / units for column 16                            TTYPE17 = '__Fe_H_ '           / label for column 17                            TFORM17 = 'E       '           / format for column 17                           TUNIT17 = '[Sun]   '           / units for column 17                            TTYPE18 = 'e__Fe_H_'           / label for column 18                            TFORM18 = 'E       '           / format for column 18                           TUNIT18 = '[Sun]   '           / units for column 18                            TTYPE19 = 'logeps_Mg_'         / label for column 19                            TFORM19 = 'E       '           / format for column 19                           TUNIT19 = '[-]     '           / units for column 19                            TTYPE20 = 'e_logeps_Mg_'       / label for column 20                            TFORM20 = 'E       '           / format for column 20                           TUNIT20 = '[-]     '           / units for column 20                            TTYPE21 = 'logeps_Si_'         / label for column 21                            TFORM21 = 'E       '           / format for column 21                           TUNIT21 = '[-]     '           / units for column 21                            TTYPE22 = 'e_logeps_Si_'       / label for column 22                            TFORM22 = 'E       '           / format for column 22                           TUNIT22 = '[-]     '           / units for column 22                            TTYPE23 = 'logeps_Ca_'         / label for column 23                            TFORM23 = 'E       '           / format for column 23                           TUNIT23 = '[-]     '           / units for column 23                            TTYPE24 = 'e_logeps_Ca_'       / label for column 24                            TFORM24 = 'E       '           / format for column 24                           TUNIT24 = '[-]     '           / units for column 24                            TTYPE25 = 'logeps_Ti_'         / label for column 25                            TFORM25 = 'E       '           / format for column 25                           TUNIT25 = '[-]     '           / units for column 25                            TTYPE26 = 'e_logeps_Ti_'       / label for column 26                            TFORM26 = 'E       '           / format for column 26                           TUNIT26 = '[-]     '           / units for column 26                            TTYPE27 = 'logeps_Sc_'         / label for column 27                            TFORM27 = 'E       '           / format for column 27                           TUNIT27 = '[-]     '           / units for column 27                            TTYPE28 = 'e_logeps_Sc_'       / label for column 28                            TFORM28 = 'E       '           / format for column 28                           TUNIT28 = '[-]     '           / units for column 28                            TTYPE29 = 'logeps_V_'          / label for column 29                            TFORM29 = 'E       '           / format for column 29                           TUNIT29 = '[-]     '           / units for column 29                            TTYPE30 = 'e_logeps_V_'        / label for column 30                            TFORM30 = 'E       '           / format for column 30                           TUNIT30 = '[-]     '           / units for column 30                            TTYPE31 = 'logeps_Cr_'         / label for column 31                            TFORM31 = 'E       '           / format for column 31                           TUNIT31 = '[-]     '           / units for column 31                            TTYPE32 = 'e_logeps_Cr_'       / label for column 32                            TFORM32 = 'E       '           / format for column 32                           TUNIT32 = '[-]     '           / units for column 32                            TTYPE33 = 'logeps_Mn_'         / label for column 33                            TFORM33 = 'E       '           / format for column 33                           TUNIT33 = '[-]     '           / units for column 33                            TTYPE34 = 'e_logeps_Mn_'       / label for column 34                            TFORM34 = 'E       '           / format for column 34                           TUNIT34 = '[-]     '           / units for column 34                            TTYPE35 = 'logeps_Co_'         / label for column 35                            TFORM35 = 'E       '           / format for column 35                           TUNIT35 = '[-]     '           / units for column 35                            TTYPE36 = 'e_logeps_Co_'       / label for column 36                            TFORM36 = 'E       '           / format for column 36                           TUNIT36 = '[-]     '           / units for column 36                            TTYPE37 = 'logeps_Ni_'         / label for column 37                            TFORM37 = 'E       '           / format for column 37                           TUNIT37 = '[-]     '           / units for column 37                            TTYPE38 = 'e_logeps_Ni_'       / label for column 38                            TFORM38 = 'E       '           / format for column 38                           TUNIT38 = '[-]     '           / units for column 38                            TTYPE39 = '__Mg_H_ '           / label for column 39                            TFORM39 = 'E       '           / format for column 39                           TUNIT39 = '[Sun]   '           / units for column 39                            TTYPE40 = 'e__Mg_H_'           / label for column 40                            TFORM40 = 'E       '           / format for column 40                           TUNIT40 = '[Sun]   '           / units for column 40                            TTYPE41 = '__Si_H_ '           / label for column 41                            TFORM41 = 'E       '           / format for column 41                           TUNIT41 = '[Sun]   '           / units for column 41                            TTYPE42 = 'e__Si_H_'           / label for column 42                            TFORM42 = 'E       '           / format for column 42                           TUNIT42 = '[Sun]   '           / units for column 42                            TTYPE43 = '__Ca_H_ '           / label for column 43                            TFORM43 = 'E       '           / format for column 43                           TUNIT43 = '[Sun]   '           / units for column 43                            TTYPE44 = 'e__Ca_H_'           / label for column 44                            TFORM44 = 'E       '           / format for column 44                           TUNIT44 = '[Sun]   '           / units for column 44                            TTYPE45 = '__Ti_H_ '           / label for column 45                            TFORM45 = 'E       '           / format for column 45                           TUNIT45 = '[Sun]   '           / units for column 45                            TTYPE46 = 'e__Ti_H_'           / label for column 46                            TFORM46 = 'E       '           / format for column 46                           TUNIT46 = '[Sun]   '           / units for column 46                            TTYPE47 = '__Sc_H_ '           / label for column 47                            TFORM47 = 'E       '           / format for column 47                           TUNIT47 = '[Sun]   '           / units for column 47                            TTYPE48 = 'e__Sc_H_'           / label for column 48                            TFORM48 = 'E       '           / format for column 48                           TUNIT48 = '[Sun]   '           / units for column 48                            TTYPE49 = '__V_H_  '           / label for column 49                            TFORM49 = 'E       '           / format for column 49                           TUNIT49 = '[Sun]   '           / units for column 49                            TTYPE50 = 'e__V_H_ '           / label for column 50                            TFORM50 = 'E       '           / format for column 50                           TUNIT50 = '[Sun]   '           / units for column 50                            TTYPE51 = '__Cr_H_ '           / label for column 51                            TFORM51 = 'E       '           / format for column 51                           TUNIT51 = '[Sun]   '           / units for column 51                            TTYPE52 = 'e__Cr_H_'           / label for column 52                            TFORM52 = 'E       '           / format for column 52                           TUNIT52 = '[Sun]   '           / units for column 52                            TTYPE53 = '__Mn_H_ '           / label for column 53                            TFORM53 = 'E       '           / format for column 53                           TUNIT53 = '[Sun]   '           / units for column 53                            TTYPE54 = 'e__Mn_H_'           / label for column 54                            TFORM54 = 'E       '           / format for column 54                           TUNIT54 = '[Sun]   '           / units for column 54                            TTYPE55 = '__Co_H_ '           / label for column 55                            TFORM55 = 'E       '           / format for column 55                           TUNIT55 = '[Sun]   '           / units for column 55                            TTYPE56 = 'e__Co_H_'           / label for column 56                            TFORM56 = 'E       '           / format for column 56                           TUNIT56 = '[Sun]   '           / units for column 56                            TTYPE57 = '__Ni_H_ '           / label for column 57                            TFORM57 = 'E       '           / format for column 57                           TUNIT57 = '[Sun]   '           / units for column 57                            TTYPE58 = 'e__Ni_H_'           / label for column 58                            TFORM58 = 'E       '           / format for column 58                           TUNIT58 = '[Sun]   '           / units for column 58                            TTYPE59 = 'SimbadName'         / label for column 59                            TFORM59 = '9A      '           / format for column 59                           TTYPE60 = 'GroupID '           / label for column 60                            TFORM60 = 'J       '           / format for column 60                           TNULL60 =          -2147483648 / blank value for column 60                      TCOMM60 = 'ID for match group'                                                  TTYPE61 = 'GroupSize'          / label for column 61                            TFORM61 = 'J       '           / format for column 61                           TNULL61 =          -2147483648 / blank value for column 61                      TCOMM61 = 'Number of rows in match group'                                       DATE-HDU= '2018-08-30T15:11:24' / Date of HDU creation (UTC)                    STILVERS= '3.1-2   '           / Version of STIL software                       STILCLAS= 'uk.ac.starlink.votable.FitsPlusTableWriter' / Author class in STIL soEND                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               wW9P+P2P3P4P5mu Leo   HD85503 HIP48455 ÔNi “Ä@bÜ„@:«®A,K2III          z <@ £◊=·GÆ>Ä  >ôöAÎÖ=·GÆA (ˆ=∏QÏ@”33=ı¬è@ß
+==ÃÃÕ@\ÃÕ=u¬è@á\)=£◊
+@Ω∏=£◊
+@¨z·>LÃÕ@™·H=∏QÏ@–  =ı¬è>Óóç>+?°À>+>è\)>V>§›/> ƒú>kÖ=Ÿá>óçP>∏>´Ö>	7L=≤->íÒ™>Álã>%„T>•„T>≤-mu Leo           wWBwÎP2P3P4P5HD 84937 HD84937 HIP48152 åE° û @bgzœÕ¡w@+}mÙpsdF5           ‘ a@ÅÎÖ=#◊
+¿ÎÖ=£◊
+@ºz·=·GÆ@∏QÏ>8QÏ@ï∏=£◊
+@O\)=·GÆ?™=q>ôö¿  ¿  @Vff=è\)¿  ¿  ¿  ¿  @É◊
+=ı¬èø· ¡=ı¬èø›ëh>5?}ø’∏=æv…ø‘˝Ù=Û∂FøÚè\> ƒú¿  ¿  ¿óç=ŒŸ¿  ¿  ¿  ¿  ¿˜œ>ÅHD 84937         wX	øÔÀP2P3P4P5ksi Hya  HD100407HIP56343 0EΩπ )$ @e®Ï‚•4¿?€ç!DƒlG7III          ¥ (@7Æ<£◊
+>#◊
+>LÃÕ@ı¬è=·GÆ@Ú=q=u¬è@Ãz·=è\)@ù¬è=£◊
+@QÎÖ=·GÆ@~∏R=è\)@µ∏=#◊
+@¶ff=ÃÃÕ@ú(ˆ=£◊
+@«
+==£◊
+=Cñ=Ò©¸=ù≤-=° ¡=ãCñ=ŒŸ<Â`B=ÃÃÕ=}Û∂>I∫=Yá=¿É=ù≤-=}Û∂Ω◊
+=>8QÏºtº=¿É=\)=Ò©¸ksi Hya          ÑÛÎeﬂP2P3P4P5eps Vir  HD113226HIP63608 3‹) ÿ @hqiæº∞f@%ÎµsÍ≥G8III          w =@1GÆ<£◊
+>ôö>#◊
+@ˆ∏R=∏QÏ@ıp§=LÃÕ@Õ¬è=ÃÃÕ@ú(ˆ=∏QÏ@Rè\=£◊
+@yôö=è\)@¥z·=LÃÕ@•¬è=ÃÃÕ@õÖ=£◊
+@»£◊=u¬è=ix’=·GÆ>6E¢=ãCñ=Ÿá=Èx’ºÃÃÕ=Èx’=Ö∏=ı¬èº˝Û∂=Ìëh=ix’=£◊
+æ   >(ı√º›/=ƒõ¶=≤-=ÃÃÕeps Vir  Ä   Ä     ÑÛÛˇP2P3P4P5HD 122563HD122563HIP68594 3¨∏· û @jT>˘€"–@#_H"ñ§KF8IV           Î <?Œ{=è\)¿(ı√>aGÆ@©ôö=LÃÕ@•∏=£◊
+@xı√=£◊
+@ôö>∏?8QÏ=£◊
+?ùp§<#◊
+@   =ÃÃÕ@ÃÕ>\)@  ¿  @_\)<#◊
+¿ß=“Ò™¿ÃÕ=¬è\¿∆®=“Ò™¿æw>Å¿   =◊
+=¿,ãD>	7L¿E∏>çP¿Fß>(ı√¿)á=¥9X¿+˜œ>%HD 122563Ä   Ä     ú ≥≠‰P2P3P4P518 Sco   HD146233HIP79672 <OKâ 3‰ @n|¯}øG¿ Ω'uH9„G2Va           ≤ P@é{<ı¬è<ı¬è<ı¬è@ˆ{=#◊
+@ÒGÆ<£◊
+@Ã(ˆ=#◊
+@ûff<ı¬è@P£◊<£◊
+@}p§<#◊
+@¥(ˆ<£◊
+@™·H<£◊
+@ù∏<£◊
+@«
+=<£◊
+=•„=Dõ¶=Dõ¶<Â`B=mëh=mëh=<j=óçP=0 ≈=H¥9=\)=ìtº=H¥9=q©¸=#◊
+=∫^5<ƒõ¶=á+=æw=Éo18 Sco           ˘"èMvP2P3P4P5mu Ara   HD160691HIP86796 RÑ:© ˇË @p†î?¬’¿IÍ¬=ÕÿƒG3IV-V         Ä Ä @âôö<ı¬è>≥33>∏A (ˆ=#◊
+@˙=q=#◊
+@‘z·=LÃÕ@©GÆ=LÃÕ@gÆ=u¬è@ãÖ<ı¬è@æff=#◊
+@∑\)=#◊
+@©ÎÖ<ı¬è@”33=LÃÕ>∏QÏ=Å%>ßlã=8QÏ>£◊
+=çOﬂ>∆ß=£◊
+>ÕOﬂ=õ•„>⁄üæ=â7L>Ωp§=mëh>‹(ˆ=≤->Ÿá=u¬è>‘˝Ù=çOﬂmu Ara   Ä   Ä     ˘"≥ÏÛP2P3P4P5bet Hyi  HD2151  HIP2021  A å 	Ï @¿Luk-º¿SPEñ$"≈G0V            Ò -@~∏R<£◊
+Ω#◊
+=u¬è@ÛÖ=#◊
+@Ìp§<ı¬è@»QÏ=u¬è@öè\=#◊
+@KÖ=#◊
+@vff=#◊
+@Ø\)=LÃÕ@•¬è<ı¬è@ôÎÖ<ı¬è@¬·H<ı¬èΩ•„=LÃÕΩâ7L=çPΩy€#=ÉoΩóçP=aGÆΩ0 ≈=@ÉΩ° ¡=q©¸Ω»¥9=Å%Ω˜ŒŸ=}Û∂Ωù≤-=8QÏΩÆ{=8QÏbet Hyi  Ä   Ä     ˘"Ω≥P2P3P4P5tau Cet  HD10700 HIP8102  "ôÅ z @:ZÓcâ¿/ﬂ˝sç~yG8.5V          & ¿  ¿  æ˙·H<ı¬è@Ì¬è<ı¬è@‰z·<ı¬è@¿ı√=LÃÕ@óÆ=è\)@8QÏ=u¬è@kÖ<ı¬è@•∏=#◊
+@ôGÆ=#◊
+@ëGÆ<ı¬è@∑\)=#◊
+æe`B=]/æµ?}=#◊
+æî˝Ù=∞ ≈æ(ı√= ¿ÉæØù≤=ôôöæ}Û∂= ¿Éæ’Å=Ö∏ø–Â=ëhsæ≥33=ôôöæ‰›/=üæwtau Cet  Ä   Ä     ˘^4äP2P3P4P5eta Boo  HD121370HIP67927 F!  @jz)«y¶@2e–ÒﬂFG0IV           ” @rè\<£◊
+>£◊
+=£◊
+A QÏ=∏QÏ@˚33=ÃÃÕ@”Ö=ÃÃÕ@£Ö=·GÆ@\ÃÕ=∏QÏ@ÑÃÕ=è\)@∫=q=£◊
+@≤=q=u¬è@¶∏R=u¬è@–QÏ=∏QÏ>ªÁm= ¿É>πX=„S¯>îz·=Ìëh>Yá=Ò©¸>hr∞=◊
+=>dZ=©˚Á>q©¸=¥9X>ä¿É=æv…>§Z=óçP>¶ff=¬è\eta Boo          ˘^9Y›P2P3P4P5gam Sge  HD189319HIP98337 L÷ ·d @rªRT`™@3}˝\@B˝M0III          ﬂ 1?Üff>£◊
+æ.{>«Æ@ˆ{=ÃÃÕ@Ùz·=ÃÃÕ@¿ı√=∏QÏ@î(ˆ=ÃÃÕ@9ôö>îz·@gÆ>#◊
+@≠¬è=u¬è¿  ¿  @ôGÆ=∏QÏ@¿QÏ>∏=,1=ﬂ;d>ôö>v»¥æïÅ>;dZæà1'>NŸæ£S¯>≤-æ†ƒú>dZæ•„>tº¿  ¿  ΩŒŸ>Xbæ2->åI∫gam Sge  Ä   Ä     ˘ôù6P2P3P4P5HD 107328HD107328HIP60172 3_A H @g"Ã&∆Ñ˚@
+Ä%›Ä®ÔK0IIIb         ê ;@¬è>∏æ®ı√>#◊
+@Ú=q=è\)@Î◊
+=LÃÕ@¿  =è\)@ò£◊=#◊
+@8QÏ=LÃÕ@n∏R=u¬è@•p§=#◊
+@ì◊
+=LÃÕ@ñ∏R<£◊
+@ªÖ<ı¬èΩ° ¡=ŸáΩÛ∂F=≤-æ§Z=Ôù≤æ$›=ÎÖæØ†=∫^5æI∫^>%æ—ÎÖ=çOﬂø.{>   æ8QÏ=ßÔûæ°GÆ=óçPHD 107328Ä   Ä     ˘ô™Ò§P2P3P4P5ksi Hya  HD100407HIP56343 0EΩπ )$ @e®Ï‚•4¿?€ç!DƒlG7III          ¥ (@7Æ<£◊
+>#◊
+>LÃÕ@ı¬è=·GÆ@Ú=q=u¬è@Ãz·=è\)@ù¬è=£◊
+@QÎÖ=·GÆ@~∏R=è\)@µ∏=#◊
+@¶ff=ÃÃÕ@ú(ˆ=£◊
+@«
+==£◊
+=Cñ=Ò©¸=ù≤-=° ¡=ãCñ=ŒŸ<Â`B=ÃÃÕ=}Û∂>I∫=Yá=¿É=ù≤-=}Û∂Ω◊
+=>8QÏºtº=¿É=\)=Ò©¸ksi Hya          ˘ô∑&§P2P3P4P518 Sco   HD146233HIP79672 <OKâ 3‰ @n|¯}øG¿ Ω'uH9„G2Va           ≤ P@é{<ı¬è<ı¬è<ı¬è@ˆ{=#◊
+@ÒGÆ<£◊
+@Ã(ˆ=#◊
+@ûff<ı¬è@P£◊<£◊
+@}p§<#◊
+@¥(ˆ<£◊
+@™·H<£◊
+@ù∏<£◊
+@«
+=<£◊
+=•„=Dõ¶=Dõ¶<Â`B=mëh=mëh=<j=óçP=0 ≈=H¥9=\)=ìtº=H¥9=q©¸=#◊
+=∫^5<ƒõ¶=á+=æw=Éo18 Sco           ˘ôÃÉdP2P3P4P518 Sco   HD146233HIP79672 <OKâ 3‰ @n|¯}øG¿ Ω'uH9„G2Va           ≤ P@é{<ı¬è<ı¬è<ı¬è@ˆ{=#◊
+@ÒGÆ<£◊
+@Ã(ˆ=#◊
+@ûff<ı¬è@P£◊<£◊
+@}p§<#◊
+@¥(ˆ<£◊
+@™·H<£◊
+@ù∏<£◊
+@«
+=<£◊
+=•„=Dõ¶=Dõ¶<Â`B=mëh=mëh=<j=óçP=0 ≈=H¥9=\)=ìtº=H¥9=q©¸=#◊
+=∫^5<ƒõ¶=á+=æw=Éo18 Sco           ˘ôıµêP2P3P4P5alf Cet  HD18884 HIP14135 Ä       @F»Ú◊s@[‰Ç„‘ M1.5IIIa       ‘ A?.{>kÖæÊff>£◊@Ï(ˆ=·GÆ@ﬂ
+==ÃÃÕ@ªÖ>∏@å(ˆ=·GÆ@4z·>LÃÕ@p£◊>ä=q@£Ö=ı¬è@ö·H=LÃÕ@ëÎÖ>∏@±GÆ>#◊
+æä¿É>glãø$›>@ÉæÈx’>9Xøff>6E¢æÀCñ>ôáæ0 ≈>ú(ˆæÒ©¸>QÎÖæÈ˚Á>_;dæ©˚Á>PÂ`ø#o>â∫^alf Cet  Ä   Ä     ˘ö˜àP2P3P4P5eps Eri  HD22049 HIP16537 G¨∫â º @Jù»¥9X¿"Í†÷íK2Vk:          ‘ @ìÖ<ı¬èΩ∏QÏ=u¬è@Ú=q=ÃÃÕ@Ïz·=ÃÃÕ@»QÏ=è\)@õÖ=∏QÏ@C◊
+=ÃÃÕ@z=q=ı¬è@±ôö=£◊
+@§z·=u¬è@ñ{>#◊
+@¿  =£◊
+Ωüæw=–Â`Ω¬è\=“Ò™ΩaGÆ=ëhsΩtº=»¥9æ'Ôû=ŒŸºãCñ=˝Û∂ºÂ`B=¥9Xæ$›/=ãCñæJ¿É>'Ôûæ5?}=ßÔûeps Eri  Ä   Ä     ˘ö•ËP2P3P4P5del Eri  HD23249 HIP17378 G™§y ¿ @KÁÚ{≤˛ƒ¿#Ü€EƒæôK1III-IV       Z @p£◊<£◊
+=u¬è=LÃÕ@˙è\=∏QÏ@Ù(ˆ=u¬è@ ·H=∏QÏ@û{=è\)@S33=ÃÃÕ@~{=LÃÕ@≥Ö=u¬è@®£◊=∏QÏ@û∏R=#◊
+@»£◊=u¬è>7K«>bN>V=â7L<ÃÃÕ=‘˝Ù=•„=æv…=ù≤-=ÎÖ=çP=£◊
+<˝Û∂=óçPΩo=ÎÖ=è\)=}Û∂=ºj=∞ ≈del Eri  Ä   Ä     ˘öTHP2P3P4P5HD 22879 HD22879 HIP17147 -°  @Kãƒx≤
+¿	º^ÿ\NF9V            Ï Y@à£◊=#◊
+ø\(ˆ=LÃÕ@Âp§=u¬è@‹ÃÕ=£◊
+@πGÆ=LÃÕ@ãÖ=ÃÃÕ@Ö=£◊
+@LÃÕ=LÃÕ@ó
+==∏QÏ@Ñz·=£◊
+@ÑÃÕ<ı¬è@™è\=∏QÏæÛ∂F=ëhsø=ù≤-øÔû=•„TøÖ=„S¯øI∫^=£◊
+ø;"—>\)ø["—=Ÿáøîì=Álãø=Û∂=á+øX‘˛=ŸáHD 22879 Ä   Ä     ÄÛÌüéP2P3P4P5eps For  HD18907 HIP14086 Fa£i  @F¥¥?¬¿<p/T‡“K2VFe-1.3CH-0.8 N¿  ¿  øôö=ÃÃÕ@Ó{=LÃÕ@„Ö=#◊
+@¡ôö=u¬è@ï¬è=∏QÏ@-p§=è\)@bè\<ı¬è@°ÎÖ=LÃÕ@íè\=£◊
+@çp§=#◊
+@¥z·=u¬èæRÒ™=}Û∂æ¿  =Dõ¶æãCñ=¬è\æe`B=˚ÁmøJ=Æ{æ =q=∂E¢øõ¶=£◊
+ø8QÏ>$›æ£◊=° ¡ø
+~˙=Æ{eps For  Ä   Ä     Äj‡ÓP2P3P4P5HD 140283HD140283HIP76976 Vˇ%q Ud @mxiµˇ∫¿%›Û∂E° sdF3           Ä Ä @e∏=·GÆ¿
+==ÃÃÕ@™=q=LÃÕ@ßÆ=#◊
+@ÄQÏ=∏QÏ@∏R=u¬è?ÃÕ¿  ¿  ¿  @,(ˆ>∏@!GÆ¿  ¿  ¿  @dz·=£◊
+¿›/=ãCñ¿æw=u¬è¿Ám=Álã¿¿É=ÎÖ¿*¿É=Ö∏¿  ¿  ¿9á>)˚Á¿1∫^=£◊
+¿  ¿  ¿&˘€=Â`BHD 140283Ä   Ä     ÄT£5Ç˚P2P3P4P5Procyon  HD61421 HIP37279 Ä       @\¥‘Ïy…®@Êc|æˆÒF5IV-V         ö T@Ä  <£◊
+<#◊
+=£◊
+@ÛÖ=è\)@Ó∏R=è\)@ÀÖ=u¬è@öè\=∏QÏ@E¬è=u¬è@rè\=∏QÏ@Æ∏R=u¬è@•¬è=è\)@ôGÆ<£◊
+@¬=q=è\)ΩçP=ôôöΩ+=õ•„=tº=üæwΩçOﬂ=»¥9æ	7L=á+æ\)=–Â`ΩÒ©¸=¨1æ   =æv…Ω ¿É=ix’ΩÂ`B=Æ{Procyon  Ä   Ä     ÄTﬁ–M	P2P3P4P5alf Tau  HD29139 HIP21421 Ä       @Q>∫˚~êˇ@0Ça™∂QHK5III          W (?é{>Bè\æΩp§>.{@Ô\)>ôö@ÈÎÖ>.{@ø\)=u¬è@ëÎÖ>ôö@=p§>LÃÕ@n∏R>u¬è@®ı√>W
+=@ôÎÖ=ÃÃÕ@îz·>8QÏ@∏ı√>W
+=æ0 ≈>=p§æ7K«>YáæÆ{>çPæ≠V>S˜œæá+>à1'æPÂ`>â7Læó
+=>tºjæ˘X>Xbæ}Û∂>_;dæÀCñ>ëÎÖalf Tau  Ä   Ä     ÄTﬁ”ZIP2P3P4P5HD 49933 HD49933 HIP32851 +4`â x∆ @Y≠I›Rxø·N‰Ω$Ë’F2V            Î [@Üff<ı¬èæ—ÎÖ=£◊
+@ÈGÆ=LÃÕ@„Ö=£◊
+@ø\)=£◊
+@êQÏ=è\)@.∏R=LÃÕ@j·H=∏QÏ@°ôö=£◊
+@ñ{=è\)¿  ¿  @¥ÃÕ=ÃÃÕæ∫^5=y€#æƒì=Æ{æ¨1=»¥9æ…∫^=≤-æ˘€#=ãCñæÖ∏=„S¯ølã=ŒŸødZ=Ôù≤¿  ¿  ø+=Ôù≤HD 49933 Ä   Ä     ÄrÁÂsP2P3P4P5HD 84937 HD84937 HIP48152 åE° û @bgzœÕ¡w@+}mÙpsdF5           ‘ a@ÅÎÖ=#◊
+¿ÎÖ=£◊
+@ºz·=·GÆ@∏QÏ>8QÏ@ï∏=£◊
+@O\)=·GÆ?™=q>ôö¿  ¿  @Vff=è\)¿  ¿  ¿  ¿  @É◊
+=ı¬èø· ¡=ı¬èø›ëh>5?}ø’∏=æv…ø‘˝Ù=Û∂FøÚè\> ƒú¿  ¿  ¿óç=ŒŸ¿  ¿  ¿  ¿  ¿˜œ>ÅHD 84937         àú0hP2P3P4P5mu Leo   HD85503 HIP48455 ÔNi “Ä@bÜ„@:«®A,K2III          z <@ £◊=·GÆ>Ä  >ôöAÎÖ=·GÆA (ˆ=∏QÏ@”33=ı¬è@ß
+==ÃÃÕ@\ÃÕ=u¬è@á\)=£◊
+@Ω∏=£◊
+@¨z·>LÃÕ@™·H=∏QÏ@–  =ı¬è>Óóç>+?°À>+>è\)>V>§›/> ƒú>kÖ=Ÿá>óçP>∏>´Ö>	7L=≤->íÒ™>Álã>%„T>•„T>≤-mu Leo           àù~	ò”P2P3P4P5Arcturus HD124897HIP69673 Ä       @jΩJ#9¿Î@3.≤P/=K1.5III        æ #?ÃÃÕ>LÃÕø∏=£◊
+@ÔÆ=∏QÏ@ÁÆ=LÃÕ@Ω∏=ı¬è@í·H=£◊
+@2è\>\)@_\)=ÃÃÕ@†  =è\)@ç∏>\)@è\)=LÃÕ@∂{=£◊
+æ! ¡=ŸáæÅ%=â7Læœ\)>+æ†Aâ=Ÿáæ€"—>ìuæ· ¡>
+=qø˝Ù=£◊
+ødõ¶> ƒúæ–bN=çOﬂæ˘X=ƒõ¶Arcturus Ä   Ä     àù~¿ìP2P3P4P5eta Boo  HD121370HIP67927 F!  @jz)«y¶@2e–ÒﬂFG0IV           ” @rè\<£◊
+>£◊
+=£◊
+A QÏ=∏QÏ@˚33=ÃÃÕ@”Ö=ÃÃÕ@£Ö=·GÆ@\ÃÕ=∏QÏ@ÑÃÕ=è\)@∫=q=£◊
+@≤=q=u¬è@¶∏R=u¬è@–QÏ=∏QÏ>ªÁm= ¿É>πX=„S¯>îz·=Ìëh>Yá=Ò©¸>hr∞=◊
+=>dZ=©˚Á>q©¸=¥9X>ä¿É=æv…>§Z=óçP>¶ff=¬è\eta Boo          à ‰¶≥P2P3P4P5Sun                       Ä       ¯      ¯                     ã @é{    <ı¬è=LÃÕ@ÙÃÕ=£◊
+@ÔÆ=£◊
+@ =q=∏QÏ@úÃÕ=è\)@N{>\)@{Ö=#◊
+@≤è\=u¬è@©ôö=∏QÏ@úz·=∏QÏ@≈¬è=ÃÃÕ    =¨1    =ßÔû    =ƒõ¶    =õ•„    >z·    =0 ≈    =Ö∏    =ŒŸ    =∫^5    =◊
+=         Ä   Ä                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
