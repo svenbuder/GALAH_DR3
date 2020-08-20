@@ -32,7 +32,6 @@ import glob
 import pickle
 import collections
 import pandas
-import pymc3
 
 # Packages to work with FITS and (IDL) SME.out files
 import astropy.io.fits as pyfits
