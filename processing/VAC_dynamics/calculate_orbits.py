@@ -7,7 +7,22 @@
 # 
 # ### History:
 # 181011 SB Created  
-# 190222 SB Included sampling with 5D covariance matrix and fixed galpy coordinate transformation for J2015.5 in ICRS
+# 190222 SB Included sampling with 5D covariance matrix and fixed galpy coordinate transformation for J2015.5 in ICRS  
+# 201001 SB Change to McMillan17 potential, including different RO and VO
+
+# # What information you need
+# 
+# ra, dec, pmra, pmdec from Gaia DR2  
+# 
+# distance:  
+# if you want to use parallax: parallax and parallax_uncertainty  
+# if you want to use covariances: covariance entries from Gaia DR2  
+# if you want to use Bailer-Jones distances: r_est, r_lo, r_hi  
+# if you want to use BSTEP: dist_gbm, e_dist_gbm  
+# 
+# vlos:  
+# if you want to use rv_galah: rv_galah, e_rv_galah  
+# if you want to use rv_gaia: rv_gaia, e_rv_gaia
 
 # In[ ]:
 
@@ -147,20 +162,40 @@ debug = False
 
 
 # ### Galpy initialization
+# 
+# We are using the McMillan17 potential from McMillan, 2017, MNRAS, 465, 76.  
+# Contrary to galpy, its normalisation parameters are:  
+# r_gc = 8.21 kpc (galpy: 8.0 kpc, Gravity Collaboration, 2018, A&A, 615, 15: 8.178 kpc).  
+# v_gc = 233.1 km/s (galpy: 220 km/s)
 
 # In[ ]:
 
 
 import galpy
-from galpy.potential import MWPotential2014 as pot
-#from galpy.potential import McMillan17 as pot
+#from galpy.potential import MWPotential2014 as pot
+from galpy.potential.mwpotentials import McMillan17 as pot
+from galpy.util.bovy_conversion import get_physical
 from galpy.actionAngle import actionAngleStaeckel
 from galpy.util import bovy_coords
 from galpy.orbit import Orbit
 
-#galpy scale units:                                                                                                                                                                                         
-_REFR0 = 8.178 #[kpc] --> galpy length unit, reference: https://arxiv.org/abs/1904.05721                                                                                                                                                   
-_REFV0 = 229.0 #[km/s] --> galpy velocity unit, reference: https://arxiv.org/abs/1810.09466
+# Reference values
+#r_galactic_centre = 8.178*u.kpc # Gravity Collaboration, 2018, A&A, 615, 15
+r_galactic_centre = 8.21*u.kpc # McMillan Potential, 2017
+z_galactic_plane = 25.0*u.pc # Bland-Hawthorn & Gerhard, 2016, ARA&A, 54, 529
+
+print('Reference frame:')
+print('R_GC = '+str(r_galactic_centre)+' (McMillan, 2017, MNRAS, 465, 76)')
+print('phi_GC = '+str(0*u.rad))
+print('z_GC = '+str(z_galactic_plane)+' (Bland-Hawthorn & Gerhard, 2016, ARA&A, 54, 529)')
+
+v_total_sun = (np.tan(6.379*u.mas)*r_galactic_centre/u.yr).to(u.km/u.s) # pm_l by Reid & Brunthaler 2004, ApJ, 616, 872
+print('V_total_sun: = '+"{:.2f}".format(v_total_sun)+' (Reid & Brunthaler 2004, ApJ, 616, 872)')
+v_peculiar = [11.1, 15.17, 7.25]*u.km/u.s # U and W from Schoenrich, Binney, Dehnen, 2010, MNRAS, 403, 1829, V so that V = V_total-V_sun
+print('V_peculiar = ',(v_peculiar),' (U and W from Schoenrich, Binney, Dehnen, 2010, MNRAS, 403, 1829)')
+print('V-component of V_peculiar = 15.17 km/s, instead of 12.24 km/s by Schoenrich et al. (2010), for matching v_circular')
+v_circular = np.round(v_total_sun-v_peculiar[1],1)
+print('V_circular = ',(v_circular),' (McMillan, 2017, MNRAS, 465, 76)')
 
 aAS = actionAngleStaeckel(
         pot   = pot,        #potential                                                                                                                                                                      
@@ -168,32 +203,92 @@ aAS = actionAngleStaeckel(
         c     = True        #use C code (for speed)                                                                                                                                                         
         )
 
-print("galpy scale units are _REFR0 = "+str(_REFR0)+" kpc and _REFV0 = "+str(_REFV0)+" km/s.")
-#print("The Sun has an angular momentum of "+str(_REFR0 * _REFV0)+" kpc km/s in this action framework with MWPotential2014")
-print("The Sun has an angular momentum of "+str(_REFR0 * _REFV0)+" kpc km/s in this action framework with McMillan17")
+#(RA = 17:45:37.224 h:m:s, Dec = −28:56:10.23 deg) (Reid& Brunthaler 2004)
 
-#Galactocentric position of the Sun according to Gravity Collaboration / Bennett & Bovy (2016)
-X_gc_sun_kpc = _REFR0 #[kpc]
-Z_gc_sun_kpc = 0.0208 #[kpc]
 
-#(RA = 17:45:37.224 h:m:s, Dec = −28:56:10.23 deg) (Reid& Brunthaler 2004
+# ### Let's get the Solar values
 
-print(r"We place Sgr A at (x; y; z) = (R_0; 0; z_0) kpc, where")
-#print("R_0 = "+str(X_gc_sun_kpc)+" kpc and z_0 = "+str(Z_gc_sun_kpc)+" pc (Bland-Hawthorn & Gerhard, 2016)")
-print("R_0 = "+str(X_gc_sun_kpc)+" kpc and z_0 = "+str(Z_gc_sun_kpc)+" pc (Bennett & Bovy 2019)")
+# In[ ]:
 
-#Velocity of the Sun w.r.t. the Local Standard of Rest (e.g. Schoenrich et al. 2010):
-U_LSR_kms = 11.10  # [km/s]
-V_LSR_kms = 12.24 # [km/s]
-W_LSR_kms = 7.25  # [km/s]
 
-#Galactocentric velocity of the Sun:                                                                                                                                                                        
-vX_gc_sun_kms =  U_LSR_kms           # = -U              [km/s]
-vY_gc_sun_kms =  V_LSR_kms+_REFV0    # = V+v_circ(R_Sun) [km/s]
-vZ_gc_sun_kms =  W_LSR_kms           # = W               [km/s]
+calculate_sun = False
 
-print("The Sun's velocity with respect to a co-located particle on a circular orbit is")
-print("V_LSR = (U_sun, V_sun, W_sun) = ("+str(vX_gc_sun_kms)+", "+str(vY_gc_sun_kms-_REFV0)+", "+str(vZ_gc_sun_kms)+") km/s (Schoenrich 2010)")
+if calculate_sun:
+    sun = dict()
+
+    # Create the Orbit instance
+    o = Orbit(
+        #ra, dec, dist, pm_ra, pm_dec, v_los
+        vxvv=[0.*u.deg,0.*u.deg,0.*u.kpc,0.*u.mas/u.yr, 0.*u.mas/u.yr,0.*u.km/u.s],
+        ro=r_galactic_centre,
+        vo=v_circular,
+        zo=z_galactic_plane,
+        solarmotion=[-11.1, 15.17, 7.25]*u.km/u.s,
+        radec=True
+    )
+
+    #Galactocentric coordinates:
+    sun['X_XYZ'] = o.helioX()#*u.kpc        
+    sun['Y_XYZ'] = o.helioY()#*u.kpc
+    sun['Z_XYZ'] = o.helioZ()#*u.kpc
+    sun['U_UVW'] = o.U()#*u.km/u.s
+    sun['V_UVW'] = o.V()#*u.km/u.s
+    sun['W_UVW'] = o.W()#*u.km/u.s
+    sun['R_Rzphi'] = o.R()#*u.kpc
+    sun['phi_Rzphi'] = o.phi()#*u.rad
+    sun['z_Rzphi'] = o.z()#*u.kpc
+    sun['vR_Rzphi'] = o.vR()#*u.km/u.s
+    sun['vphi_Rzphi'] = o.vT()#*u.km/u.s        
+    sun['vz_Rzphi'] = o.vz()#*u.km/u.s
+    sun['vT_Rzphi'] = o.vT()#*u.km/u.s
+
+    try:
+        sun['J_R'], sun['L_Z'],sun['J_Z'] = aAS(
+            #R,vR,vT,z,vz[,phi]
+            sun['R_Rzphi']*u.kpc,
+            sun['vR_Rzphi']*u.km/u.s,
+            sun['vT_Rzphi']*u.km/u.s,
+            sun['z_Rzphi']*u.kpc,
+            sun['vz_Rzphi']*u.km/u.s,
+            sun['phi_Rzphi']*u.rad,
+            ro=r_galactic_centre,vo=v_circular
+        )
+    except:
+        sun['J_R'] = [np.nan]
+        sun['L_Z'] = [np.nan]
+        sun['J_Z'] = [np.nan]
+
+    try:
+        sun['ecc'], sun['zmax'], sun['R_peri'], sun['R_ap'] = aAS.EccZmaxRperiRap(
+            #R,vR,vT,z,vz[,phi]
+            sun['R_Rzphi']*u.kpc,
+            sun['vR_Rzphi']*u.km/u.s,
+            sun['vT_Rzphi']*u.km/u.s,
+            sun['z_Rzphi']*u.kpc,
+            sun['vz_Rzphi']*u.km/u.s,
+            sun['phi_Rzphi']*u.rad,
+            ro=r_galactic_centre,vo=v_circular
+        )         
+        sun['zmax']
+        sun['R_peri']
+        sun['R_peri']
+
+    except:
+        sun['ecc'] = [np.nan]
+        sun['zmax'] = [np.nan]
+        sun['R_peri'] = [np.nan]
+        sun['R_ap'] = [np.nan]
+
+    sun['Energy'] = o.E(pot=pot,ro=r_galactic_centre,vo=v_circular,zo=z_galactic_plane)
+
+    print('Solar values:')
+    print('X,Y,Z: '+"{:.2f}".format(sun['X_XYZ'])+' '+"{:.2f}".format(sun['Y_XYZ'])+' '+"{:.2f}".format(sun['Z_XYZ']))
+    print('U,V,W: '+"{:.2f}".format(sun['U_UVW'])+' '+"{:.2f}".format(sun['V_UVW'])+' '+"{:.2f}".format(sun['W_UVW']))
+    print('R,phi,z: '+"{:.2f}".format(sun['R_Rzphi'])+' '+"{:.2f}".format(sun['phi_Rzphi'])+' '+"{:.2f}".format(sun['z_Rzphi']))
+    print('vR,vphi,vT,vz: '+"{:.2f}".format(sun['vR_Rzphi'])+' '+"{:.2f}".format(sun['vphi_Rzphi'])+' '+"{:.2f}".format(sun['vT_Rzphi'])+' '+"{:.2f}".format(sun['vz_Rzphi']))
+    print('J_R,L_Z,J_Z: '+"{:.2f}".format(sun['J_R'][0])+' '+"{:.2f}".format(sun['L_Z'][0])+' '+"{:.2f}".format(sun['J_Z'][0]))
+    print('ecc, zmax, R_peri, R_apo: '+"{:.2f}".format(sun['ecc'][0])+' '+"{:.2f}".format(sun['zmax'][0])+' '+"{:.2f}".format(sun['R_peri'][0])+' '+"{:.2f}".format(sun['R_ap'][0]))
+    print('Energy: '+"{:.2f}".format(sun['Energy']))
 
 
 # ### Input of 6D information in observable dimensions
@@ -202,9 +297,9 @@ print("V_LSR = (U_sun, V_sun, W_sun) = ("+str(vX_gc_sun_kms)+", "+str(vY_gc_sun_
 
 
 try:
-    galah_gaia_input = pyfits.getdata('/shared-storage/buder/svn-repos/trunk/GALAH/GALAH_DR3/catalogs/GALAH_DR3_main_200604_extended_caution.fits',1)
+    galah_gaia_input = pyfits.getdata('/shared-storage/buder/svn-repos/trunk/GALAH/GALAH_DR3/catalogs/GALAH_DR3_main_200604_extended_caution_v2.fits',1)
 except:
-    galah_gaia_input = pyfits.getdata('/Users/svenbuder/GALAH_DR3/catalogs/GALAH_DR3_main_200604_extended_caution.fits',1)
+    galah_gaia_input = pyfits.getdata('/Users/svenbuder/GALAH_DR3/catalogs/GALAH_DR3_main_200604_extended_caution_v2.fits',1)
 
 full_length = len(galah_gaia_input['sobject_id'])
 print("Initial nr. of entries")
@@ -220,12 +315,6 @@ if subset*subset_size >= full_length:
     sys.exit('The subset is beyond the length of GALAH DR3')
 
 galah_gaia_input = galah_gaia_input[subset*subset_size:np.min([(subset+1)*subset_size,full_length])]
-
-# np.random.seed(123)
-# shuffle = np.arange(len(galah_gaia_input))
-# np.random.shuffle(shuffle)
-# shuffle
-# galah_gaia_input = (galah_gaia_input[shuffle])[:subset_size]
 
 nr_galah_stars = len(galah_gaia_input['sobject_id'])
 print("Nr. stars per subset")
@@ -278,8 +367,12 @@ six_dimensions['ra'] = galah_gaia['ra']
 # Declination [deg]
 six_dimensions['dec'] = galah_gaia['dec']
 
-# Distance from Sun [pc]
-six_dimensions['distance'] = galah_gaia['r_est']
+# 1000./Parallax [mas]
+six_dimensions['distance'] = 1000./galah_gaia['parallax']
+# Bailer-Jones distance from Sun [pc]
+six_dimensions['r_est'] = galah_gaia['r_est']
+# BSTEP distance from Sun [pc]
+six_dimensions['dist_gbm'] = galah_gaia['dist_gbm']*1000.
 # Parallax [mas]
 six_dimensions['parallax'] = galah_gaia['parallax']
 
@@ -311,11 +404,13 @@ e_six_dimensions = {}
 e_six_dimensions['ra'] = galah_gaia['ra_error']/(1000.*3600.)
 # Error of declination [mas] to [deg]
 e_six_dimensions['dec'] = galah_gaia['dec_error']/(1000.*3600.)
-# Error of distance from Sun [pc]
-e_six_dimensions['distance_high'] = galah_gaia['r_hi']
-e_six_dimensions['distance_low']  = galah_gaia['r_lo']
+# Error of Bailer-Jones distance from Sun [pc]
+e_six_dimensions['r_hi'] = galah_gaia['r_hi']
+e_six_dimensions['r_lo']  = galah_gaia['r_lo']
     # We are currently sampling a 2-sided Gaussian because Bailer-Jones are only giving 16th/50th/86th percentiles.
     # Any idea how to improve that because of missing posteriors from Bailer-Jones?
+# Error of BSTEP distance from Sun [pc]
+e_six_dimensions['dist_gbm'] = galah_gaia['e_dist_gbm']*1000.
 # Error of parallax [mas]
 e_six_dimensions['parallax']  = galah_gaia['parallax_error']
 # Error of total proper motion in direction of right ascension [mas/yr]
@@ -346,7 +441,7 @@ MC_size = 10000
 np.random.seed(123)
 
 XYZ_labels       = ['X_XYZ','Y_XYZ','Z_XYZ']
-UVW_labels       = ['U_LSR','V_LSR','W_LSR']
+UVW_labels       = ['U_UVW','V_UVW','W_UVW']
 
 Rphiz_labels     = ['R_Rzphi','z_Rzphi','phi_Rzphi']
 vRphiz_labels    = ['vR_Rzphi','vz_Rzphi','vphi_Rzphi','vT_Rzphi']
@@ -374,18 +469,18 @@ def sample_6d_uncertainty(
     six_dimensions,
     e_six_dimensions,
     MC_size=MC_size,
-    no_correlation = False,
-    extreme_covariance = False,
-    parallax_offset=-0.029/1000.
+    use_BailerJones = False,
+    use_BSTEP = False,
+    parallax_offset=-0.029
     ):
     
     """
     This function samples the 6D space with the given uncertainties.
-    3 Options are available:
+    4 Options are available:
     
     if MC_size==1: assume no uncertainties
     
-    if no_correlation==True: Sample 6D parameters independently
+    if use_BailerJones==True: Sample 6D parameters independently with distance from Bailer-Jones
     
     if no_correlation==False: Use Gaia DR2 covariance matrix to sample 5D
     and GALAH vrad for 6th D
@@ -397,90 +492,125 @@ def sample_6d_uncertainty(
     
     # Option 1: We assume no errors and simply return the actual parameters
     if MC_size == 1:
+        print('We assume no errors and simply return the actual parameters')
         for each_key in six_dimensions.keys():
             if each_key == 'distance':
-                MC_sample_6D[each_key] = np.array([[six_dimensions[each_key][x]] for x in range(nr_stars)])/1000.
+                if use_BailerJones:
+                    print('Using Bailer-Jones')
+                    MC_sample_6D['distance'] = np.array([[six_dimensions['r_est'][x]] for x in range(nr_stars)])/1000.
+                elif use_BSTEP:
+                    print('Using BSTEP, otherwise Bailer-Jones')
+                    MC_sample_6D['distance'] = np.array([[six_dimensions['r_est'][x]] for x in range(nr_stars)])/1000.
+                    bstep = np.array([[six_dimensions['dist_gbm'][x]] for x in range(nr_stars)])/1000.
+                    bstep_available = np.isfinite(bstep)
+                    MC_sample_6D['distance'][bstep_available] = bstep[bstep_available]
+                else:
+                    print('Parallax')
+                    MC_sample_6D['distance'] = np.array([[1000./(six_dimensions['parallax'][x]-parallax_offset)] for x in range(nr_stars)])/1000.
             else:
                 MC_sample_6D[each_key] = np.array([[six_dimensions[each_key][x]] for x in range(nr_stars)])
     
+    elif use_BailerJones:
+        # Option 2: Sampling the distances from Bailer-Jones assuming 2 separate Gaussian distributions
+        print('Sampling the distances from Bailer-Jones assuming 2 separate Gaussian distributions')
+        distance_sigma_lo  = np.array([np.abs(np.random.normal(loc = 0., scale = six_dimensions['r_est'] -  e_six_dimensions['r_lo'])) for i in range(MC_size)])
+        distance_sigma_hi  = np.array([np.abs(np.random.normal(loc = 0., scale = e_six_dimensions['r_hi'] - six_dimensions['r_est'])) for i in range(MC_size)])
+        select_lo_hi = np.array([(np.random.uniform(0, 1, size=nr_stars) < 0.5).astype(float) for x in range(MC_size)])
+
+        MC_sample_6D['ra']       = np.array([np.random.normal(loc=six_dimensions['ra'], scale=e_six_dimensions['ra']) for i in range(MC_size)]).T
+        MC_sample_6D['dec']      = np.array([np.random.normal(loc=six_dimensions['dec'], scale=e_six_dimensions['dec']) for i in range(MC_size)]).T
+        MC_sample_6D['distance'] = (six_dimensions['r_est'] + select_lo_hi*distance_sigma_hi - (1-select_lo_hi)*distance_sigma_lo).clip(min=0).T/1000.
+        MC_sample_6D['pmra']     = np.array([np.random.normal(loc=six_dimensions['pmra'], scale=e_six_dimensions['pmra']) for i in range(MC_size)]).T
+        MC_sample_6D['pmdec']    = np.array([np.random.normal(loc=six_dimensions['pmdec'], scale=e_six_dimensions['pmdec']) for i in range(MC_size)]).T
+        MC_sample_6D['vrad']     = np.array([np.random.normal(loc=six_dimensions['vrad'], scale=e_six_dimensions['vrad']) for i in range(MC_size)]).T
+
+    elif use_BSTEP:
+        # Option 3: Using BSTEP GBM distances wherever possible (need useful stellar parameters, Bailer Jones otherwise)
+        # Then check which values are not finite
+        bstep_available = np.isfinite(six_dimensions['dist_gbm']) & np.isfinite(e_six_dimensions['dist_gbm'])
+        nr_bstep = len(six_dimensions['dist_gbm'][bstep_available])
+
+        MC_sample_6D['ra']       = np.array([np.random.normal(loc=six_dimensions['ra'], scale=e_six_dimensions['ra']) for i in range(MC_size)]).T
+        MC_sample_6D['dec']      = np.array([np.random.normal(loc=six_dimensions['dec'], scale=e_six_dimensions['dec']) for i in range(MC_size)]).T
+        
+        # First fill everything with BSTEP
+        print('Using BSTEP GBM distances (available for '+str(nr_bstep)+')')
+        MC_sample_6D['distance'] = np.array([np.random.normal(loc=six_dimensions['dist_gbm'], scale=e_six_dimensions['dist_gbm']) for i in range(MC_size)]).T/1000.
+
+        # Fill the ones without finite BSTEP with Bailer-Jones
+        print('No parameters available for '+str(nr_stars-nr_bstep)+', using Bailer Jones for those')
+        distance_sigma_lo  = np.array([np.abs(np.random.normal(loc = 0., scale = six_dimensions['r_est'][~bstep_available] -  e_six_dimensions['r_lo'][~bstep_available])) for i in range(MC_size)])
+        distance_sigma_hi  = np.array([np.abs(np.random.normal(loc = 0., scale = e_six_dimensions['r_hi'][~bstep_available] - six_dimensions['r_est'][~bstep_available])) for i in range(MC_size)])
+        select_lo_hi = np.array([(np.random.uniform(0, 1, size=np.shape(distance_sigma_lo)[1]) < 0.5).astype(float) for x in range(MC_size)])
+        MC_sample_6D['distance'][~bstep_available,:] = (six_dimensions['r_est'][~bstep_available] + select_lo_hi*distance_sigma_hi - (1-select_lo_hi)*distance_sigma_lo).clip(min=0).T/1000.
+
+        MC_sample_6D['pmra']     = np.array([np.random.normal(loc=six_dimensions['pmra'], scale=e_six_dimensions['pmra']) for i in range(MC_size)]).T
+        MC_sample_6D['pmdec']    = np.array([np.random.normal(loc=six_dimensions['pmdec'], scale=e_six_dimensions['pmdec']) for i in range(MC_size)]).T
+        MC_sample_6D['vrad']     = np.array([np.random.normal(loc=six_dimensions['vrad'], scale=e_six_dimensions['vrad']) for i in range(MC_size)]).T
+
     else:
-        if no_correlation == True:
-            # Option2: We sample the errors neglecting the covariance matrix
-        
-            # Sampling the distances from Bailer-Jones assuming 2 separate Gaussian distributions
-            distance_sigma_lo  = np.array([np.abs(np.random.normal(loc = 0., scale = six_dimensions['distance'] -  e_six_dimensions['distance_low'])) for i in range(MC_size)])
-            distance_sigma_hi  = np.array([np.abs(np.random.normal(loc = 0., scale = e_six_dimensions['distance_high'] - six_dimensions['distance'])) for i in range(MC_size)])
-            select_lo_hi = np.array([(np.random.uniform(0, 1, size=nr_stars) < 0.5).astype(float) for x in range(MC_size)])
+        # Option4: We sample the errors including the covariance matrix
+        print('We sample the errors including the covariance matrix and parallax offset')
 
-            MC_sample_6D['ra']       = np.array([np.random.normal(loc=six_dimensions['ra'], scale=e_six_dimensions['ra']) for i in range(MC_size)]).T
-            MC_sample_6D['dec']      = np.array([np.random.normal(loc=six_dimensions['dec'], scale=e_six_dimensions['dec']) for i in range(MC_size)]).T
-            MC_sample_6D['distance'] = (six_dimensions['distance'] + select_lo_hi*distance_sigma_hi - (1-select_lo_hi)*distance_sigma_lo).clip(min=0).T/1000.
-            MC_sample_6D['pmra']     = np.array([np.random.normal(loc=six_dimensions['pmra'], scale=e_six_dimensions['pmra']) for i in range(MC_size)]).T
-            MC_sample_6D['pmdec']    = np.array([np.random.normal(loc=six_dimensions['pmdec'], scale=e_six_dimensions['pmdec']) for i in range(MC_size)]).T
-            MC_sample_6D['vrad']     = np.array([np.random.normal(loc=six_dimensions['vrad'], scale=e_six_dimensions['vrad']) for i in range(MC_size)]).T
-        
-        else:
-            # Option3: We sample the errors including the covariance matrix
-
-            # Mean vector and covariance matrix
-            mu = np.array(
-                [six_dimensions['ra'],
-                 six_dimensions['dec'],
-                 six_dimensions['parallax']-parallax_offset,
-                 six_dimensions['pmra'],
-                 six_dimensions['pmdec'],
-                 six_dimensions['vrad']
-                ])
-
-            s00 = (e_six_dimensions['ra'])**2
-            s11 = (e_six_dimensions['dec'])**2
-            s22 = e_six_dimensions['parallax']**2
-            s33 = e_six_dimensions['pmra']**2
-            s44 = e_six_dimensions['pmdec']**2
-            s55 = e_six_dimensions['vrad']**2
-
-            s01 = (e_six_dimensions['ra']) * e_six_dimensions['dec'] * galah_gaia['ra_dec_corr']
-            s02 = (e_six_dimensions['ra']) * e_six_dimensions['parallax'] * galah_gaia['ra_parallax_corr']
-            s03 = (e_six_dimensions['ra']) * e_six_dimensions['pmra'] * galah_gaia['ra_pmra_corr']
-            s04 = (e_six_dimensions['ra']) * e_six_dimensions['pmdec'] * galah_gaia['ra_pmdec_corr']
-            s05 = 0.*np.ones(np.shape(galah_gaia['sobject_id'])[0])
-
-            s12 = (e_six_dimensions['dec']) * e_six_dimensions['parallax'] * galah_gaia['dec_parallax_corr']
-            s13 = (e_six_dimensions['dec']) * e_six_dimensions['pmra'] * galah_gaia['dec_pmra_corr']
-            s14 = (e_six_dimensions['dec']) * e_six_dimensions['pmdec'] * galah_gaia['dec_pmdec_corr']
-            s15 = 0.*np.ones(np.shape(galah_gaia['sobject_id'])[0])
-
-            s23 = e_six_dimensions['parallax'] * e_six_dimensions['pmra'] * galah_gaia['parallax_pmra_corr']
-            s24 = e_six_dimensions['parallax'] * e_six_dimensions['pmdec'] * galah_gaia['parallax_pmdec_corr']
-            s25 = 0.*np.ones(np.shape(galah_gaia['sobject_id'])[0])
-
-            s34 = e_six_dimensions['pmra'] * e_six_dimensions['pmdec'] * galah_gaia['pmra_pmdec_corr']
-            s35 = 0.*np.ones(np.shape(galah_gaia['sobject_id'])[0])
-
-            s45 = 0.*np.ones(np.shape(galah_gaia['sobject_id'])[0])
-
-            sigma = np.array([
-                [
-                [s00[x], s01[x], s02[x], s03[x], s04[x], s05[x]],
-                [s01[x], s11[x], s12[x], s13[x], s14[x], s15[x]],
-                [s02[x], s12[x], s22[x], s23[x], s24[x], s25[x]],
-                [s03[x], s13[x], s23[x], s33[x], s34[x], s35[x]],
-                [s04[x], s14[x], s24[x], s34[x], s44[x], s45[x]],
-                [s05[x], s15[x], s25[x], s35[x], s45[x], s55[x]]
-                ] for x in range(np.shape(galah_gaia['sobject_id'])[0])
+        # Mean vector and covariance matrix
+        mu = np.array(
+            [six_dimensions['ra'],
+             six_dimensions['dec'],
+             six_dimensions['parallax']-parallax_offset,
+             six_dimensions['pmra'],
+             six_dimensions['pmdec'],
+             six_dimensions['vrad']
             ])
-           
-            sample = np.array([np.random.multivariate_normal(mu[:,x], sigma[x], size= MC_size) for x in range(np.shape(mu)[1])])
 
-            print('Created MC_sample_6D with (Nr. entries, Nr. Samples, Dimensions):')
-            print(np.shape(sample))
-            
-            MC_sample_6D['ra']       = sample[:,:,0] #in deg   #*np.pi/180. # in rad
-            MC_sample_6D['dec']      = sample[:,:,1] #in deg   #*np.pi/180. # in rad
-            MC_sample_6D['distance'] = 1./(sample[:,:,2]).clip(min=0.00001) # in kpc
-            MC_sample_6D['pmra']     = sample[:,:,3] # in mas/yr
-            MC_sample_6D['pmdec']    = sample[:,:,4] # in mas/yr
-            MC_sample_6D['vrad']     = sample[:,:,5] # in km/s
+        s00 = (e_six_dimensions['ra'])**2
+        s11 = (e_six_dimensions['dec'])**2
+        s22 = e_six_dimensions['parallax']**2
+        s33 = e_six_dimensions['pmra']**2
+        s44 = e_six_dimensions['pmdec']**2
+        s55 = e_six_dimensions['vrad']**2
+
+        s01 = (e_six_dimensions['ra']) * e_six_dimensions['dec'] * galah_gaia['ra_dec_corr']
+        s02 = (e_six_dimensions['ra']) * e_six_dimensions['parallax'] * galah_gaia['ra_parallax_corr']
+        s03 = (e_six_dimensions['ra']) * e_six_dimensions['pmra'] * galah_gaia['ra_pmra_corr']
+        s04 = (e_six_dimensions['ra']) * e_six_dimensions['pmdec'] * galah_gaia['ra_pmdec_corr']
+        s05 = 0.*np.ones(np.shape(galah_gaia['sobject_id'])[0])
+
+        s12 = (e_six_dimensions['dec']) * e_six_dimensions['parallax'] * galah_gaia['dec_parallax_corr']
+        s13 = (e_six_dimensions['dec']) * e_six_dimensions['pmra'] * galah_gaia['dec_pmra_corr']
+        s14 = (e_six_dimensions['dec']) * e_six_dimensions['pmdec'] * galah_gaia['dec_pmdec_corr']
+        s15 = 0.*np.ones(np.shape(galah_gaia['sobject_id'])[0])
+
+        s23 = e_six_dimensions['parallax'] * e_six_dimensions['pmra'] * galah_gaia['parallax_pmra_corr']
+        s24 = e_six_dimensions['parallax'] * e_six_dimensions['pmdec'] * galah_gaia['parallax_pmdec_corr']
+        s25 = 0.*np.ones(np.shape(galah_gaia['sobject_id'])[0])
+
+        s34 = e_six_dimensions['pmra'] * e_six_dimensions['pmdec'] * galah_gaia['pmra_pmdec_corr']
+        s35 = 0.*np.ones(np.shape(galah_gaia['sobject_id'])[0])
+
+        s45 = 0.*np.ones(np.shape(galah_gaia['sobject_id'])[0])
+
+        sigma = np.array([
+            [
+            [s00[x], s01[x], s02[x], s03[x], s04[x], s05[x]],
+            [s01[x], s11[x], s12[x], s13[x], s14[x], s15[x]],
+            [s02[x], s12[x], s22[x], s23[x], s24[x], s25[x]],
+            [s03[x], s13[x], s23[x], s33[x], s34[x], s35[x]],
+            [s04[x], s14[x], s24[x], s34[x], s44[x], s45[x]],
+            [s05[x], s15[x], s25[x], s35[x], s45[x], s55[x]]
+            ] for x in range(np.shape(galah_gaia['sobject_id'])[0])
+        ])
+
+        sample = np.array([np.random.multivariate_normal(mu[:,x], sigma[x], size= MC_size) for x in range(np.shape(mu)[1])])
+
+        print('Created MC_sample_6D with (Nr. entries, Nr. Samples, Dimensions):')
+        print(np.shape(sample))
+
+        MC_sample_6D['ra']       = sample[:,:,0] #in deg   #*np.pi/180. # in rad
+        MC_sample_6D['dec']      = sample[:,:,1] #in deg   #*np.pi/180. # in rad
+        MC_sample_6D['distance'] = 1./(sample[:,:,2]).clip(min=0.00001) # in kpc
+        MC_sample_6D['pmra']     = sample[:,:,3] # in mas/yr
+        MC_sample_6D['pmdec']    = sample[:,:,4] # in mas/yr
+        MC_sample_6D['vrad']     = sample[:,:,5] # in km/s
 
     return MC_sample_6D
 
@@ -527,20 +657,20 @@ def estimate_orbit_parameters(MC_sample_6D, orbit_information, nr_stars):
         # Create the Orbit instance
         o = Orbit(
             vxvv=[ra,dec,dist,pm_ra, pm_dec,v_los],
-            ro=_REFR0*u.kpc,
-            vo=_REFV0*u.km/u.s,
-            zo=Z_gc_sun_kpc*u.kpc,
-            solarmotion='schoenrich',
+            ro=r_galactic_centre,
+            vo=v_circular,
+            zo=z_galactic_plane,
+            solarmotion=[-11.1, 15.17, 7.25]*u.km/u.s,
             radec=True
         )
         
         #Galactocentric coordinates:
-        star_i['X_XYZ'] = o.x()#*u.kpc        
-        star_i['Y_XYZ'] = o.y()#*u.kpc
-        star_i['Z_XYZ'] = o.z()#*u.kpc
-        star_i['U_LSR'] = o.U()#*u.km/u.s
-        star_i['V_LSR'] = o.V()#*u.km/u.s
-        star_i['W_LSR'] = o.W()#*u.km/u.s
+        star_i['X_XYZ'] = o.helioX()#*u.kpc        
+        star_i['Y_XYZ'] = o.helioY()#*u.kpc
+        star_i['Z_XYZ'] = o.helioZ()#*u.kpc
+        star_i['U_UVW'] = o.U()#*u.km/u.s
+        star_i['V_UVW'] = o.V()#*u.km/u.s
+        star_i['W_UVW'] = o.W()#*u.km/u.s
         star_i['R_Rzphi'] = o.R()#*u.kpc
         star_i['phi_Rzphi'] = o.phi()#*u.rad
         star_i['z_Rzphi'] = o.z()#*u.kpc
@@ -558,7 +688,7 @@ def estimate_orbit_parameters(MC_sample_6D, orbit_information, nr_stars):
                 star_i['z_Rzphi']*u.kpc,
                 star_i['vz_Rzphi']*u.km/u.s,
                 star_i['phi_Rzphi']*u.rad,
-                ro=_REFR0*u.kpc,vo=_REFV0*u.km/u.s
+                ro=r_galactic_centre,vo=v_circular
             )
         except:
             star_i['J_R'] = [np.nan]
@@ -574,8 +704,8 @@ def estimate_orbit_parameters(MC_sample_6D, orbit_information, nr_stars):
                 star_i['z_Rzphi']*u.kpc,
                 star_i['vz_Rzphi']*u.km/u.s,
                 star_i['phi_Rzphi']*u.rad,
-                ro=_REFR0*u.kpc,vo=_REFV0*u.km/u.s,zo=Z_gc_sun_kpc*u.kpc
-            )            
+                ro=r_galactic_centre,vo=v_circular
+            )         
             star_i['zmax']
             star_i['R_peri']
             star_i['R_peri']
@@ -586,7 +716,7 @@ def estimate_orbit_parameters(MC_sample_6D, orbit_information, nr_stars):
             star_i['R_peri'] = [np.nan]
             star_i['R_ap'] = [np.nan]
 
-        star_i['Energy'] = o.E(pot=pot,ro=_REFR0*u.kpc,vo=_REFV0*u.km/u.s,zo=Z_gc_sun_kpc*u.kpc)
+        star_i['Energy'] = o.E(pot=pot,ro=r_galactic_centre,vo=v_circular,zo=z_galactic_plane)
 
         for each_label in orbit_labels:
             if len(MC_sample_6D['ra'][0]) == 1:
@@ -596,7 +726,7 @@ def estimate_orbit_parameters(MC_sample_6D, orbit_information, nr_stars):
                     print('did not work for '+each_label)
             else:
                 try:
-                    percentiles = np.percentile(star_i[each_label], q=[5,50,59])
+                    percentiles = np.percentile(star_i[each_label], q=[5,50,95])
                     orbit_information[each_label+'_5'][each_star] = percentiles[0]
                     orbit_information[each_label+'_50'][each_star] = percentiles[1]
                     orbit_information[each_label+'_95'][each_star] = percentiles[2]
@@ -609,12 +739,42 @@ def estimate_orbit_parameters(MC_sample_6D, orbit_information, nr_stars):
 
 
 # We will first 'sample' only once with the best value
-MC_sample_6D = sample_6d_uncertainty(six_dimensions,e_six_dimensions,MC_size=1,no_correlation=True)
+MC_sample_6D = sample_6d_uncertainty(six_dimensions,e_six_dimensions,MC_size=1,use_BSTEP=True)
 orbit_information = estimate_orbit_parameters(MC_sample_6D, orbit_information, nr_stars)
 
 # And now we sample with a certain Monte Carlo sampling size
-MC_sample_6D = sample_6d_uncertainty(six_dimensions,e_six_dimensions,MC_size=MC_size,no_correlation=False)
+MC_sample_6D = sample_6d_uncertainty(six_dimensions,e_six_dimensions,MC_size=MC_size,use_BSTEP=True)
 orbit_information = estimate_orbit_parameters(MC_sample_6D, orbit_information, nr_stars)
+
+
+# In[ ]:
+
+
+# plot difference of distance estimation choices
+if debug:
+    MC_sample_6D = sample_6d_uncertainty(six_dimensions,e_six_dimensions,MC_size=MC_size,use_BSTEP=True)
+    MC_sample_6D_1 = sample_6d_uncertainty(six_dimensions,e_six_dimensions,MC_size=MC_size,use_BailerJones=True)
+    MC_sample_6D_2 = sample_6d_uncertainty(six_dimensions,e_six_dimensions,MC_size=MC_size)
+
+    star_bla = 4
+
+    print(galah_gaia['sobject_id'][star_bla],galah_gaia['teff'][star_bla],galah_gaia['logg'][star_bla],galah_gaia['fe_h'][star_bla],galah_gaia['flag_sp'][star_bla])
+
+    if star_bla == 0:
+        kwargs = dict(bins=np.linspace(0.16,0.1725,100),histtype='step')
+    else:
+        kwargs = dict(bins=50,histtype='step')
+
+    print('Approach, best_dist, (best_dist-low_dist)/best_dist, low_dist, high_dist')
+    print('BSTEP: ',six_dimensions['dist_gbm'][star_bla],e_six_dimensions['dist_gbm'][star_bla]/six_dimensions['dist_gbm'][star_bla],six_dimensions['dist_gbm'][star_bla]-e_six_dimensions['dist_gbm'][star_bla],six_dimensions['dist_gbm'][star_bla]+e_six_dimensions['dist_gbm'][star_bla])
+    print('Bailer-Jones: ',six_dimensions['r_est'][star_bla],(six_dimensions['r_est'][star_bla]-e_six_dimensions['r_lo'][star_bla])/six_dimensions['r_est'][star_bla],e_six_dimensions['r_lo'][star_bla],e_six_dimensions['r_hi'][star_bla])
+    print('Parallax: ',1000./six_dimensions['parallax'][star_bla],e_six_dimensions['parallax'][star_bla]/six_dimensions['parallax'][star_bla],1000./(six_dimensions['parallax'][star_bla]+e_six_dimensions['parallax'][star_bla]),1000./(six_dimensions['parallax'][star_bla]-e_six_dimensions['parallax'][star_bla]))
+    print('BSTEP-Bailer-Jones',six_dimensions['dist_gbm'][star_bla]-six_dimensions['r_est'][star_bla],(six_dimensions['dist_gbm'][star_bla]-six_dimensions['r_est'][star_bla])/six_dimensions['dist_gbm'][star_bla])
+
+    plt.hist(MC_sample_6D['distance'][star_bla],label='BSTEP',**kwargs);
+    plt.hist(MC_sample_6D_1['distance'][star_bla],label='Bailer-Jones',**kwargs);
+    plt.hist(MC_sample_6D_2['distance'][star_bla],label='Parallax',**kwargs);
+    plt.legend()
 
 
 # In[ ]:
