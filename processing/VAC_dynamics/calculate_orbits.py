@@ -176,11 +176,10 @@ import galpy
 from galpy.potential.mwpotentials import McMillan17 as pot
 from galpy.util.bovy_conversion import get_physical
 from galpy.actionAngle import actionAngleStaeckel
-from galpy.util import bovy_coords
 from galpy.orbit import Orbit
 
 # Reference values
-#r_galactic_centre = 8.178*u.kpc # Gravity Collaboration, 2018, A&A, 615, 15
+#r_galactic_centre = 8.178*u.kpc # Gravity Collaboration, 2019, A&A, 625, 10
 r_galactic_centre = 8.21*u.kpc # McMillan Potential, 2017
 z_galactic_plane = 25.0*u.pc # Bland-Hawthorn & Gerhard, 2016, ARA&A, 54, 529
 
@@ -224,6 +223,7 @@ if calculate_sun:
         vo=v_circular,
         zo=z_galactic_plane,
         solarmotion=[-11.1, 15.17, 7.25]*u.km/u.s,
+        #solarmotion='schoenrich',
         radec=True
     )
 
@@ -243,7 +243,7 @@ if calculate_sun:
     sun['vT_Rzphi'] = o.vT()#*u.km/u.s
 
     try:
-        sun['J_R'], sun['L_Z'],sun['J_Z'] = aAS(
+        sun['J_R'], sun['L_Z'],sun['J_Z'], sun['Omegar'], sun['Omegaphi'], sun['Omegaz'], angler,anglephi,anglez = aAS.actionsFreqsAngles(
             #R,vR,vT,z,vz[,phi]
             sun['R_Rzphi']*u.kpc,
             sun['vR_Rzphi']*u.km/u.s,
@@ -254,9 +254,24 @@ if calculate_sun:
             ro=r_galactic_centre,vo=v_circular
         )
     except:
-        sun['J_R'] = [np.nan]
-        sun['L_Z'] = [np.nan]
-        sun['J_Z'] = [np.nan]
+        sun['Omegar'] = [np.nan]
+        sun['Omegaphi'] = [np.nan]
+        sun['Omegaz'] = [np.nan]
+        try:
+            sun['J_R'], sun['L_Z'],sun['J_Z'] = aAS(
+            #R,vR,vT,z,vz[,phi]
+            sun['R_Rzphi']*u.kpc,
+            sun['vR_Rzphi']*u.km/u.s,
+            sun['vT_Rzphi']*u.km/u.s,
+            sun['z_Rzphi']*u.kpc,
+            sun['vz_Rzphi']*u.km/u.s,
+            sun['phi_Rzphi']*u.rad,
+            ro=r_galactic_centre,vo=v_circular
+        )
+        except:
+            sun['J_R'] = [np.nan]
+            sun['L_Z'] = [np.nan]
+            sun['J_Z'] = [np.nan]
 
     try:
         sun['ecc'], sun['zmax'], sun['R_peri'], sun['R_ap'] = aAS.EccZmaxRperiRap(
@@ -287,6 +302,7 @@ if calculate_sun:
     print('R,phi,z: '+"{:.2f}".format(sun['R_Rzphi'])+' '+"{:.2f}".format(sun['phi_Rzphi'])+' '+"{:.2f}".format(sun['z_Rzphi']))
     print('vR,vphi,vT,vz: '+"{:.2f}".format(sun['vR_Rzphi'])+' '+"{:.2f}".format(sun['vphi_Rzphi'])+' '+"{:.2f}".format(sun['vT_Rzphi'])+' '+"{:.2f}".format(sun['vz_Rzphi']))
     print('J_R,L_Z,J_Z: '+"{:.2f}".format(sun['J_R'][0])+' '+"{:.2f}".format(sun['L_Z'][0])+' '+"{:.2f}".format(sun['J_Z'][0]))
+    print('Omega R/phi/z: '+"{:.2f}".format(sun['Omegar'][0])+' '+"{:.2f}".format(sun['Omegaphi'][0])+' '+"{:.2f}".format(sun['Omegaz'][0]))
     print('ecc, zmax, R_peri, R_apo: '+"{:.2f}".format(sun['ecc'][0])+' '+"{:.2f}".format(sun['zmax'][0])+' '+"{:.2f}".format(sun['R_peri'][0])+' '+"{:.2f}".format(sun['R_ap'][0]))
     print('Energy: '+"{:.2f}".format(sun['Energy']))
 
@@ -298,9 +314,15 @@ if calculate_sun:
 
 try:
     galah_gaia_input = pyfits.getdata('/shared-storage/buder/svn-repos/trunk/GALAH/GALAH_DR3/catalogs/GALAH_DR3_main_200604_extended_caution_v2.fits',1)
+    out_dir = '/shared-storage/buder/svn-repos/trunk/GALAH/GALAH_DR3/processing/VAC_dynamics/'
 except:
-    galah_gaia_input = pyfits.getdata('/Users/svenbuder/GALAH_DR3/catalogs/GALAH_DR3_main_200604_extended_caution_v2.fits',1)
-
+    try:
+        galah_gaia_input = pyfits.getdata('/Users/svenbuder/GALAH_DR3/catalogs/GALAH_DR3_main_200604_extended_caution_v2.fits',1)
+        out_dir = '/Users/svenbuder/GALAH_DR3/processing/VAC_dynamics/'
+    except:
+        galah_gaia_input = pyfits.getdata('/avatar/buder/trunk/GALAH/GALAH_DR3/catalogs/GALAH_DR3_main_200604_extended_caution_v2.fits',1)
+        out_dir = '/avatar/buder/trunk/GALAH/GALAH_DR3/processing/VAC_dynamics/'
+        
 full_length = len(galah_gaia_input['sobject_id'])
 print("Initial nr. of entries")
 print(full_length)
@@ -436,7 +458,9 @@ e_six_dimensions['vrad'][use_gaia_instead] = galah_gaia['e_rv_gaia'][use_gaia_in
 # In[ ]:
 
 
-MC_size = 10000
+MC_size = 1000
+
+print('MC Size: ',MC_size)
 
 np.random.seed(123)
 
@@ -447,6 +471,7 @@ Rphiz_labels     = ['R_Rzphi','z_Rzphi','phi_Rzphi']
 vRphiz_labels    = ['vR_Rzphi','vz_Rzphi','vphi_Rzphi','vT_Rzphi']
 
 action_labels    = ['J_R','L_Z','J_Z']
+frequency_labels    = ['Omegar','Omegaphi','Omegaz']
 ext_orbit_labels = ['ecc', 'zmax', 'R_peri', 'R_ap', 'Energy']
 
 orbit_labels = np.concatenate((
@@ -455,6 +480,7 @@ orbit_labels = np.concatenate((
     Rphiz_labels,
     vRphiz_labels,
     action_labels,
+    frequency_labels,
     ext_orbit_labels    
     ))
 print(orbit_labels)
@@ -680,7 +706,7 @@ def estimate_orbit_parameters(MC_sample_6D, orbit_information, nr_stars):
         star_i['vT_Rzphi'] = o.vT()#*u.km/u.s
         
         try:
-            star_i['J_R'], star_i['L_Z'],star_i['J_Z'] = aAS(
+            star_i['J_R'], star_i['L_Z'],star_i['J_Z'], star_i['Omegar'], star_i['Omegaphi'], star_i['Omegaz'] = aAS(
                 #R,vR,vT,z,vz[,phi]
                 star_i['R_Rzphi']*u.kpc,
                 star_i['vR_Rzphi']*u.km/u.s,
@@ -691,9 +717,24 @@ def estimate_orbit_parameters(MC_sample_6D, orbit_information, nr_stars):
                 ro=r_galactic_centre,vo=v_circular
             )
         except:
-            star_i['J_R'] = [np.nan]
-            star_i['L_Z'] = [np.nan]
-            star_i['J_Z'] = [np.nan]
+            star_i['Omegar'] = [np.nan]
+            star_i['Omegaphi'] = [np.nan]
+            star_i['Omegaz'] = [np.nan]
+            try:
+                star_i['J_R'], star_i['L_Z'],star_i['J_Z'] = aAS(
+                    #R,vR,vT,z,vz[,phi]
+                    star_i['R_Rzphi']*u.kpc,
+                    star_i['vR_Rzphi']*u.km/u.s,
+                    star_i['vT_Rzphi']*u.km/u.s,
+                    star_i['z_Rzphi']*u.kpc,
+                    star_i['vz_Rzphi']*u.km/u.s,
+                    star_i['phi_Rzphi']*u.rad,
+                    ro=r_galactic_centre,vo=v_circular
+                )
+            except:
+                star_i['J_R'] = [np.nan]
+                star_i['L_Z'] = [np.nan]
+                star_i['J_Z'] = [np.nan]
 
         try:
             star_i['ecc'], star_i['zmax'], star_i['R_peri'], star_i['R_ap'] = aAS.EccZmaxRperiRap(
@@ -1050,7 +1091,7 @@ for each_orbit_label in orbit_labels:
 galah_dynamics_data = pandas.DataFrame(galah_dynamics,columns=galah_dynamics.keys())
 
 data_for_fits = Table.from_pandas(galah_dynamics_data)
-data_for_fits.write('dynamics_output/sobject_dynamics_'+str(subset)+'.fits',overwrite=True)
+data_for_fits.write(out_dir+'dynamics_output/sobject_dynamics_'+str(subset)+'.fits',overwrite=True)
 
 
 # In[ ]:
