@@ -335,6 +335,7 @@ print("Initial nr. of entries")
 print(full_length)
 
 subset_size = 11
+
 try:
     subset = int(sys.argv[1])
 except:
