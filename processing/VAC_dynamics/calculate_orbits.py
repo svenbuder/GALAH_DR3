@@ -27,6 +27,13 @@
 # In[ ]:
 
 
+import time
+start = time.time()
+
+
+# In[ ]:
+
+
 # Preamble for notebook 
 
 # Compatibility with Python 3
@@ -210,7 +217,7 @@ aAS = actionAngleStaeckel(
 # In[ ]:
 
 
-calculate_sun = False
+calculate_sun = True
 
 if calculate_sun:
     sun = dict()
@@ -327,7 +334,7 @@ full_length = len(galah_gaia_input['sobject_id'])
 print("Initial nr. of entries")
 print(full_length)
 
-subset_size = 10000
+subset_size = 10
 
 try:
     subset = int(sys.argv[1])
@@ -458,7 +465,7 @@ e_six_dimensions['vrad'][use_gaia_instead] = galah_gaia['e_rv_gaia'][use_gaia_in
 # In[ ]:
 
 
-MC_size = 1000
+MC_size = 100
 
 print('MC Size: ',MC_size)
 
@@ -706,7 +713,7 @@ def estimate_orbit_parameters(MC_sample_6D, orbit_information, nr_stars):
         star_i['vT_Rzphi'] = o.vT()#*u.km/u.s
         
         try:
-            star_i['J_R'], star_i['L_Z'],star_i['J_Z'], star_i['Omegar'], star_i['Omegaphi'], star_i['Omegaz'] = aAS(
+            star_i['J_R'], star_i['L_Z'],star_i['J_Z'], star_i['Omegar'], star_i['Omegaphi'], star_i['Omegaz'], angler, anglephi, anglez = aAS.actionsFreqsAngles(
                 #R,vR,vT,z,vz[,phi]
                 star_i['R_Rzphi']*u.kpc,
                 star_i['vR_Rzphi']*u.km/u.s,
@@ -1097,6 +1104,12 @@ data_for_fits.write(out_dir+'dynamics_output/sobject_dynamics_'+str(subset)+'.fi
 # In[ ]:
 
 
+galah_dynamics['Omegar']
+
+
+# In[ ]:
+
+
 try:
     import email
     import email.mime.application
@@ -1204,4 +1217,10 @@ def calculate_posterior_percentiles(varpi, sigma_varpi, r_len, r_lo, r_est, r_hi
 #     r_est = galah_gaia['r_est'][0], 
 #     r_hi = galah_gaia['r_hi'][0]
 # )
+
+
+# In[ ]:
+
+
+print('Total time:',start-time.time())
 
