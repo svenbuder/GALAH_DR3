@@ -327,7 +327,7 @@ full_length = len(galah_gaia_input['sobject_id'])
 print("Initial nr. of entries")
 print(full_length)
 
-subset_size = 10000
+subset_size = 500
 
 try:
     subset = int(sys.argv[1])
@@ -458,7 +458,7 @@ e_six_dimensions['vrad'][use_gaia_instead] = galah_gaia['e_rv_gaia'][use_gaia_in
 # In[ ]:
 
 
-MC_size = 1000
+MC_size = 100
 
 print('MC Size: ',MC_size)
 
