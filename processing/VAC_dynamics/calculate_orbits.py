@@ -27,13 +27,6 @@
 # In[ ]:
 
 
-import time
-start = time.time()
-
-
-# In[ ]:
-
-
 # Preamble for notebook 
 
 # Compatibility with Python 3
@@ -44,6 +37,10 @@ try:
     get_ipython().run_line_magic('config', "InlineBackend.figure_format='retina'")
 except:
     pass
+
+# Start timer
+import time
+start = time.time()
 
 # Basic packages
 import numpy as np
