@@ -334,7 +334,7 @@ full_length = len(galah_gaia_input['sobject_id'])
 print("Initial nr. of entries")
 print(full_length)
 
-subset_size = 10
+subset_size = 11
 
 try:
     subset = int(sys.argv[1])
