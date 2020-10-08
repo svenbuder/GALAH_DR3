@@ -242,7 +242,7 @@ if calculate_sun:
     sun['phi_Rzphi'] = o.phi()#*u.rad
     sun['z_Rzphi'] = o.z()#*u.kpc
     sun['vR_Rzphi'] = o.vR()#*u.km/u.s
-    sun['vphi_Rzphi'] = o.vT()#*u.km/u.s        
+    sun['vphi_Rzphi'] = o.vphi()#*u.km/u.s        
     sun['vz_Rzphi'] = o.vz()#*u.km/u.s
     sun['vT_Rzphi'] = o.vT()#*u.km/u.s
 
@@ -331,7 +331,7 @@ full_length = len(galah_gaia_input['sobject_id'])
 print("Initial nr. of entries")
 print(full_length)
 
-subset_size = 11
+subset_size = 10000
 
 try:
     subset = int(sys.argv[1])
@@ -462,7 +462,7 @@ e_six_dimensions['vrad'][use_gaia_instead] = galah_gaia['e_rv_gaia'][use_gaia_in
 # In[ ]:
 
 
-MC_size = 100
+MC_size = 1000
 
 print('MC Size: ',MC_size)
 
@@ -705,7 +705,7 @@ def estimate_orbit_parameters(MC_sample_6D, orbit_information, nr_stars):
         star_i['phi_Rzphi'] = o.phi()#*u.rad
         star_i['z_Rzphi'] = o.z()#*u.kpc
         star_i['vR_Rzphi'] = o.vR()#*u.km/u.s
-        star_i['vphi_Rzphi'] = o.vT()#*u.km/u.s        
+        star_i['vphi_Rzphi'] = o.vphi()#*u.km/u.s        
         star_i['vz_Rzphi'] = o.vz()#*u.km/u.s
         star_i['vT_Rzphi'] = o.vT()#*u.km/u.s
         
