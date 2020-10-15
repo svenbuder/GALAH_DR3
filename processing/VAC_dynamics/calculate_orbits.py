@@ -336,51 +336,76 @@ subset_size = 10000
 try:
     subset = int(sys.argv[1])
 except:
-    subset = 0
-if subset*subset_size >= full_length:
-    sys.exit('The subset is beyond the length of GALAH DR3')
+    subset = -1
 
-galah_gaia_input = galah_gaia_input[subset*subset_size:np.min([(subset+1)*subset_size,full_length])]
+if subset != -1:
 
-nr_galah_stars = len(galah_gaia_input['sobject_id'])
-print("Nr. stars per subset")
-print(nr_galah_stars)
+    if subset*subset_size >= full_length:
+        sys.exit('The subset is beyond the length of GALAH DR3')
 
-nr_galah_stars_dynamics = np.where(
-    np.isfinite(galah_gaia_input['ra']) &
-    np.isfinite(galah_gaia_input['dec']) &
-    np.isfinite(galah_gaia_input['r_est']) &
-    np.isfinite(galah_gaia_input['pmra']) &
-    np.isfinite(galah_gaia_input['pmdec']) &
-    #np.isfinite(galah_gaia_input['rv_guess']) &
-    np.isfinite(galah_gaia_input['ra_error']) &
-    np.isfinite(galah_gaia_input['dec_error']) &
-    np.isfinite(galah_gaia_input['r_hi']) &
-    np.isfinite(galah_gaia_input['r_lo']) &
-    np.isfinite(galah_gaia_input['pmra_error']) &
-    np.isfinite(galah_gaia_input['pmdec_error']) &
-    #np.isfinite(galah_gaia_input['e_rv_guess']) &
-    #(galah_gaia_input['rv_guess'] != 999.) &
-    #(galah_gaia_input['rv_guess'] != 1024.) &
-    (
+    galah_gaia_input = galah_gaia_input[subset*subset_size:np.min([(subset+1)*subset_size,full_length])]
+
+    nr_galah_stars = len(galah_gaia_input['sobject_id'])
+    print("Nr. stars per subset")
+    print(nr_galah_stars)
+
+    nr_galah_stars_dynamics = np.where(
+        np.isfinite(galah_gaia_input['ra']) &
+        np.isfinite(galah_gaia_input['dec']) &
+        np.isfinite(galah_gaia_input['r_est']) &
+        np.isfinite(galah_gaia_input['pmra']) &
+        np.isfinite(galah_gaia_input['pmdec']) &
+        #np.isfinite(galah_gaia_input['rv_guess']) &
+        np.isfinite(galah_gaia_input['ra_error']) &
+        np.isfinite(galah_gaia_input['dec_error']) &
+        np.isfinite(galah_gaia_input['r_hi']) &
+        np.isfinite(galah_gaia_input['r_lo']) &
+        np.isfinite(galah_gaia_input['pmra_error']) &
+        np.isfinite(galah_gaia_input['pmdec_error']) &
+        #np.isfinite(galah_gaia_input['e_rv_guess']) &
+        #(galah_gaia_input['rv_guess'] != 999.) &
+        #(galah_gaia_input['rv_guess'] != 1024.) &
         (
-        np.isfinite(galah_gaia_input['rv_galah']) &
-        np.isfinite(galah_gaia_input['e_rv_galah'])
-        ) |
-        (
-        np.isfinite(galah_gaia_input['rv_gaia']) &
-        np.isfinite(galah_gaia_input['e_rv_gaia'])
+            (
+            np.isfinite(galah_gaia_input['rv_galah']) &
+            np.isfinite(galah_gaia_input['e_rv_galah'])
+            ) |
+            (
+            np.isfinite(galah_gaia_input['rv_gaia']) &
+            np.isfinite(galah_gaia_input['e_rv_gaia'])
+            )
         )
+    )[0]
+
+    # This should only me activated for tests with subsets of GALAH DR3
+    #nr_galah_stars_dynamics = nr_galah_stars_dynamics[:100]
+
+    galah_gaia = galah_gaia_input[nr_galah_stars_dynamics]
+    nr_stars = len(galah_gaia['sobject_id'])
+    print("Selected number of stars")
+    print(nr_stars)
+    
+else:
+    print('Rerunning Orbits')
+    
+    old_dynamics = Table.read('../../catalogs/GALAH_DR3_VAC_dynamics_201012_allspec.fits')
+    
+    bad_orbits = (
+        np.isfinite(old_dynamics['X_XYZ']) & 
+        np.isnan(old_dynamics['ecc']) & 
+        np.isfinite(galah_gaia_input['dist_gbm'])
     )
-)[0]
+    galah_gaia_input['dist_gbm'][bad_orbits] = np.NaN
 
-# This should only me activated for tests with subsets of GALAH DR3
-#nr_galah_stars_dynamics = nr_galah_stars_dynamics[:100]
-
-galah_gaia = galah_gaia_input[nr_galah_stars_dynamics]
-nr_stars = len(galah_gaia['sobject_id'])
-print("Selected number of stars")
-print(nr_stars)
+    rerun_entry = np.arange(len(galah_gaia_input))[bad_orbits]
+    
+    galah_gaia = galah_gaia_input[rerun_entry]
+    galah_gaia['dist_gbm'] = np.NaN
+    nr_stars = len(rerun_entry)
+    nr_galah_stars = nr_stars
+    nr_galah_stars_dynamics = np.arange(nr_stars)
+    print("Selected number of stars")
+    print(nr_stars)
 
 
 # In[ ]:
@@ -462,7 +487,7 @@ e_six_dimensions['vrad'][use_gaia_instead] = galah_gaia['e_rv_gaia'][use_gaia_in
 # In[ ]:
 
 
-MC_size = 1000
+MC_size = 10
 
 print('MC Size: ',MC_size)
 
@@ -1080,7 +1105,11 @@ if debug==True:
 
 galah_dynamics = collections.OrderedDict()
 
-galah_dynamics['sobject_id'] = galah_gaia_input['sobject_id']
+if subset != -1:
+    galah_dynamics['sobject_id'] = galah_gaia_input['sobject_id']
+else:
+    galah_dynamics['sobject_id'] = galah_gaia['sobject_id']
+
 for each_orbit_label in orbit_labels:
     galah_dynamics[each_orbit_label] = np.zeros(nr_galah_stars, dtype=float)
     galah_dynamics[each_orbit_label].fill(np.nan)
@@ -1096,128 +1125,4 @@ galah_dynamics_data = pandas.DataFrame(galah_dynamics,columns=galah_dynamics.key
 
 data_for_fits = Table.from_pandas(galah_dynamics_data)
 data_for_fits.write(out_dir+'dynamics_output/sobject_dynamics_'+str(subset)+'.fits',overwrite=True)
-
-
-# In[ ]:
-
-
-galah_dynamics['Omegar']
-
-
-# In[ ]:
-
-
-try:
-    import email
-    import email.mime.application
-    from email.MIMEMultipart import MIMEMultipart
-    from email.MIMEText import MIMEText
-    from email.MIMEImage import MIMEImage
-    msg = MIMEMultipart()
-
-    msg['From'] = 'gemini2'
-    msg['To'] = 'buder@mpia.de'
-    msg['Subject'] = 'Orbit calculation for subset '+str(subset)+' GALAH DR3 finished'                                                                                                         
-
-    import smtplib
-    mailer = smtplib.SMTP('localhost')
-    mailer.sendmail('gemini2', 'buder@mpia.de', msg.as_string())
-    mailer.close()
-    print('Email sent')
-except:
-    print('Could not send email')
-
-
-# # Posterior Sampling of the Distances/parallaxes
-
-# In[ ]:
-
-
-def likelihood_function(distance,parallax,uncertainty,parallax_zeropoint=-0.029/1000.):
-    '''
-    distance in pc
-    parallax in mas
-    uncertainty in mas
-    
-    returns unnormalized likelihood function
-    '''
-    parallax /= 1000
-    uncertainty /= 1000
-    result = np.exp(-np.divide((parallax-parallax_zeropoint-np.divide(1,distance))**2,2*uncertainty**2))
-    return(result)
-
-def prior_function(distance, r_len):
-    prior = 1./(2.*r_len**3)*distance**2.*np.exp(-distance/r_len)
-    prior[(distance<=0)] = 0.
-    return prior
-
-def posterior_function(prior, likelihood):
-    return prior*likelihood
-
-def cumulative_sum(x, y):
-        """
-        Compute areas of trapezoids and sum result
-        """
-        xdif = x[1:] - x[:-1]
-        yavg = (y[0:-1] + y[1:] ) / 2.  
-        tsum = np.cumsum(xdif*yavg) 
-
-        return(tsum)
-
-def calculate_posterior_percentiles(varpi, sigma_varpi, r_len, r_lo, r_est, r_hi):
-
-    # sample within 5sigma parallax uncertainty
-    distance_sample = 1000./np.linspace(
-        varpi+5*sigma_varpi,
-        (varpi-5*sigma_varpi).clip(min=0.1),
-        1000)
-    
-    likelihood = likelihood_function(
-        distance = distance_sample,
-        parallax = varpi,
-        uncertainty = sigma_varpi,
-        parallax_zeropoint=-0.029/1000.)
-
-    prior = prior_function(
-        distance = distance_sample,
-        r_len = r_len
-    )
-    
-    posterior = posterior_function(prior, likelihood)
-    
-    cumulative_posterior = cumulative_sum(distance_linspace,prior*likelihood/np.max(prior*likelihood))
-    cumulative_distance = (distance_linspace[1:]+distance_linspace[:-1])/2.
-    cumulative_posterior /= np.max(cumulative_posterior)
-
-    percentiles = np.interp([0.158655254,0.50,1-0.158655254],cumulative_posterior,cumulative_distance)
-
-    plt.figure()
-    plt.plot(
-        distance_sample,
-        posterior
-    )
-    for each in percentiles:
-        plt.axvline(each,c='k')
-    
-    for each in [r_lo,r_est,r_hi]:
-        plt.axvline(each,c='r')
-        
-    plt.show()
-    
-    return (percentiles)
-
-# calculate_posterior_percentiles(
-#     varpi = galah_gaia['parallax'][0], 
-#     sigma_varpi = galah_gaia['parallax_error'][0], 
-#     r_len = galah_gaia['r_len'][0], 
-#     r_lo = galah_gaia['r_lo'][0], 
-#     r_est = galah_gaia['r_est'][0], 
-#     r_hi = galah_gaia['r_hi'][0]
-# )
-
-
-# In[ ]:
-
-
-print('Total time:',start-time.time())
 
