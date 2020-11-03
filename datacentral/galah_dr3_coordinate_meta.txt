@@ -1,0 +1,3 @@
+table_name|source_name_col|long_col|lat_col|long_format|lat_format|frame|equinox
+mainstartable|sobject_id|ra|dec|deg|deg|icrs|
+mainspectable|sobject_id|ra|dec|deg|deg|icrs|

@@ -1,0 +1,512 @@
+*Column Name* | *Description* | *UCD* | *Unit* | *Data Type* | 
+:--------------|:--------------|:------------|:------------|:----------|
+star_id|2MASS identifier|meta.id.cross||string|
+sobject_id|GALAH identifier|meta.id||integer|
+source_id|Gaia DR2 source_id|meta.id.cross||integer|
+survey_name|Name of survey as part of GALAH+DR3|meta.id||string|
+field_id|GALAH fco field|meta.id||integer|
+flag_repeat|Repeat observation flag, indicating if used for clean catalog|meta.code.qual,stat.fit||integer|
+wg4_field|GALAH WG4 field|meta.number||string|
+wg4_pipeline|SME pipeline version free/lbol/seis|meta.version||string|
+flag_sp|Stellar parameter quality flag|meta.code.qual,stat.fit||integer|
+teff|Spectroscopic effective temperature (used for fitting)|phys.temperature.effective|K|float|
+e_teff|Uncertainty teff|stat.error;phys.temperature.effective|K|float|
+irfm_teff|IRFM temperature (not used for synthesis)|phys.temperature.effective,phot|K|float|
+irfm_ebv|E(B-V) used for IRFM teff estimation|phys.absorption.gal|mag|float|
+irfm_ebv_ref|Reference irfm_ebv|meta.bib||string|
+cov_e_teff|SME covariance fitting uncertainty teff|fit.param;stat.error;phys.temperature.effective|K|float|
+init_teff|SME initial teff|fit.param;phys.temperature.effective|K|float|
+logg|Surface gravity (not fitted via spectra if wg4_pipeline not free)|phys.gravity|log(cm.s**-2)|float|
+e_logg|Uncertainty logg|stat.error;phys.gravity|log(cm.s**-2)|float|
+cov_e_logg|MonteCarlo uncertainty logg|fit.param;stat.error;phys.gravity|log(cm.s**-2)|float|
+init_logg|SME initial logg|fit.param;phys.gravity|log(cm.s**-2)|float|
+fe_h|Fe atomic abundance from Fe lines (final, 1D-NLTE)|phys.abund.Fe||float|
+e_fe_h|Uncertainty fe_h|stat.error;phys.abund.Fe||float|
+cov_e_fe_h|SME covariance fitting uncertainty fe_h|fit.param;stat.error;phys.abund.Fe||float|
+flag_fe_h|Quality flag fe_h|meta.code.qual,stat.fit||integer|
+fe_h_atmo|sme.feh from stellar parameter run, fitted from H, Ti, Sc, Fe|stat.fit.param||float|
+e_fe_h_atmo|Uncertainty fe_h_atmo|fit.param;phys.abund.Fe||float|
+cov_e_fe_h_atmo|SME covariance fitting uncertainty sme.feh|fit.param;stat.error;phys.abund.Fe||float|
+init_fe_h_atmo|SME initial sme.feh|fit.param;stat.error;phys.abund.Fe||float|
+vmic|Microturbulence velocity (from empirical relation)|phys.veloc.microTurb|km s-1|float|
+vbroad|Broadening velocity (fitted sme.vsini with sme.vmac=0)|phys.veloc.rotat|km s-1|float|
+e_vbroad|Uncertainty of vbroad|stat.error;phys.veloc.rotat|km s-1|float|
+cov_e_vbroad|SME covariance fitting uncertainty sme.vsini|fit.param;stat.error;phys.veloc.rotat|km s-1|float|
+init_vbroad|SME initial broadening velocity|fit.param;stat.error;phys.veloc.rotat|km s-1|float|
+mass|Stellar parameter fitting product of stellar mass|fit.param;phys.mass|solMass|float|
+lbol|Stellar parameter fitting product of bolometric luminosity|fit.param;phys.luminosity|solLum|float|
+age|Stellar parameter fitting product of stellar age|fit.param;time.age|Gyr|float|
+chi2_sp|Chi2 value of stellar parameter fitting|stat.fit.chi2||float|
+alpha_fe|Combined, weighted alpha-process element abundance|phys.abund||float|
+e_alpha_fe|Uncertainty of alpha_fe|stat.error;phys.abund||float|
+nr_alpha_fe|Bitmask of used measurements for alpha_fe|meta.number||float|
+flag_alpha_fe|Quality flag of measurements for alpha_fe|meta.code.qual,stat.fit||integer|
+flux_A_Fe|Normalised maximum absorption strength of in iron lines|spectr.line||float|
+chi_A_Fe|Chi2 value of iron abundance fitting|stat.fit.chi2||float|
+ind_Li6708_fe|Individual uncalibrated measurmenet of line/combo Li6708 with local RV fitted|phys.abund||float|
+ind_cov_e_Li6708|SME covariance fitting uncertainty ind_Li6708_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Li6708|Quality flag fit for ind_Li6708_fe|meta.code.qual,stat.fit||integer|
+ind_Li6708_NoRV_fe|Individual uncalibrated measurmenet of line/combo Li6708_NoRV with RV fixed|phys.abund||float|
+ind_cov_e_Li6708_NoRV|SME covariance fitting uncertainty ind_Li6708_NoRV_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Li6708_NoRV|Quality flag fit for ind_Li6708_NoRV_fe|meta.code.qual,stat.fit||integer|
+ind_C6588_fe|Individual uncalibrated measurmenet of line/combo C6588|phys.abund||float|
+ind_cov_e_C6588|SME covariance fitting uncertainty ind_C6588_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_C6588|Quality flag fit for ind_C6588_fe|meta.code.qual,stat.fit||integer|
+ind_O_fe|Individual uncalibrated measurmenet of line/combo O|phys.abund||float|
+ind_cov_e_O|SME covariance fitting uncertainty ind_O_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_O|Quality flag fit for ind_O_fe|meta.code.qual,stat.fit||integer|
+ind_Na_fe|Individual uncalibrated measurmenet of line/combo Na|phys.abund||float|
+ind_cov_e_Na|SME covariance fitting uncertainty ind_Na_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Na|Quality flag fit for ind_Na_fe|meta.code.qual,stat.fit||integer|
+ind_Mg5711_fe|Individual uncalibrated measurmenet of line/combo Mg5711|phys.abund||float|
+ind_cov_e_Mg5711|SME covariance fitting uncertainty ind_Mg5711_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Mg5711|Quality flag fit for ind_Mg5711_fe|meta.code.qual,stat.fit||integer|
+ind_Al_fe|Individual uncalibrated measurmenet of line/combo Al|phys.abund||float|
+ind_cov_e_Al|SME covariance fitting uncertainty ind_Al_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Al|Quality flag fit for ind_Al_fe|meta.code.qual,stat.fit||integer|
+ind_Si_fe|Individual uncalibrated measurmenet of line/combo Si|phys.abund||float|
+ind_cov_e_Si|SME covariance fitting uncertainty ind_Si_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Si|Quality flag fit for ind_Si_fe|meta.code.qual,stat.fit||integer|
+ind_K7699_fe|Individual uncalibrated measurmenet of line/combo K7699|phys.abund||float|
+ind_cov_e_K7699|SME covariance fitting uncertainty ind_K7699_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_K7699|Quality flag fit for ind_K7699_fe|meta.code.qual,stat.fit||integer|
+ind_Ca_fe|Individual uncalibrated measurmenet of line/combo Ca|phys.abund||float|
+ind_cov_e_Ca|SME covariance fitting uncertainty ind_Ca_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Ca|Quality flag fit for ind_Ca_fe|meta.code.qual,stat.fit||integer|
+ind_Sc_fe|Individual uncalibrated measurmenet of line/combo Sc|phys.abund||float|
+ind_cov_e_Sc|SME covariance fitting uncertainty ind_Sc_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Sc|Quality flag fit for ind_Sc_fe|meta.code.qual,stat.fit||integer|
+ind_Ti4758_fe|Individual uncalibrated measurmenet of line/combo Ti4758|phys.abund||float|
+ind_cov_e_Ti4758|SME covariance fitting uncertainty ind_Ti4758_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Ti4758|Quality flag fit for ind_Ti4758_fe|meta.code.qual,stat.fit||integer|
+ind_Ti4759_fe|Individual uncalibrated measurmenet of line/combo Ti4759|phys.abund||float|
+ind_cov_e_Ti4759|SME covariance fitting uncertainty ind_Ti4759_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Ti4759|Quality flag fit for ind_Ti4759_fe|meta.code.qual,stat.fit||integer|
+ind_Ti4778_fe|Individual uncalibrated measurmenet of line/combo Ti4778|phys.abund||float|
+ind_cov_e_Ti4778|SME covariance fitting uncertainty ind_Ti4778_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Ti4778|Quality flag fit for ind_Ti4778_fe|meta.code.qual,stat.fit||integer|
+ind_Ti4782_fe|Individual uncalibrated measurmenet of line/combo Ti4782|phys.abund||float|
+ind_cov_e_Ti4782|SME covariance fitting uncertainty ind_Ti4782_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Ti4782|Quality flag fit for ind_Ti4782_fe|meta.code.qual,stat.fit||integer|
+ind_Ti4798_fe|Individual uncalibrated measurmenet of line/combo Ti4798|phys.abund||float|
+ind_cov_e_Ti4798|SME covariance fitting uncertainty ind_Ti4798_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Ti4798|Quality flag fit for ind_Ti4798_fe|meta.code.qual,stat.fit||integer|
+ind_Ti4802_fe|Individual uncalibrated measurmenet of line/combo Ti4802|phys.abund||float|
+ind_cov_e_Ti4802|SME covariance fitting uncertainty ind_Ti4802_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Ti4802|Quality flag fit for ind_Ti4802_fe|meta.code.qual,stat.fit||integer|
+ind_Ti4820_fe|Individual uncalibrated measurmenet of line/combo Ti4820|phys.abund||float|
+ind_cov_e_Ti4820|SME covariance fitting uncertainty ind_Ti4820_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Ti4820|Quality flag fit for ind_Ti4820_fe|meta.code.qual,stat.fit||integer|
+ind_Ti5689_fe|Individual uncalibrated measurmenet of line/combo Ti5689|phys.abund||float|
+ind_cov_e_Ti5689|SME covariance fitting uncertainty ind_Ti5689_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Ti5689|Quality flag fit for ind_Ti5689_fe|meta.code.qual,stat.fit||integer|
+ind_Ti5716_fe|Individual uncalibrated measurmenet of line/combo Ti5716|phys.abund||float|
+ind_cov_e_Ti5716|SME covariance fitting uncertainty ind_Ti5716_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Ti5716|Quality flag fit for ind_Ti5716_fe|meta.code.qual,stat.fit||integer|
+ind_Ti5720_fe|Individual uncalibrated measurmenet of line/combo Ti5720|phys.abund||float|
+ind_cov_e_Ti5720|SME covariance fitting uncertainty ind_Ti5720_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Ti5720|Quality flag fit for ind_Ti5720_fe|meta.code.qual,stat.fit||integer|
+ind_Ti5739_fe|Individual uncalibrated measurmenet of line/combo Ti5739|phys.abund||float|
+ind_cov_e_Ti5739|SME covariance fitting uncertainty ind_Ti5739_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Ti5739|Quality flag fit for ind_Ti5739_fe|meta.code.qual,stat.fit||integer|
+ind_Ti5866_fe|Individual uncalibrated measurmenet of line/combo Ti5866|phys.abund||float|
+ind_cov_e_Ti5866|SME covariance fitting uncertainty ind_Ti5866_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Ti5866|Quality flag fit for ind_Ti5866_fe|meta.code.qual,stat.fit||integer|
+ind_Ti6599_fe|Individual uncalibrated measurmenet of line/combo Ti6599|phys.abund||float|
+ind_cov_e_Ti6599|SME covariance fitting uncertainty ind_Ti6599_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Ti6599|Quality flag fit for ind_Ti6599_fe|meta.code.qual,stat.fit||integer|
+ind_Ti6717_fe|Individual uncalibrated measurmenet of line/combo Ti6717|phys.abund||float|
+ind_cov_e_Ti6717|SME covariance fitting uncertainty ind_Ti6717_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Ti6717|Quality flag fit for ind_Ti6717_fe|meta.code.qual,stat.fit||integer|
+ind_Ti7853_fe|Individual uncalibrated measurmenet of line/combo Ti7853|phys.abund||float|
+ind_cov_e_Ti7853|SME covariance fitting uncertainty ind_Ti7853_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Ti7853|Quality flag fit for ind_Ti7853_fe|meta.code.qual,stat.fit||integer|
+ind_Ti4720_fe|Individual uncalibrated measurmenet of line/combo Ti4720|phys.abund||float|
+ind_cov_e_Ti4720|SME covariance fitting uncertainty ind_Ti4720_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Ti4720|Quality flag fit for ind_Ti4720_fe|meta.code.qual,stat.fit||integer|
+ind_Ti4765_fe|Individual uncalibrated measurmenet of line/combo Ti4765|phys.abund||float|
+ind_cov_e_Ti4765|SME covariance fitting uncertainty ind_Ti4765_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Ti4765|Quality flag fit for ind_Ti4765_fe|meta.code.qual,stat.fit||integer|
+ind_Ti4799_fe|Individual uncalibrated measurmenet of line/combo Ti4799|phys.abund||float|
+ind_cov_e_Ti4799|SME covariance fitting uncertainty ind_Ti4799_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Ti4799|Quality flag fit for ind_Ti4799_fe|meta.code.qual,stat.fit||integer|
+ind_Ti4849_fe|Individual uncalibrated measurmenet of line/combo Ti4849|phys.abund||float|
+ind_cov_e_Ti4849|SME covariance fitting uncertainty ind_Ti4849_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Ti4849|Quality flag fit for ind_Ti4849_fe|meta.code.qual,stat.fit||integer|
+ind_Ti4866_fe|Individual uncalibrated measurmenet of line/combo Ti4866|phys.abund||float|
+ind_cov_e_Ti4866|SME covariance fitting uncertainty ind_Ti4866_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Ti4866|Quality flag fit for ind_Ti4866_fe|meta.code.qual,stat.fit||integer|
+ind_Ti4874_fe|Individual uncalibrated measurmenet of line/combo Ti4874|phys.abund||float|
+ind_cov_e_Ti4874|SME covariance fitting uncertainty ind_Ti4874_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Ti4874|Quality flag fit for ind_Ti4874_fe|meta.code.qual,stat.fit||integer|
+ind_V4832_fe|Individual uncalibrated measurmenet of line/combo V4832|phys.abund||float|
+ind_cov_e_V4832|SME covariance fitting uncertainty ind_V4832_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_V4832|Quality flag fit for ind_V4832_fe|meta.code.qual,stat.fit||integer|
+ind_V4784_fe|Individual uncalibrated measurmenet of line/combo V4784|phys.abund||float|
+ind_cov_e_V4784|SME covariance fitting uncertainty ind_V4784_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_V4784|Quality flag fit for ind_V4784_fe|meta.code.qual,stat.fit||integer|
+ind_V4797_fe|Individual uncalibrated measurmenet of line/combo V4797|phys.abund||float|
+ind_cov_e_V4797|SME covariance fitting uncertainty ind_V4797_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_V4797|Quality flag fit for ind_V4797_fe|meta.code.qual,stat.fit||integer|
+ind_Cr_fe|Individual uncalibrated measurmenet of line/combo Cr|phys.abund||float|
+ind_cov_e_Cr|SME covariance fitting uncertainty ind_Cr_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Cr|Quality flag fit for ind_Cr_fe|meta.code.qual,stat.fit||integer|
+ind_Mn_fe|Individual uncalibrated measurmenet of line/combo Mn|phys.abund||float|
+ind_cov_e_Mn|SME covariance fitting uncertainty ind_Mn_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Mn|Quality flag fit for ind_Mn_fe|meta.code.qual,stat.fit||integer|
+ind_Co4781_fe|Individual uncalibrated measurmenet of line/combo Co4781|phys.abund||float|
+ind_cov_e_Co4781|SME covariance fitting uncertainty ind_Co4781_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Co4781|Quality flag fit for ind_Co4781_fe|meta.code.qual,stat.fit||integer|
+ind_Co4900_fe|Individual uncalibrated measurmenet of line/combo Co4900|phys.abund||float|
+ind_cov_e_Co4900|SME covariance fitting uncertainty ind_Co4900_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Co4900|Quality flag fit for ind_Co4900_fe|meta.code.qual,stat.fit||integer|
+ind_Co5647_fe|Individual uncalibrated measurmenet of line/combo Co5647|phys.abund||float|
+ind_cov_e_Co5647|SME covariance fitting uncertainty ind_Co5647_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Co5647|Quality flag fit for ind_Co5647_fe|meta.code.qual,stat.fit||integer|
+ind_Co6490_fe|Individual uncalibrated measurmenet of line/combo Co6490|phys.abund||float|
+ind_cov_e_Co6490|SME covariance fitting uncertainty ind_Co6490_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Co6490|Quality flag fit for ind_Co6490_fe|meta.code.qual,stat.fit||integer|
+ind_Co6551_fe|Individual uncalibrated measurmenet of line/combo Co6551|phys.abund||float|
+ind_cov_e_Co6551|SME covariance fitting uncertainty ind_Co6551_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Co6551|Quality flag fit for ind_Co6551_fe|meta.code.qual,stat.fit||integer|
+ind_Co6632_fe|Individual uncalibrated measurmenet of line/combo Co6632|phys.abund||float|
+ind_cov_e_Co6632|SME covariance fitting uncertainty ind_Co6632_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Co6632|Quality flag fit for ind_Co6632_fe|meta.code.qual,stat.fit||integer|
+ind_Co6679_fe|Individual uncalibrated measurmenet of line/combo Co6679|phys.abund||float|
+ind_cov_e_Co6679|SME covariance fitting uncertainty ind_Co6679_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Co6679|Quality flag fit for ind_Co6679_fe|meta.code.qual,stat.fit||integer|
+ind_Co7713_fe|Individual uncalibrated measurmenet of line/combo Co7713|phys.abund||float|
+ind_cov_e_Co7713|SME covariance fitting uncertainty ind_Co7713_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Co7713|Quality flag fit for ind_Co7713_fe|meta.code.qual,stat.fit||integer|
+ind_Co7838_fe|Individual uncalibrated measurmenet of line/combo Co7838|phys.abund||float|
+ind_cov_e_Co7838|SME covariance fitting uncertainty ind_Co7838_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Co7838|Quality flag fit for ind_Co7838_fe|meta.code.qual,stat.fit||integer|
+ind_Ni5847_fe|Individual uncalibrated measurmenet of line/combo Ni5847|phys.abund||float|
+ind_cov_e_Ni5847|SME covariance fitting uncertainty ind_Ni5847_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Ni5847|Quality flag fit for ind_Ni5847_fe|meta.code.qual,stat.fit||integer|
+ind_Ni6586_fe|Individual uncalibrated measurmenet of line/combo Ni6586|phys.abund||float|
+ind_cov_e_Ni6586|SME covariance fitting uncertainty ind_Ni6586_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Ni6586|Quality flag fit for ind_Ni6586_fe|meta.code.qual,stat.fit||integer|
+ind_Cu5700_fe|Individual uncalibrated measurmenet of line/combo Cu5700|phys.abund||float|
+ind_cov_e_Cu5700|SME covariance fitting uncertainty ind_Cu5700_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Cu5700|Quality flag fit for ind_Cu5700_fe|meta.code.qual,stat.fit||integer|
+ind_Cu5782_fe|Individual uncalibrated measurmenet of line/combo Cu5782|phys.abund||float|
+ind_cov_e_Cu5782|SME covariance fitting uncertainty ind_Cu5782_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Cu5782|Quality flag fit for ind_Cu5782_fe|meta.code.qual,stat.fit||integer|
+ind_Zn4722_fe|Individual uncalibrated measurmenet of line/combo Zn4722|phys.abund||float|
+ind_cov_e_Zn4722|SME covariance fitting uncertainty ind_Zn4722_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Zn4722|Quality flag fit for ind_Zn4722_fe|meta.code.qual,stat.fit||integer|
+ind_Zn4811_fe|Individual uncalibrated measurmenet of line/combo Zn4811|phys.abund||float|
+ind_cov_e_Zn4811|SME covariance fitting uncertainty ind_Zn4811_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Zn4811|Quality flag fit for ind_Zn4811_fe|meta.code.qual,stat.fit||integer|
+ind_Rb7800_fe|Individual uncalibrated measurmenet of line/combo Rb7800|phys.abund||float|
+ind_cov_e_Rb7800|SME covariance fitting uncertainty ind_Rb7800_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Rb7800|Quality flag fit for ind_Rb7800_fe|meta.code.qual,stat.fit||integer|
+ind_Sr6550_fe|Individual uncalibrated measurmenet of line/combo Sr6550|phys.abund||float|
+ind_cov_e_Sr6550|SME covariance fitting uncertainty ind_Sr6550_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Sr6550|Quality flag fit for ind_Sr6550_fe|meta.code.qual,stat.fit||integer|
+ind_Y_fe|Individual uncalibrated measurmenet of line/combo Y|phys.abund||float|
+ind_cov_e_Y|SME covariance fitting uncertainty ind_Y_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Y|Quality flag fit for ind_Y_fe|meta.code.qual,stat.fit||integer|
+ind_Y4820_fe|Individual uncalibrated measurmenet of line/combo Y4820|phys.abund||float|
+ind_cov_e_Y4820|SME covariance fitting uncertainty ind_Y4820_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Y4820|Quality flag fit for ind_Y4820_fe|meta.code.qual,stat.fit||integer|
+ind_Y4855_fe|Individual uncalibrated measurmenet of line/combo Y4855|phys.abund||float|
+ind_cov_e_Y4855|SME covariance fitting uncertainty ind_Y4855_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Y4855|Quality flag fit for ind_Y4855_fe|meta.code.qual,stat.fit||integer|
+ind_Y4884_fe|Individual uncalibrated measurmenet of line/combo Y4884|phys.abund||float|
+ind_cov_e_Y4884|SME covariance fitting uncertainty ind_Y4884_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Y4884|Quality flag fit for ind_Y4884_fe|meta.code.qual,stat.fit||integer|
+ind_Y5663_fe|Individual uncalibrated measurmenet of line/combo Y5663|phys.abund||float|
+ind_cov_e_Y5663|SME covariance fitting uncertainty ind_Y5663_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Y5663|Quality flag fit for ind_Y5663_fe|meta.code.qual,stat.fit||integer|
+ind_Y5729_fe|Individual uncalibrated measurmenet of line/combo Y5729|phys.abund||float|
+ind_cov_e_Y5729|SME covariance fitting uncertainty ind_Y5729_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Y5729|Quality flag fit for ind_Y5729_fe|meta.code.qual,stat.fit||integer|
+ind_Zr4739_fe|Individual uncalibrated measurmenet of line/combo Zr4739|phys.abund||float|
+ind_cov_e_Zr4739|SME covariance fitting uncertainty ind_Zr4739_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Zr4739|Quality flag fit for ind_Zr4739_fe|meta.code.qual,stat.fit||integer|
+ind_Zr4772_fe|Individual uncalibrated measurmenet of line/combo Zr4772|phys.abund||float|
+ind_cov_e_Zr4772|SME covariance fitting uncertainty ind_Zr4772_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Zr4772|Quality flag fit for ind_Zr4772_fe|meta.code.qual,stat.fit||integer|
+ind_Zr4806_fe|Individual uncalibrated measurmenet of line/combo Zr4806|phys.abund||float|
+ind_cov_e_Zr4806|SME covariance fitting uncertainty ind_Zr4806_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Zr4806|Quality flag fit for ind_Zr4806_fe|meta.code.qual,stat.fit||integer|
+ind_Zr4828_fe|Individual uncalibrated measurmenet of line/combo Zr4828|phys.abund||float|
+ind_cov_e_Zr4828|SME covariance fitting uncertainty ind_Zr4828_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Zr4828|Quality flag fit for ind_Zr4828_fe|meta.code.qual,stat.fit||integer|
+ind_Zr5681_fe|Individual uncalibrated measurmenet of line/combo Zr5681|phys.abund||float|
+ind_cov_e_Zr5681|SME covariance fitting uncertainty ind_Zr5681_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Zr5681|Quality flag fit for ind_Zr5681_fe|meta.code.qual,stat.fit||integer|
+ind_Mo5689_fe|Individual uncalibrated measurmenet of line/combo Mo5689|phys.abund||float|
+ind_cov_e_Mo5689|SME covariance fitting uncertainty ind_Mo5689_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Mo5689|Quality flag fit for ind_Mo5689_fe|meta.code.qual,stat.fit||integer|
+ind_Mo5751_fe|Individual uncalibrated measurmenet of line/combo Mo5751|phys.abund||float|
+ind_cov_e_Mo5751|SME covariance fitting uncertainty ind_Mo5751_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Mo5751|Quality flag fit for ind_Mo5751_fe|meta.code.qual,stat.fit||integer|
+ind_Mo5858_fe|Individual uncalibrated measurmenet of line/combo Mo5858|phys.abund||float|
+ind_cov_e_Mo5858|SME covariance fitting uncertainty ind_Mo5858_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Mo5858|Quality flag fit for ind_Mo5858_fe|meta.code.qual,stat.fit||integer|
+ind_Mo6619_fe|Individual uncalibrated measurmenet of line/combo Mo6619|phys.abund||float|
+ind_cov_e_Mo6619|SME covariance fitting uncertainty ind_Mo6619_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Mo6619|Quality flag fit for ind_Mo6619_fe|meta.code.qual,stat.fit||integer|
+ind_Ru4758_fe|Individual uncalibrated measurmenet of line/combo Ru4758|phys.abund||float|
+ind_cov_e_Ru4758|SME covariance fitting uncertainty ind_Ru4758_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Ru4758|Quality flag fit for ind_Ru4758_fe|meta.code.qual,stat.fit||integer|
+ind_Ru4869_fe|Individual uncalibrated measurmenet of line/combo Ru4869|phys.abund||float|
+ind_cov_e_Ru4869|SME covariance fitting uncertainty ind_Ru4869_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Ru4869|Quality flag fit for ind_Ru4869_fe|meta.code.qual,stat.fit||integer|
+ind_Ru5699_fe|Individual uncalibrated measurmenet of line/combo Ru5699|phys.abund||float|
+ind_cov_e_Ru5699|SME covariance fitting uncertainty ind_Ru5699_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Ru5699|Quality flag fit for ind_Ru5699_fe|meta.code.qual,stat.fit||integer|
+ind_Ba_fe|Individual uncalibrated measurmenet of line/combo Ba|phys.abund||float|
+ind_cov_e_Ba|SME covariance fitting uncertainty ind_Ba_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Ba|Quality flag fit for ind_Ba_fe|meta.code.qual,stat.fit||integer|
+ind_La4716_fe|Individual uncalibrated measurmenet of line/combo La4716|phys.abund||float|
+ind_cov_e_La4716|SME covariance fitting uncertainty ind_La4716_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_La4716|Quality flag fit for ind_La4716_fe|meta.code.qual,stat.fit||integer|
+ind_La4749_fe|Individual uncalibrated measurmenet of line/combo La4749|phys.abund||float|
+ind_cov_e_La4749|SME covariance fitting uncertainty ind_La4749_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_La4749|Quality flag fit for ind_La4749_fe|meta.code.qual,stat.fit||integer|
+ind_La4804_fe|Individual uncalibrated measurmenet of line/combo La4804|phys.abund||float|
+ind_cov_e_La4804|SME covariance fitting uncertainty ind_La4804_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_La4804|Quality flag fit for ind_La4804_fe|meta.code.qual,stat.fit||integer|
+ind_La5806_fe|Individual uncalibrated measurmenet of line/combo La5806|phys.abund||float|
+ind_cov_e_La5806|SME covariance fitting uncertainty ind_La5806_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_La5806|Quality flag fit for ind_La5806_fe|meta.code.qual,stat.fit||integer|
+ind_Ce4774_fe|Individual uncalibrated measurmenet of line/combo Ce4774|phys.abund||float|
+ind_cov_e_Ce4774|SME covariance fitting uncertainty ind_Ce4774_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Ce4774|Quality flag fit for ind_Ce4774_fe|meta.code.qual,stat.fit||integer|
+ind_Nd4811_fe|Individual uncalibrated measurmenet of line/combo Nd4811|phys.abund||float|
+ind_cov_e_Nd4811|SME covariance fitting uncertainty ind_Nd4811_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Nd4811|Quality flag fit for ind_Nd4811_fe|meta.code.qual,stat.fit||integer|
+ind_Nd5741_fe|Individual uncalibrated measurmenet of line/combo Nd5741|phys.abund||float|
+ind_cov_e_Nd5741|SME covariance fitting uncertainty ind_Nd5741_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Nd5741|Quality flag fit for ind_Nd5741_fe|meta.code.qual,stat.fit||integer|
+ind_Nd5770_fe|Individual uncalibrated measurmenet of line/combo Nd5770|phys.abund||float|
+ind_cov_e_Nd5770|SME covariance fitting uncertainty ind_Nd5770_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Nd5770|Quality flag fit for ind_Nd5770_fe|meta.code.qual,stat.fit||integer|
+ind_Nd5812_fe|Individual uncalibrated measurmenet of line/combo Nd5812|phys.abund||float|
+ind_cov_e_Nd5812|SME covariance fitting uncertainty ind_Nd5812_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Nd5812|Quality flag fit for ind_Nd5812_fe|meta.code.qual,stat.fit||integer|
+ind_Nd5842_fe|Individual uncalibrated measurmenet of line/combo Nd5842|phys.abund||float|
+ind_cov_e_Nd5842|SME covariance fitting uncertainty ind_Nd5842_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Nd5842|Quality flag fit for ind_Nd5842_fe|meta.code.qual,stat.fit||integer|
+ind_Sm4720_fe|Individual uncalibrated measurmenet of line/combo Sm4720|phys.abund||float|
+ind_cov_e_Sm4720|SME covariance fitting uncertainty ind_Sm4720_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Sm4720|Quality flag fit for ind_Sm4720_fe|meta.code.qual,stat.fit||integer|
+ind_Sm4792_fe|Individual uncalibrated measurmenet of line/combo Sm4792|phys.abund||float|
+ind_cov_e_Sm4792|SME covariance fitting uncertainty ind_Sm4792_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Sm4792|Quality flag fit for ind_Sm4792_fe|meta.code.qual,stat.fit||integer|
+ind_Sm4837_fe|Individual uncalibrated measurmenet of line/combo Sm4837|phys.abund||float|
+ind_cov_e_Sm4837|SME covariance fitting uncertainty ind_Sm4837_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Sm4837|Quality flag fit for ind_Sm4837_fe|meta.code.qual,stat.fit||integer|
+ind_Sm4848_fe|Individual uncalibrated measurmenet of line/combo Sm4848|phys.abund||float|
+ind_cov_e_Sm4848|SME covariance fitting uncertainty ind_Sm4848_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Sm4848|Quality flag fit for ind_Sm4848_fe|meta.code.qual,stat.fit||integer|
+ind_Sm4854_fe|Individual uncalibrated measurmenet of line/combo Sm4854|phys.abund||float|
+ind_cov_e_Sm4854|SME covariance fitting uncertainty ind_Sm4854_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Sm4854|Quality flag fit for ind_Sm4854_fe|meta.code.qual,stat.fit||integer|
+ind_Eu5819_fe|Individual uncalibrated measurmenet of line/combo Eu5819|phys.abund||float|
+ind_cov_e_Eu5819|SME covariance fitting uncertainty ind_Eu5819_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Eu5819|Quality flag fit for ind_Eu5819_fe|meta.code.qual,stat.fit||integer|
+ind_Eu6645_fe|Individual uncalibrated measurmenet of line/combo Eu6645|phys.abund||float|
+ind_cov_e_Eu6645|SME covariance fitting uncertainty ind_Eu6645_fe|fit.param;stat.error;phys.abund||float|
+ind_flag_Eu6645|Quality flag fit for ind_Eu6645_fe|meta.code.qual,stat.fit||integer|
+Li_fe|Neutral Li atomic abundance (final, 1D-NLTE)|phys.abund||float|
+e_Li_fe|Uncertainty Li_fe|stat.error;phys.abund||float|
+nr_Li_fe|Bitmask of used Li ind lines|meta.number||integer|
+flag_Li_fe|Quality flag of Li_fe|meta.code.qual,stat.fit||integer|
+C_fe|Neutral C atomic abundance (final, 1D-NLTE)|phys.abund||float|
+e_C_fe|Uncertainty C_fe|stat.error;phys.abund||float|
+nr_C_fe|Bitmask of used C ind lines|meta.number||integer|
+flag_C_fe|Quality flag of C_fe|meta.code.qual,stat.fit||integer|
+O_fe|Neutral O atomic abundance (final, 1D-NLTE)|phys.abund||float|
+e_O_fe|Uncertainty O_fe|stat.error;phys.abund||float|
+nr_O_fe|Bitmask of used O ind lines|meta.number||integer|
+flag_O_fe|Quality flag of O_fe|meta.code.qual,stat.fit||integer|
+Na_fe|Neutral Na atomic abundance (final, 1D-NLTE)|phys.abund||float|
+e_Na_fe|Uncertainty Na_fe|stat.error;phys.abund||float|
+nr_Na_fe|Bitmask of used Na ind lines|meta.number||integer|
+flag_Na_fe|Quality flag of Na_fe|meta.code.qual,stat.fit||integer|
+Mg_fe|Neutral Mg atomic abundance (final, 1D-NLTE)|phys.abund||float|
+e_Mg_fe|Uncertainty Mg_fe|stat.error;phys.abund||float|
+nr_Mg_fe|Bitmask of used Mg ind lines|meta.number||integer|
+flag_Mg_fe|Quality flag of Mg_fe|meta.code.qual,stat.fit||integer|
+Al_fe|Neutral Al atomic abundance (final, 1D-NLTE)|phys.abund||float|
+e_Al_fe|Uncertainty Al_fe|stat.error;phys.abund||float|
+nr_Al_fe|Bitmask of used Al ind lines|meta.number||integer|
+flag_Al_fe|Quality flag of Al_fe|meta.code.qual,stat.fit||integer|
+Si_fe|Neutral Si atomic abundance (final, 1D-NLTE)|phys.abund||float|
+e_Si_fe|Uncertainty Si_fe|stat.error;phys.abund||float|
+nr_Si_fe|Bitmask of used Si ind lines|meta.number||integer|
+flag_Si_fe|Quality flag of Si_fe|meta.code.qual,stat.fit||integer|
+K_fe|Neutral K atomic abundance (final, 1D-NLTE)|phys.abund||float|
+e_K_fe|Uncertainty K_fe|stat.error;phys.abund||float|
+nr_K_fe|Bitmask of used K ind lines|meta.number||integer|
+flag_K_fe|Quality flag of K_fe|meta.code.qual,stat.fit||integer|
+Ca_fe|Neutral Ca atomic abundance (final, 1D-NLTE)|phys.abund||float|
+e_Ca_fe|Uncertainty Ca_fe|stat.error;phys.abund||float|
+nr_Ca_fe|Bitmask of used Ca ind lines|meta.number||integer|
+flag_Ca_fe|Quality flag of Ca_fe|meta.code.qual,stat.fit||integer|
+Sc_fe|Neutral Sc atomic abundance (final, 1D-LTE)|phys.abund||float|
+e_Sc_fe|Uncertainty Sc_fe|stat.error;phys.abund||float|
+nr_Sc_fe|Bitmask of used Sc ind lines|meta.number||integer|
+flag_Sc_fe|Quality flag of Sc_fe|meta.code.qual,stat.fit||integer|
+Sc2_fe|Single-ionised Sc2 atomic abundance (final, 1D-LTE)|phys.abund||float|
+e_Sc2_fe|Uncertainty Sc2_fe|stat.error;phys.abund||float|
+nr_Sc2_fe|Bitmask of used Sc2 ind lines|meta.number||integer|
+flag_Sc2_fe|Quality flag of Sc2_fe|meta.code.qual,stat.fit||integer|
+Ti_fe|Neutral Ti atomic abundance (final, 1D-LTE)|phys.abund||float|
+e_Ti_fe|Uncertainty Ti_fe|stat.error;phys.abund||float|
+nr_Ti_fe|Bitmask of used Ti ind lines|meta.number||integer|
+flag_Ti_fe|Quality flag of Ti_fe|meta.code.qual,stat.fit||integer|
+Ti2_fe|Single-ionised Ti2 atomic abundance (final, 1D-LTE)|phys.abund||float|
+e_Ti2_fe|Uncertainty Ti2_fe|stat.error;phys.abund||float|
+nr_Ti2_fe|Bitmask of used Ti2 ind lines|meta.number||integer|
+flag_Ti2_fe|Quality flag of Ti2_fe|meta.code.qual,stat.fit||integer|
+V_fe|Neutral V atomic abundance (final, 1D-LTE)|phys.abund||float|
+e_V_fe|Uncertainty V_fe|stat.error;phys.abund||float|
+nr_V_fe|Bitmask of used V ind lines|meta.number||integer|
+flag_V_fe|Quality flag of V_fe|meta.code.qual,stat.fit||integer|
+Cr_fe|Neutral Cr atomic abundance (final, 1D-LTE)|phys.abund||float|
+e_Cr_fe|Uncertainty Cr_fe|stat.error;phys.abund||float|
+nr_Cr_fe|Bitmask of used Cr ind lines|meta.number||integer|
+flag_Cr_fe|Quality flag of Cr_fe|meta.code.qual,stat.fit||integer|
+Cr2_fe|Single-ionised Cr2 atomic abundance (final, 1D-LTE)|phys.abund||float|
+e_Cr2_fe|Uncertainty Cr2_fe|stat.error;phys.abund||float|
+nr_Cr2_fe|Bitmask of used Cr2 ind lines|meta.number||integer|
+flag_Cr2_fe|Quality flag of Cr2_fe|meta.code.qual,stat.fit||integer|
+Mn_fe|Neutral Mn atomic abundance (final, 1D-NLTE)|phys.abund||float|
+e_Mn_fe|Uncertainty Mn_fe|stat.error;phys.abund||float|
+nr_Mn_fe|Bitmask of used Mn ind lines|meta.number||integer|
+flag_Mn_fe|Quality flag of Mn_fe|meta.code.qual,stat.fit||integer|
+Co_fe|Neutral Co atomic abundance (final, 1D-LTE)|phys.abund||float|
+e_Co_fe|Uncertainty Co_fe|stat.error;phys.abund||float|
+nr_Co_fe|Bitmask of used Co ind lines|meta.number||integer|
+flag_Co_fe|Quality flag of Co_fe|meta.code.qual,stat.fit||integer|
+Ni_fe|Neutral Ni atomic abundance (final, 1D-LTE)|phys.abund||float|
+e_Ni_fe|Uncertainty Ni_fe|stat.error;phys.abund||float|
+nr_Ni_fe|Bitmask of used Ni ind lines|meta.number||integer|
+flag_Ni_fe|Quality flag of Ni_fe|meta.code.qual,stat.fit||integer|
+Cu_fe|Neutral Cu atomic abundance (final, 1D-LTE)|phys.abund||float|
+e_Cu_fe|Uncertainty Cu_fe|stat.error;phys.abund||float|
+nr_Cu_fe|Bitmask of used Cu ind lines|meta.number||integer|
+flag_Cu_fe|Quality flag of Cu_fe|meta.code.qual,stat.fit||integer|
+Zn_fe|Neutral Zn atomic abundance (final, 1D-LTE)|phys.abund||float|
+e_Zn_fe|Uncertainty Zn_fe|stat.error;phys.abund||float|
+nr_Zn_fe|Bitmask of used Zn ind lines|meta.number||integer|
+flag_Zn_fe|Quality flag of Zn_fe|meta.code.qual,stat.fit||integer|
+Rb_fe|Neutral Rb atomic abundance (final, 1D-LTE)|phys.abund||float|
+e_Rb_fe|Uncertainty Rb_fe|stat.error;phys.abund||float|
+nr_Rb_fe|Bitmask of used Rb ind lines|meta.number||integer|
+flag_Rb_fe|Quality flag of Rb_fe|meta.code.qual,stat.fit||integer|
+Sr_fe|Neutral Sr atomic abundance (final, 1D-LTE)|phys.abund||float|
+e_Sr_fe|Uncertainty Sr_fe|stat.error;phys.abund||float|
+nr_Sr_fe|Bitmask of used Sr ind lines|meta.number||integer|
+flag_Sr_fe|Quality flag of Sr_fe|meta.code.qual,stat.fit||integer|
+Y_fe|Neutral Y atomic abundance (final, 1D-LTE)|phys.abund||float|
+e_Y_fe|Uncertainty Y_fe|stat.error;phys.abund||float|
+nr_Y_fe|Bitmask of used Y ind lines|meta.number||integer|
+flag_Y_fe|Quality flag of Y_fe|meta.code.qual,stat.fit||integer|
+Zr_fe|Neutral Zr atomic abundance (final, 1D-LTE)|phys.abund||float|
+e_Zr_fe|Uncertainty Zr_fe|stat.error;phys.abund||float|
+nr_Zr_fe|Bitmask of used Zr ind lines|meta.number||integer|
+flag_Zr_fe|Quality flag of Zr_fe|meta.code.qual,stat.fit||integer|
+Mo_fe|Neutral Mo atomic abundance (final, 1D-LTE)|phys.abund||float|
+e_Mo_fe|Uncertainty Mo_fe|stat.error;phys.abund||float|
+nr_Mo_fe|Bitmask of used Mo ind lines|meta.number||integer|
+flag_Mo_fe|Quality flag of Mo_fe|meta.code.qual,stat.fit||integer|
+Ru_fe|Neutral Ru atomic abundance (final, 1D-LTE)|phys.abund||float|
+e_Ru_fe|Uncertainty Ru_fe|stat.error;phys.abund||float|
+nr_Ru_fe|Bitmask of used Ru ind lines|meta.number||integer|
+flag_Ru_fe|Quality flag of Ru_fe|meta.code.qual,stat.fit||integer|
+Ba_fe|Single-ionised Ba atomic abundance (final, 1D-NLTE)|phys.abund||float|
+e_Ba_fe|Uncertainty Ba_fe|stat.error;phys.abund||float|
+nr_Ba_fe|Bitmask of used Ba ind lines|meta.number||integer|
+flag_Ba_fe|Quality flag of Ba_fe|meta.code.qual,stat.fit||integer|
+La_fe|Single-ionised La atomic abundance (final, 1D-LTE)|phys.abund||float|
+e_La_fe|Uncertainty La_fe|stat.error;phys.abund||float|
+nr_La_fe|Bitmask of used La ind lines|meta.number||integer|
+flag_La_fe|Quality flag of La_fe|meta.code.qual,stat.fit||integer|
+Ce_fe|Single-ionised Ce atomic abundance (final, 1D-LTE)|phys.abund||float|
+e_Ce_fe|Uncertainty Ce_fe|stat.error;phys.abund||float|
+nr_Ce_fe|Bitmask of used Ce ind lines|meta.number||integer|
+flag_Ce_fe|Quality flag of Ce_fe|meta.code.qual,stat.fit||integer|
+Nd_fe|Single-ionised Nd atomic abundance (final, 1D-LTE)|phys.abund||float|
+e_Nd_fe|Uncertainty Nd_fe|stat.error;phys.abund||float|
+nr_Nd_fe|Bitmask of used Nd ind lines|meta.number||integer|
+flag_Nd_fe|Quality flag of Nd_fe|meta.code.qual,stat.fit||integer|
+Sm_fe|Single-ionised Sm atomic abundance (final, 1D-LTE)|phys.abund||float|
+e_Sm_fe|Uncertainty Sm_fe|stat.error;phys.abund||float|
+nr_Sm_fe|Bitmask of used Sm ind lines|meta.number||integer|
+flag_Sm_fe|Quality flag of Sm_fe|meta.code.qual,stat.fit||integer|
+Eu_fe|Single-ionised Eu atomic abundance (final, 1D-LTE)|phys.abund||float|
+e_Eu_fe|Uncertainty Eu_fe|stat.error;phys.abund||float|
+nr_Eu_fe|Bitmask of used Eu ind lines|meta.number||integer|
+flag_Eu_fe|Quality flag of Eu_fe|meta.code.qual,stat.fit||integer|
+ra|propagated from Gaia DR2|pos.eq.ra;meta.main|deg|float|
+ra_error|propagated from Gaia DR2|stat.error;pos.eq.ra|mas|float|
+dec|propagated from Gaia DR2|pos.eq.dec;meta.main|deg|float|
+dec_error|propagated from Gaia DR2|stat.error;pos.eq.dec|mas|float|
+l|propagated from Gaia DR2|pos.galactic.lon|deg|float|
+b|propagated from Gaia DR2|pos.galactic.lat|deg|float|
+parallax|propagated from Gaia DR2|pos.parallax|mas|float|
+parallax_error|propagated from Gaia DR2|stat.error;pos.parallax|mas|float|
+r_est|propagated from 2018AJ....156...58B|pos.distance|pc|float|
+r_lo|propagated from 2018AJ....156...58B|stat.error;stat.min;pos.distance|pc|float|
+r_hi|propagated from 2018AJ....156...58B|stat.error;stat.max;pos.distance|pc|float|
+r_len|propagated from 2018AJ....156...58B|stat.fit.param;pos.distance|pc|float|
+dist_bstep|Distance from BSTEP modelling|fit.param;pos.distance||float|
+e_dist_bstep|1-sigma uncertainty of dist_bstep|fit.param;stat.error;pos.distance||float|
+pmra|propagated from Gaia DR2|pos.pm;pos.eq.ra|mas yr-1|float|
+pmra_error|propagated from Gaia DR2|stat.error;pos.pm;pos.eq.ra|mas yr-1|float|
+pmdec|propagated from Gaia DR2|pos.pm;pos.eq.dec|mas yr-1|float|
+pmdec_error|propagated from Gaia DR2|stat.error;pos.pm;pos.eq.dec|mas yr-1|float|
+ra_dec_corr|propagated from Gaia DR2|stat.correlation;pos.eq.ra;pos.eq.dec||float|
+ra_parallax_corr|propagated from Gaia DR2|stat.correlation;pos.eq.ra;pos.parallax||float|
+ra_pmra_corr|propagated from Gaia DR2|stat.correlation;pos.eq.ra;pos.pm;pos.eq.ra||float|
+ra_pmdec_corr|propagated from Gaia DR2|stat.correlation;pos.eq.ra;pos.pm;pos.eq.dec||float|
+dec_parallax_corr|propagated from Gaia DR2|stat.correlation;pos.eq.dec;pos.parallax||float|
+dec_pmra_corr|propagated from Gaia DR2|stat.correlation;pos.eq.dec;pos.pm;pos.eq.ra||float|
+dec_pmdec_corr|propagated from Gaia DR2|stat.correlation;pos.eq.dec;pos.pm;pos.eq.dec||float|
+parallax_pmra_corr|propagated from Gaia DR2|stat.correlation;pos.parallax;pos.pm;pos.eq.ra||float|
+parallax_pmdec_corr|propagated from Gaia DR2|stat.correlation;pos.parallax;pos.pm;pos.eq.dec||float|
+pmra_pmdec_corr|propagated from Gaia DR2|stat.correlation;pos.pm;pos.eq.ra;pos.pm;pos.eq.dec||float|
+rv_galah|SME fitted radial velocity from GALAH spectra|spect.dopplerVeloc.opt|km s-1|float|
+e_rv_galah|Uncertainty of rv_galah|stat.error;spect.dopplerVeloc.opt|km s-1|float|
+cov_e_rv_galah|SME covariance fitting uncertainty sme.vrad|fit.param;stat.error;spect.dopplerVeloc.opt|km s-1|float|
+rv_gaia|propagated from Gaia DR2|spect.dopplerVeloc.opt|km s-1|float|
+e_rv_gaia|propagated from Gaia DR2|stat.error;spect.dopplerVeloc.opt|km s-1|float|
+red_flag|eduction pipeline quality flag|meta.code.qual;||integer|
+ebv|SFD extinction value|phys.absorption.gal|mag|float|
+snr_c1_iraf|Average SNR/px CCD1|stat.snr||float|
+snr_c2_iraf|Average SNR/px CCD2|stat.snr||float|
+snr_c3_iraf|Average SNR/px CCD3|stat.snr||float|
+snr_c4_iraf|Average SNR/px CCD4|stat.snr||float|
+flag_guess|GUESS reduction pipeline quality flag|meta.code.qual,stat.fit||integer|
+rv_guess|Reduction pipeline best radial velocity|fit.param;spect.dopplerVeloc.opt|km s-1|float|
+e_rv_guess|Reduction pipeline uncertainty radial velocity|fit.param;stat.error;spect.dopplerVeloc.opt|km s-1|float|
+teff_guess|Reduction pipeline best teff|fit.param;phys.temperature.effective|K|float|
+logg_guess|Reduction pipeline best logg|fit.param;phys.gravity|log(cm.s**-2)|float|
+feh_guess|Reduction pipeline best fe_h|fit.param;phys.abund.Fe||float|
+rv_5854|Local best fit to RV when fitting A(Ba5854)|fit.param;spect.dopplerVeloc.opt|km s-1|float|
+rv_6708|Local best fit to RV when fitting A(Li6708)|fit.param;spect.dopplerVeloc.opt|km s-1|float|
+rv_6722|Local best fit to RV when fitting A(Si6722)|fit.param;spect.dopplerVeloc.opt|km s-1|float|
+v_jk|V magnitude estimated from 2MASS J and Ks mag|phot.mag|mag|float|
+j_m|propagated from 2MASS|phot.mag;em.IR.J|mag|float|
+j_msigcom|propagated from 2MASS|stat.error;phot.mag;em.IR.J|mag|float|
+h_m|propagated from 2MASS|phot.mag;em.IR.H|mag|float|
+h_msigcom|propagated from 2MASS|stat.error;phot.mag;em.IR.H|mag|float|
+ks_m|propagated from 2MASS|phot.mag;em.IR.K|mag|float|
+ks_msigcom|propagated from 2MASS|stat.error;phot.mag;em.IR.K|mag|float|
+ph_qual_tmass|propagated from 2MASS ph_qual|meta.code.qual;phot||string|
+w2mpro|propagated from AllWISE|phot.mag;em.IR.4-8um|mag|float|
+w2mpro_error|propagated from AllWISE|stat.error;phot.mag|mag|float|
+ph_qual_wise|propagated from AllWISE ph_qual|meta.code.qual;phot||string|
+a_ks|Used Ks band extinction|phys.absorption.gal|mag|float|
+e_a_ks|Uncertainty of a_ks|stat.error,phys.absorption.gal|mag|float|
+bc_ks|Used Bolometric Correction for Ks band|phot.mag.bc;em.IR.K|mag|float|
+ruwe|propagated from Gaia DR2|stat.error||float|
+phot_g_mean_mag|propagated from Gaia DR2|phot.mag;stat.mean;em.opt|mag|float|
+bp_rp|propagated from Gaia DR2|phot.color|mag|float|

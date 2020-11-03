@@ -1,0 +1,4 @@
+name|pretty_name|description|documentation|contact|date|version
+mainstargroup|GALAH_DR3_main_allstar|GALAH DR3 Main Allstar (Clean)||sven.buder@anu.edu.au|2020-10-09|200604
+mainspecgroup|GALAH_DR3_main_allstar|GALAH DR3 Main Allspec (Extended Caution)||sven.buder@anu.edu.au|2020-10-09|200604
+vacgroup|GALAH_DR3_vac|GALAH DR3 Value-Added-Catalogs||sven.buder@anu.edu.au|2020-10-12|201012

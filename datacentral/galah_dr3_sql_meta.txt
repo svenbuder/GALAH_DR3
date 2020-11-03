@@ -1,0 +1,6 @@
+table_name|sql
+mainstartable|“SELECT * FROM galah_dr3.mainstartable WHERE sobject_id = {objid}”
+mainspectable|“SELECT * FROM galah_dr3.mainspectable WHERE sobject_id = {objid}”
+vacagestable|“SELECT * FROM galah_dr3.vacagestable WHERE sobject_id = {objid}”
+vacdynamicstable|“SELECT * FROM galah_dr3.vacdynamicstable WHERE sobject_id = {objid}”
+vacrvtable|“SELECT * FROM galah_dr3.vacrvtable WHERE sobject_id = {objid}”

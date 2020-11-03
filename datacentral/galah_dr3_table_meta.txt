@@ -1,0 +1,5 @@
+mainspectable|GALAH DR3 Main Allspec (Extended Caution)|mainspecgroup|GALAH_DR3_main_allspec_v1.csv|sven.buder@anu.edu.au|2020-11-01|201101
+mainstartable|GALAH DR3 Main Allstar (Clean)|mainstargroup|GALAH_DR3_main_allstar_v1.csv|sven.buder@anu.edu.au|2020-11-01| 201101
+vacagestable|GALAH DR3 VAC Ages|vacgroup|GALAH_DR3_VAC_ages_v1.csv|sven.buder@anu.edu.au|2020-11-01| 201101
+vacdynamicstable|GALAH DR3 VAC Dyanmics|vacgroup|GALAH_DR3_VAC_dynamics_v1.csv|sven.buder@anu.edu.au|2020-11-01| 201101
+vacrvtable|GALAH DR3 VAC RV|vacgroup|GALAH_DR3_VAC_rv.csv|sven.buder@anu.edu.au|2020-11-01| 201101
