@@ -1,10 +1,26 @@
-# GALAH_DR3
+# Useful links and processing files of GALAH+ DR3
 
-This repository accompanies GALAH DR3 and its release paper.
+This repository accompanies GALAH+ DR3 and its release paper.
 
-If you are only looking for the catalog, please go here: [GALAH DR2 (not yet DR3)](https://datacentral.org.au/teamdata/GALAH/public/)
+## Useful links:
 
-## Content of this repository:  
+### GALAH+ DR3 paper (Buder et al., 2020, MNRAS, submitted
+[arXiv:2020.XXXXX](https://arxiv.org) or [on DataCentral](https://docs.datacentral.org.au/documents/34/galah_dr3_201105.pdf)
+
+### GALAH+ DR3 catalogs
+[FITS files on DataCentral](https://datacentral.org.au/teamdata/GALAH/public/GALAH_DR3/)
+You can download the catalogs via wget.
+
+### Additional Datacentral Tools:
+[TAP](https://datacentral.org.au/vo/tap)
+[Schema browser](https://datacentral.org.au/services/schema/)
+
+### [Tutorials](https://github.com/svenbuder/GALAH_DR3/blob/master/tutorials/)
+on how to get the data from the terminal (via wget), print the keywords, plot spectra (once downloaded)
+
+## Content of this repository:
+
+This repository is ment to allow other researchers to dive into the nitty-gritty details of the spectroscopic analysis. We provide the most important tools used for the SME analysis, the selection of linelist, and all code used for the post-processing (from collected SME results to final main catalog, including flagging and validation scripts).
   
 ### 1) input  
 This directory includes the information that WG4 has received from WG3 (Reduction) as well as additional information on performed crossmatches and external information (such as asteroseismic values). Here we also plot a first overview of the data:
