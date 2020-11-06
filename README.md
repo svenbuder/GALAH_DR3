@@ -4,8 +4,8 @@ This repository accompanies GALAH+ DR3 and its release paper.
 
 ## Useful links:
 
-### GALAH+ DR3 paper (Buder et al., 2020, MNRAS, submitted
-[arXiv:2020.XXXXX](https://arxiv.org) or [on DataCentral](https://docs.datacentral.org.au/documents/34/galah_dr3_201105.pdf)
+### GALAH+ DR3 paper (Buder et al., 2020, MNRAS, submitted)
+[arXiv:2011.02505](https://arxiv.org/abs/2011.02505) or [on DataCentral](https://docs.datacentral.org.au/documents/34/galah_dr3_201105.pdf)
 
 ### GALAH+ DR3 catalogs
 [FITS files on DataCentral](https://datacentral.org.au/teamdata/GALAH/public/GALAH_DR3/)
