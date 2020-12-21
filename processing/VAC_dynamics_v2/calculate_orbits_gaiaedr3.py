@@ -602,6 +602,15 @@ def get_orbit_calculation_input(data, MC_size=1):
         sample['dec'] = mu_sigma_sample[:,1]
         
         if data['use_dist_flag'] == 0:
+            # Making sure e16 < distance_bstep < e84
+            # if not: sample symmetrically with e_distance_bstep
+            if (
+                (data['e16_distance_bstep'] < data['distance_bstep']) |
+                (data['e16_distance_bstep'] < data['distance_bstep'])
+            ):
+                data['e16_distance_bstep'] = data['distance_bstep'] - data['e_distance_bstep']
+                data['e84_distance_bstep'] = data['distance_bstep'] + data['e_distance_bstep']
+
             sample['distance'] = sample_distance_from2sidedGaussian_DMod(
                 data['e16_distance_bstep']*1000,
                 data['distance_bstep']*1000,
@@ -807,4 +816,10 @@ galah_dynamics_data = pandas.DataFrame(galah_dynamics,columns=galah_dynamics.key
 
 data_for_fits = Table.from_pandas(galah_dynamics_data)
 data_for_fits.write(out_dir+'dynamics_output/sobject_dynamics_'+str(subset)+'.fits',overwrite=True)
+
+
+# In[ ]:
+
+
+
 
