@@ -21,7 +21,7 @@
 # if you want to use rv_galah: rv_galah, e_rv_galah  
 # if you want to use rv_gaia: rv_gaia, e_rv_gaia
 
-# In[1]:
+# In[ ]:
 
 
 # Preamble for notebook 
@@ -44,6 +44,7 @@ import numpy as np
 np.seterr(divide='ignore', invalid='ignore')
 import os
 import sys
+import random
 import glob
 import pickle
 import collections
@@ -156,7 +157,7 @@ parula_r = ListedColormap(_parula_data[::-1], name='parula_r')
 willi_blau = [0.0722666667, 0.4886666667, 0.8467]
 
 
-# In[2]:
+# In[ ]:
 
 
 debug = False
@@ -169,7 +170,7 @@ debug = False
 # r_gc = 8.21 kpc (galpy: 8.0 kpc, Gravity Collaboration, 2018, A&A, 615, 15: 8.178 kpc).  
 # v_gc = 233.1 km/s (galpy: 220 km/s)
 
-# In[3]:
+# In[ ]:
 
 
 import galpy
@@ -208,7 +209,7 @@ aAS = actionAngleStaeckel(
 
 # ### Let's get the Solar values
 
-# In[4]:
+# In[ ]:
 
 
 calculate_sun = True
@@ -313,15 +314,15 @@ if calculate_sun:
 
 # ### Input of 6D information in observable dimensions
 
-# In[5]:
+# In[ ]:
 
 
 try:
-    galah_gaia_input = Table.read('/Users/svenbuder/GALAH_DR3/processing/VAC_dynamics_v2/GALAH_DR3_VAC_dynamics_v2_input.fits',1)
+    galah_gaia_input = Table.read('/Users/svenbuder/GALAH_DR3/processing/VAC_dynamics_v2/VAC_Dynamics_V2_input.fits',1)
     out_dir = '/Users/svenbuder/GALAH_DR3/processing/VAC_dynamics_v2/'
 except:
-    galah_gaia_input = Table.read('/avatar/buder/trunk/GALAH/GALAH_DR3/processing/VAC_dynamics_v2/GALAH_DR3_VAC_dynamics_v2_input.fits',1)
-    out_dir = '/avatar/buder/trunk/GALAH/GALAH_DR3/processing/VAC_dynamics_v2'
+    galah_gaia_input = Table.read('/avatar/buder/trunk/GALAH/GALAH_DR3/processing/VAC_dynamics_v2/VAC_Dynamics_V2_input.fits',1)
+    out_dir = '/avatar/buder/trunk/GALAH/GALAH_DR3/processing/VAC_dynamics_v2/'
         
 full_length = len(galah_gaia_input['sobject_id'])
 print("Initial nr. of entries")
@@ -340,140 +341,33 @@ if plot_dynamics:
     subset_size = 134
     subset = 13
 
-if subset != -1:
+if subset*subset_size >= full_length:
+    sys.exit('The subset is beyond the length of GALAH DR3')
 
-    if subset*subset_size >= full_length:
-        sys.exit('The subset is beyond the length of GALAH DR3')
+galah_gaia_input = galah_gaia_input[subset*subset_size:np.min([(subset+1)*subset_size,full_length])]
 
-    galah_gaia_input = galah_gaia_input[subset*subset_size:np.min([(subset+1)*subset_size,full_length])]
+nr_galah_stars = len(galah_gaia_input['sobject_id'])
+print("Nr. stars per subset")
+print(nr_galah_stars)
 
-    nr_galah_stars = len(galah_gaia_input['sobject_id'])
-    print("Nr. stars per subset")
-    print(nr_galah_stars)
+nr_galah_stars_dynamics = np.where(
+    (galah_gaia_input['use_dist_flag'] < 8) & # distance from BSTEP, BailerJones PhotoGeo/Geo, 1/Parallax
+    (galah_gaia_input['use_rv_flag'] < 4) # rv from Zwitter, GALAH, Gaia DR2
+)[0]
 
-    nr_galah_stars_dynamics = np.where(
-        np.isfinite(galah_gaia_input['ra']) &
-        np.isfinite(galah_gaia_input['dec']) &
-        np.isfinite(galah_gaia_input['pmra']) &
-        np.isfinite(galah_gaia_input['pmdec']) &
-        np.isfinite(galah_gaia_input['parallax']) &
-        np.isfinite(galah_gaia_input['parallax_error']) &
-        np.isfinite(galah_gaia_input['ra_error']) &
-        np.isfinite(galah_gaia_input['dec_error']) &
-        np.isfinite(galah_gaia_input['pmra_error']) &
-        np.isfinite(galah_gaia_input['pmdec_error']) &
-        (
-            (
-            np.isfinite(galah_gaia_input['rv_galah']) &
-            np.isfinite(galah_gaia_input['e_rv_galah'])
-            ) |
-            (
-            np.isfinite(galah_gaia_input['dr2_radial_velocity']) &
-            np.isfinite(galah_gaia_input['dr2_radial_velocity_error'])
-            )
-        )
-    )[0]
+# This should only me activated for tests with subsets of GALAH DR3
+#nr_galah_stars_dynamics = nr_galah_stars_dynamics[:100]
 
-    # This should only me activated for tests with subsets of GALAH DR3
-    #nr_galah_stars_dynamics = nr_galah_stars_dynamics[:100]
-
-    galah_gaia = galah_gaia_input[nr_galah_stars_dynamics]
-    nr_stars = len(galah_gaia['sobject_id'])
-    print("Selected number of stars")
-    print(nr_stars)
-    
-else:
-    print('Rerunning Orbits')
-    
-    old_dynamics = Table.read(out_dir+'../../catalogs/GALAH_DR3_VAC_dynamics_201012_allspec.fits')
-    
-    bad_orbits = (
-        np.isfinite(old_dynamics['X_XYZ']) & 
-        np.isnan(old_dynamics['ecc']) & 
-        np.isfinite(galah_gaia_input['dist_gbm'])
-    )
-    galah_gaia_input['dist_gbm'][bad_orbits] = np.NaN
-
-    rerun_entry = np.arange(len(galah_gaia_input))[bad_orbits]
-    
-    galah_gaia = galah_gaia_input[rerun_entry]
-    galah_gaia['dist_gbm'] = np.NaN
-    nr_stars = len(rerun_entry)
-    nr_galah_stars = nr_stars
-    nr_galah_stars_dynamics = np.arange(nr_stars)
-    print("Selected number of stars")
-    print(nr_stars)
+galah_gaia = galah_gaia_input[nr_galah_stars_dynamics]
+nr_stars = len(galah_gaia['sobject_id'])
+print("Selected number of stars")
+print(nr_stars)
 
 
-# In[6]:
+# In[ ]:
 
 
-six_dimensions = {}
-
-# Right ascension [deg]
-six_dimensions['ra'] = galah_gaia['ra']
-# Declination [deg]
-six_dimensions['dec'] = galah_gaia['dec']
-
-# 1000./Parallax [mas]
-six_dimensions['distance'] = 1000./galah_gaia['parallax']
-# Parallax [mas]
-six_dimensions['parallax'] = galah_gaia['parallax']
-
-# Total proper motion in direction of right ascension [mas/yr]
-six_dimensions['pmra'] = galah_gaia['pmra']
-# Total proper motion in direction of declination [mas/yr]
-six_dimensions['pmdec'] = galah_gaia['pmdec']
-
-# Radial velocity [km/s]
-six_dimensions['vrad'] = galah_gaia['rv_galah']
-
-# Use Gaia RVS if GALAH not good
-use_gaia_instead = (
-    (galah_gaia['dr2_radial_velocity_error'] < galah_gaia['e_rv_galah']) |
-    (
-        np.isnan(galah_gaia['e_rv_galah']) &
-        np.isfinite(galah_gaia['dr2_radial_velocity_error'])
-    )
-)
-six_dimensions['vrad'][use_gaia_instead] = galah_gaia['dr2_radial_velocity'][use_gaia_instead]
-
-
-# In[7]:
-
-
-e_six_dimensions = {}
-
-# Error of right ascension [mas] to [deg]
-e_six_dimensions['ra'] = galah_gaia['ra_error']/(1000.*3600.)
-# Error of declination [mas] to [deg]
-e_six_dimensions['dec'] = galah_gaia['dec_error']/(1000.*3600.)
-# Error of parallax [mas]
-e_six_dimensions['parallax']  = galah_gaia['parallax_error']
-# Error of total proper motion in direction of right ascension [mas/yr]
-e_six_dimensions['pmra'] = galah_gaia['pmra_error']
-# Error of total proper motion in direction of declination [mas/yr]
-e_six_dimensions['pmdec'] = galah_gaia['pmdec_error']
-# Error of radial velocity [km/s]
-e_six_dimensions['vrad'] = galah_gaia['e_rv_galah']
-
-# Use Gaia RVS if GALAH not good
-use_gaia_instead = (
-    (galah_gaia['dr2_radial_velocity_error'] < galah_gaia['e_rv_galah']) |
-    (
-        np.isnan(galah_gaia['e_rv_galah']) &
-        np.isfinite(galah_gaia['dr2_radial_velocity_error'])
-    )
-)
-e_six_dimensions['vrad'][use_gaia_instead] = galah_gaia['dr2_radial_velocity_error'][use_gaia_instead]
-
-
-# ## Monte Carlo sampling of Orbits
-
-# In[8]:
-
-
-MC_size = 5
+MC_size = 1000
 
 print('MC Size: ',MC_size)
 
@@ -503,164 +397,7 @@ orbit_labels = np.concatenate((
 print(orbit_labels)
 
 
-# ### Samples
-
-# In[9]:
-
-
-def sample_6d_uncertainty(
-    six_dimensions,
-    e_six_dimensions,
-    MC_size=MC_size,
-    use_BailerJones = False,
-    use_BSTEP = False,
-    parallax_offset=0.
-    ):
-    
-    """
-    This function samples the 6D space with the given uncertainties.
-    4 Options are available:
-    
-    if MC_size==1: assume no uncertainties
-    
-    if use_BailerJones==True: Sample 6D parameters independently with distance from Bailer-Jones
-    
-    if no_correlation==False: Use Gaia DR2 covariance matrix to sample 5D
-    and GALAH vrad for 6th D
-    """
-
-    np.random.seed(123)
-    
-    MC_sample_6D = {}
-    
-    # Option 1: We assume no errors and simply return the actual parameters
-    if MC_size == 1:
-        print('We assume no errors and simply return the actual parameters')
-        for each_key in six_dimensions.keys():
-            if each_key == 'distance':
-                if use_BailerJones:
-                    print('Using Bailer-Jones')
-                    MC_sample_6D['distance'] = np.array([[six_dimensions['r_est'][x]] for x in range(nr_stars)])/1000.
-                elif use_BSTEP:
-                    print('Using BSTEP, otherwise Bailer-Jones')
-                    MC_sample_6D['distance'] = np.array([[six_dimensions['r_est'][x]] for x in range(nr_stars)])/1000.
-                    bstep = np.array([[six_dimensions['dist_gbm'][x]] for x in range(nr_stars)])/1000.
-                    bstep_available = np.isfinite(bstep)
-                    MC_sample_6D['distance'][bstep_available] = bstep[bstep_available]
-                else:
-                    print('Parallax')
-                    MC_sample_6D['distance'] = np.array([[1000./(six_dimensions['parallax'][x]-parallax_offset)] for x in range(nr_stars)])/1000.
-            else:
-                MC_sample_6D[each_key] = np.array([[six_dimensions[each_key][x]] for x in range(nr_stars)])
-    
-    elif use_BailerJones:
-        # Option 2: Sampling the distances from Bailer-Jones assuming 2 separate Gaussian distributions
-        print('Sampling the distances from Bailer-Jones assuming 2 separate Gaussian distributions')
-        distance_sigma_lo  = np.array([np.abs(np.random.normal(loc = 0., scale = six_dimensions['r_est'] -  e_six_dimensions['r_lo'])) for i in range(MC_size)])
-        distance_sigma_hi  = np.array([np.abs(np.random.normal(loc = 0., scale = e_six_dimensions['r_hi'] - six_dimensions['r_est'])) for i in range(MC_size)])
-        select_lo_hi = np.array([(np.random.uniform(0, 1, size=nr_stars) < 0.5).astype(float) for x in range(MC_size)])
-
-        MC_sample_6D['ra']       = np.array([np.random.normal(loc=six_dimensions['ra'], scale=e_six_dimensions['ra']) for i in range(MC_size)]).T
-        MC_sample_6D['dec']      = np.array([np.random.normal(loc=six_dimensions['dec'], scale=e_six_dimensions['dec']) for i in range(MC_size)]).T
-        MC_sample_6D['distance'] = (six_dimensions['r_est'] + select_lo_hi*distance_sigma_hi - (1-select_lo_hi)*distance_sigma_lo).clip(min=0).T/1000.
-        MC_sample_6D['pmra']     = np.array([np.random.normal(loc=six_dimensions['pmra'], scale=e_six_dimensions['pmra']) for i in range(MC_size)]).T
-        MC_sample_6D['pmdec']    = np.array([np.random.normal(loc=six_dimensions['pmdec'], scale=e_six_dimensions['pmdec']) for i in range(MC_size)]).T
-        MC_sample_6D['vrad']     = np.array([np.random.normal(loc=six_dimensions['vrad'], scale=e_six_dimensions['vrad']) for i in range(MC_size)]).T
-
-    elif use_BSTEP:
-        # Option 3: Using BSTEP GBM distances wherever possible (need useful stellar parameters, Bailer Jones otherwise)
-        # Then check which values are not finite
-        bstep_available = np.isfinite(six_dimensions['dist_gbm']) & np.isfinite(e_six_dimensions['dist_gbm'])
-        nr_bstep = len(six_dimensions['dist_gbm'][bstep_available])
-
-        MC_sample_6D['ra']       = np.array([np.random.normal(loc=six_dimensions['ra'], scale=e_six_dimensions['ra']) for i in range(MC_size)]).T
-        MC_sample_6D['dec']      = np.array([np.random.normal(loc=six_dimensions['dec'], scale=e_six_dimensions['dec']) for i in range(MC_size)]).T
-        
-        # First fill everything with BSTEP
-        print('Using BSTEP GBM distances (available for '+str(nr_bstep)+')')
-        MC_sample_6D['distance'] = np.array([np.random.normal(loc=six_dimensions['dist_gbm'], scale=e_six_dimensions['dist_gbm']) for i in range(MC_size)]).T/1000.
-
-        # Fill the ones without finite BSTEP with Bailer-Jones
-        print('No parameters available for '+str(nr_stars-nr_bstep)+', using Bailer Jones for those')
-        distance_sigma_lo  = np.array([np.abs(np.random.normal(loc = 0., scale = six_dimensions['r_est'][~bstep_available] -  e_six_dimensions['r_lo'][~bstep_available])) for i in range(MC_size)])
-        distance_sigma_hi  = np.array([np.abs(np.random.normal(loc = 0., scale = e_six_dimensions['r_hi'][~bstep_available] - six_dimensions['r_est'][~bstep_available])) for i in range(MC_size)])
-        select_lo_hi = np.array([(np.random.uniform(0, 1, size=np.shape(distance_sigma_lo)[1]) < 0.5).astype(float) for x in range(MC_size)])
-        MC_sample_6D['distance'][~bstep_available,:] = (six_dimensions['r_est'][~bstep_available] + select_lo_hi*distance_sigma_hi - (1-select_lo_hi)*distance_sigma_lo).clip(min=0).T/1000.
-
-        MC_sample_6D['pmra']     = np.array([np.random.normal(loc=six_dimensions['pmra'], scale=e_six_dimensions['pmra']) for i in range(MC_size)]).T
-        MC_sample_6D['pmdec']    = np.array([np.random.normal(loc=six_dimensions['pmdec'], scale=e_six_dimensions['pmdec']) for i in range(MC_size)]).T
-        MC_sample_6D['vrad']     = np.array([np.random.normal(loc=six_dimensions['vrad'], scale=e_six_dimensions['vrad']) for i in range(MC_size)]).T
-
-    else:
-        # Option4: We sample the errors including the covariance matrix
-        print('We sample the errors including the covariance matrix and parallax offset')
-
-        # Mean vector and covariance matrix
-        mu = np.array(
-            [six_dimensions['ra'],
-             six_dimensions['dec'],
-             six_dimensions['parallax']-parallax_offset,
-             six_dimensions['pmra'],
-             six_dimensions['pmdec'],
-             six_dimensions['vrad']
-            ])
-
-        s00 = (e_six_dimensions['ra'])**2
-        s11 = (e_six_dimensions['dec'])**2
-        s22 = e_six_dimensions['parallax']**2
-        s33 = e_six_dimensions['pmra']**2
-        s44 = e_six_dimensions['pmdec']**2
-        s55 = e_six_dimensions['vrad']**2
-
-        s01 = (e_six_dimensions['ra']) * e_six_dimensions['dec'] * galah_gaia['ra_dec_corr']
-        s02 = (e_six_dimensions['ra']) * e_six_dimensions['parallax'] * galah_gaia['ra_parallax_corr']
-        s03 = (e_six_dimensions['ra']) * e_six_dimensions['pmra'] * galah_gaia['ra_pmra_corr']
-        s04 = (e_six_dimensions['ra']) * e_six_dimensions['pmdec'] * galah_gaia['ra_pmdec_corr']
-        s05 = 0.*np.ones(np.shape(galah_gaia['sobject_id'])[0])
-
-        s12 = (e_six_dimensions['dec']) * e_six_dimensions['parallax'] * galah_gaia['dec_parallax_corr']
-        s13 = (e_six_dimensions['dec']) * e_six_dimensions['pmra'] * galah_gaia['dec_pmra_corr']
-        s14 = (e_six_dimensions['dec']) * e_six_dimensions['pmdec'] * galah_gaia['dec_pmdec_corr']
-        s15 = 0.*np.ones(np.shape(galah_gaia['sobject_id'])[0])
-
-        s23 = e_six_dimensions['parallax'] * e_six_dimensions['pmra'] * galah_gaia['parallax_pmra_corr']
-        s24 = e_six_dimensions['parallax'] * e_six_dimensions['pmdec'] * galah_gaia['parallax_pmdec_corr']
-        s25 = 0.*np.ones(np.shape(galah_gaia['sobject_id'])[0])
-
-        s34 = e_six_dimensions['pmra'] * e_six_dimensions['pmdec'] * galah_gaia['pmra_pmdec_corr']
-        s35 = 0.*np.ones(np.shape(galah_gaia['sobject_id'])[0])
-
-        s45 = 0.*np.ones(np.shape(galah_gaia['sobject_id'])[0])
-
-        sigma = np.array([
-            [
-            [s00[x], s01[x], s02[x], s03[x], s04[x], s05[x]],
-            [s01[x], s11[x], s12[x], s13[x], s14[x], s15[x]],
-            [s02[x], s12[x], s22[x], s23[x], s24[x], s25[x]],
-            [s03[x], s13[x], s23[x], s33[x], s34[x], s35[x]],
-            [s04[x], s14[x], s24[x], s34[x], s44[x], s45[x]],
-            [s05[x], s15[x], s25[x], s35[x], s45[x], s55[x]]
-            ] for x in range(np.shape(galah_gaia['sobject_id'])[0])
-        ])
-
-        sample = np.array([np.random.multivariate_normal(mu[:,x], sigma[x], size= MC_size) for x in range(np.shape(mu)[1])])
-
-        print('Created MC_sample_6D with (Nr. entries, Nr. Samples, Dimensions):')
-        print(np.shape(sample))
-
-        MC_sample_6D['ra']       = sample[:,:,0] #in deg   #*np.pi/180. # in rad
-        MC_sample_6D['dec']      = sample[:,:,1] #in deg   #*np.pi/180. # in rad
-        MC_sample_6D['distance'] = 1./(sample[:,:,2]).clip(min=0.00001) # in kpc
-        MC_sample_6D['pmra']     = sample[:,:,3] # in mas/yr
-        MC_sample_6D['pmdec']    = sample[:,:,4] # in mas/yr
-        MC_sample_6D['vrad']     = sample[:,:,5] # in km/s
-
-    return MC_sample_6D
-
-
-# # Compute orbit information
-
-# In[10]:
+# In[ ]:
 
 
 # The final orbit information will go into a dictionary, which we initialise with np.nan values
@@ -675,57 +412,301 @@ for each_orbit_label in orbit_labels:
     orbit_information[each_orbit_label+'_95'] = np.zeros(nr_stars); orbit_information[each_orbit_label+'_95'][:]=np.nan
 
 
-# In[11]:
+# In[ ]:
 
 
-def estimate_orbit_parameters(MC_sample_6D, orbit_information, nr_stars, plot_dynamics):
+def distance2dmod(distance):
+    """
+    return the distance modulus for each distance
+    """
+    return np.array(5.0*np.log10(distance)-5.0)
+
+def dmod2distance(dmod):
+    """
+    return the distance from distance modulus
+    """
+    return np.array(10**(1.0+0.2*dmod)).clip(min=0.0001)
+
+def sample_distance_from_dmod(dist_16,dist_50,dist_84,MC_size):
+    """
+    Assume that the distance modulus is Gaussian
+    (when using the mean the sigma from 50th-16th and 84th-16th percentile)
+    """
+    # Get distance modulus
+    (dmod_16, dmod_50, dmod_84) = distance2dmod([dist_16,dist_50,dist_84])
+    # Get mean sigma of distance modulus
+    sigma_mean = 0.5*(dmod_84-dmod_16)
+
+    # Sample with mean distance modulus and mean sigma of distance modulus
+    dmod_sample = np.random.normal(dmod_50,scale=sigma_mean,size=MC_size)
+    
+    # return distance sample by converting distance modulus sample
+    return(dmod2distance(dmod_sample))
+
+def sample_distance_from_distance(dist_16,dist_50,dist_84,MC_size):
+    """
+    Assume that the distance modulus is Gaussian
+    (when using the mean the sigma from 50th-16th and 84th-16th percentile)
+    """
+    # Get mean sigma of distance modulus
+    sigma_mean = 0.5*(dist_84-dist_16)
+
+    # return distance sample by sampling mean distance and mean sigma of distance
+    return(np.random.normal(dist_50,scale=sigma_mean,size=MC_size).clip(min=0.0001))
+
+
+def sample_distance_from2sidedGaussian(dist_16,dist_50,dist_84,MC_size):
+    """
+    Assume that the distance can be sampled via 2 Gaussians
+    (one with sigma = 50th-16th and one with sigma 84th-50th)
+    We sample them with MC_size around 0 and use their absolute values and then
+    add/subtract from the 50th distance value.
+    We then randomly select MC_size/2 of from either distribution.
+    
+    """
+    distance_sigma_lo = np.abs(np.random.normal(loc = 0., scale = dist_50 -  dist_16, size = MC_size))
+    distance_sigma_hi = np.abs(np.random.normal(loc = 0., scale = dist_84 -  dist_50, size = MC_size))
+    select_lo_hi = np.concatenate((np.ones(int(MC_size/2)),np.zeros(MC_size-int(MC_size/2))))
+    random.shuffle(select_lo_hi)
+    
+    return(np.array(
+        (dist_50 + # 50th percentile
+         select_lo_hi*distance_sigma_hi - # add selected sample from 84th-50th Gaussian
+         (1-select_lo_hi)*distance_sigma_lo # subtract selected sample from 50th-16th Gaussian
+        )).clip(min=0.0001) # Make sure distane is positive
+    )
+
+def sample_distance_from2sidedGaussian_DMod(dist_16,dist_50,dist_84,MC_size):
+    """
+    Assume that the distance can be sampled via 2 Gaussians
+    (one with sigma = 50th-16th and one with sigma 84th-50th) in DMod
+    We sample them with MC_size around 0 and use their absolute values and then
+    add/subtract from the 50th distance value.
+    We then randomly select MC_size/2 of from either distribution.
+    
+    """
+    # Get distance modulus from distance
+    (dmod_16, dmod_50, dmod_84) = distance2dmod([dist_16,dist_50,dist_84])
+
+    # Sample Gaussian with sigmas according to uper and lower percentiles
+    dmod_sigma_lo = np.abs(np.random.normal(loc = 0., scale = dmod_50 -  dmod_16, size = MC_size))
+    dmod_sigma_hi = np.abs(np.random.normal(loc = 0., scale = dmod_84 -  dmod_50, size = MC_size))
+    # Concatenate arrays with 1 (length = MC_size/2) and 0 (length = MC_size/2)
+    select_lo_hi = np.concatenate((np.ones(int(MC_size/2)),np.zeros(MC_size-int(MC_size/2))))
+    # Shuffle the values to randomly have randomly distributed values of 0 and 1
+    random.shuffle(select_lo_hi)
+
+    # Combine 2 different Gaussians sampled by the shuffled distribution
+    dmod_sample = np.array(
+        dmod_50 + # 50th percentile
+        select_lo_hi*dmod_sigma_hi - # add selected sample from 84th-50th Gaussian
+        (1-select_lo_hi)*dmod_sigma_lo # subtract selected sample from 50th-16th Gaussian
+    )
+    
+    # return distance sample by converting distance modulus sample
+    return((dmod2distance(dmod_sample)).clip(min=0.0001)) # Make sure distance is positive
+    
+
+
+# In[ ]:
+
+
+def get_orbit_calculation_input(data, MC_size=1):
+    """
+    This function creates the 6D (ra, dec, distance, pmra, pmdec, vrad) input
+    needed for galpy's Orbit() function and action calculations.    
+    
+    INPUT:
+    data dictionary
+    MC_size: if 1: only best value will be calculated
+    
+    OUTPUT:
+    ra
+    dec
+    distance
+    pmra
+    pmdec
+    vrad    
+    """
+    
+    if MC_size==1:
+        
+        sample = dict()
+
+        sample['ra'] = np.array([data['ra']])
+        sample['dec'] = np.array([data['dec']])
+        if data['use_dist_flag'] == 0:
+            sample['distance'] = np.array([data['distance_bstep']])*1000.
+        elif data['use_dist_flag'] == 1:
+            sample['distance'] = np.array([data['r_med_photogeo']])
+        elif data['use_dist_flag'] == 2:
+            sample['distance'] = np.array([data['r_med_geo']])
+        elif data['use_dist_flag'] == 4:
+            sample['distance'] = np.array([1000./data['parallax_corr']])
+        else:
+            print("No useful distance available")
+        sample['pmra'] = np.array([data['pmra']])
+        sample['pmdec'] = np.array([data['pmdec']])
+        if data['use_rv_flag'] == 0:
+            sample['vrad'] = np.array([data['rv_obst']])
+        elif data['use_rv_flag'] == 1:
+            sample['vrad'] = np.array([data['rv_galah']])
+        elif data['use_rv_flag'] == 2:
+            sample['vrad'] = np.array([data['dr2_radial_velocity']])
+        else:
+            print("No useful radial velocity available")                                
+
+    else:
+        
+        sample = dict()
+        
+        mu = np.array(
+            [data['ra'],
+             data['dec'],
+             data['parallax_corr'],
+             data['pmra'],
+             data['pmdec'],
+        ])
+        
+        s00 = (data['ra_error']/(3600.*1000.))**2
+        s11 = (data['dec_error']/(3600.*1000.))**2
+        s22 = data['parallax_error']**2
+        s33 = data['pmra_error']**2
+        s44 = data['pmdec_error']**2
+
+        s01 = (data['ra_error']/(3600.*1000.)) * (data['dec_error']/(3600.*1000.)) * data['ra_dec_corr']
+        s02 = (data['ra_error']/(3600.*1000.)) * data['parallax_error'] * data['ra_parallax_corr']
+        s03 = (data['ra_error']/(3600.*1000.)) * data['pmra_error'] * data['ra_pmra_corr']
+        s04 = (data['ra_error']/(3600.*1000.)) * data['pmdec_error'] * data['ra_pmdec_corr']
+
+        s12 = (data['dec_error']/(3600.*1000.)) * data['parallax_error'] * data['dec_parallax_corr']
+        s13 = (data['dec_error']/(3600.*1000.)) * data['pmra'] * data['dec_pmra_corr']
+        s14 = (data['dec_error']/(3600.*1000.)) * data['pmdec'] * data['dec_pmdec_corr']
+
+        s23 = data['parallax_error'] * data['pmra_error'] * data['parallax_pmra_corr']
+        s24 = data['parallax_error'] * data['pmdec_error'] * data['parallax_pmdec_corr']
+
+        s34 = data['pmra_error'] * data['pmdec_error'] * data['pmra_pmdec_corr']
+
+        sigma = np.array([
+            [s00, s01, s02, s03, s04],
+            [s01, s11, s12, s13, s14],
+            [s02, s12, s22, s23, s24],
+            [s03, s13, s23, s33, s34],
+            [s04, s14, s24, s34, s44]
+        ])
+        
+        mu_sigma_sample = np.array(np.random.multivariate_normal(mu, sigma, size= MC_size))
+
+        sample['ra'] = mu_sigma_sample[:,0]
+        sample['dec'] = mu_sigma_sample[:,1]
+        
+        if data['use_dist_flag'] == 0:
+            sample['distance'] = sample_distance_from2sidedGaussian_DMod(
+                data['e16_distance_bstep']*1000,
+                data['distance_bstep']*1000,
+                data['e84_distance_bstep']*1000,
+                MC_size=MC_size
+            )
+        elif data['use_dist_flag'] == 1:
+            sample['distance'] = sample_distance_from2sidedGaussian_DMod(
+                data['r_lo_photogeo'],
+                data['r_med_photogeo'],
+                data['r_hi_photogeo'],
+                MC_size=MC_size
+            )
+        elif data['use_dist_flag'] == 2:
+            sample['distance'] = sample_distance_from2sidedGaussian_DMod(
+                data['r_lo_geo'],
+                data['r_med_geo'],
+                data['r_hi_geo'],
+                MC_size=MC_size
+            )
+        elif data['use_dist_flag'] == 4:
+            sample['distance'] = (1000./mu_sigma_sample[:,2]).clip(min=0.0001)
+        else:
+            print("No useful distance available")
+
+        sample['pmra'] = mu_sigma_sample[:,3]
+        sample['pmdec'] = mu_sigma_sample[:,4]
+
+        if data['use_rv_flag'] == 0:
+            sample['vrad'] = np.array(np.random.normal(data['rv_obst'], scale=data['e_rv_obst'], size=MC_size))
+        elif data['use_rv_flag'] == 1:
+            sample['vrad'] = np.array(np.random.normal(data['rv_sme_v2'], scale=data['e_rv_sme'], size=MC_size))
+        elif data['use_rv_flag'] == 2:
+            sample['vrad'] = np.array(np.random.normal(data['dr2_radial_velocity'], scale=data['dr2_radial_velocity_error'], size=MC_size))
+        else:
+            print("No useful radial velocity available")
+            
+    return(sample)
+
+
+# In[ ]:
+
+
+def estimate_orbit_parameters(star_index, orbit_calculation_input):
     """
     Estimate orbit parameters from the given
     MC sample of 6D information for the Nr of stars
     and save it into orbit_information
     """
 
-    if plot_dynamics:
-        all_orbits = []
-        
-    for each_star in range(nr_stars):
-        
-        # We are creating a dictionary for each star
-        star_i = dict()
-        
-        ra     = MC_sample_6D['ra'][each_star]           *u.deg
-        dec    = MC_sample_6D['dec'][each_star]          *u.deg
-        dist   = MC_sample_6D['distance'][each_star]     *u.kpc
-        pm_ra  = MC_sample_6D['pmra'][each_star]         *u.mas/u.year
-        pm_dec = MC_sample_6D['pmdec'][each_star]        *u.mas/u.year
-        v_los  = MC_sample_6D['vrad'][each_star]         *u.km/u.s
+    # We are creating a dictionary for each star
+    star_i = dict()
 
-        # Create the Orbit instance
-        o = Orbit(
-            vxvv=[ra,dec,dist,pm_ra, pm_dec,v_los],
-            ro=r_galactic_centre,
-            vo=v_circular,
-            zo=z_galactic_plane,
-            solarmotion=[-11.1, 15.17, 7.25]*u.km/u.s,
-            radec=True
+    ra     = orbit_calculation_input['ra']           *u.deg
+    dec    = orbit_calculation_input['dec']          *u.deg
+    dist   = orbit_calculation_input['distance']     *u.pc
+    pm_ra  = orbit_calculation_input['pmra']         *u.mas/u.year
+    pm_dec = orbit_calculation_input['pmdec']        *u.mas/u.year
+    v_los  = orbit_calculation_input['vrad']         *u.km/u.s
+
+    # Create the Orbit instance
+    o = Orbit(
+        vxvv=[ra,dec,dist,pm_ra, pm_dec,v_los],
+        ro=r_galactic_centre,
+        vo=v_circular,
+        zo=z_galactic_plane,
+        solarmotion=[-11.1, 15.17, 7.25]*u.km/u.s,
+        radec=True
+    )
+    
+    star_i = dict()
+    #Galactocentric coordinates:
+    star_i['X_XYZ'] = o.helioX()#*u.kpc        
+    star_i['Y_XYZ'] = o.helioY()#*u.kpc
+    star_i['Z_XYZ'] = o.helioZ()#*u.kpc
+    star_i['U_UVW'] = o.U()#*u.km/u.s
+    star_i['V_UVW'] = o.V()#*u.km/u.s
+    star_i['W_UVW'] = o.W()#*u.km/u.s
+    star_i['R_Rzphi'] = o.R()#*u.kpc
+    star_i['phi_Rzphi'] = o.phi()#*u.rad
+    star_i['z_Rzphi'] = o.z()#*u.kpc
+    star_i['vR_Rzphi'] = o.vR()#*u.km/u.s
+    star_i['vT_Rzphi'] = o.vT()#*u.km/u.s        
+    star_i['vz_Rzphi'] = o.vz()#*u.km/u.s
+        
+    try:
+        star_i['J_R'], star_i['L_Z'],star_i['J_Z'], star_i['omega_R'], star_i['omega_phi'], star_i['omega_z'], star_i['angle_R'], star_i['angle_phi'], star_i['angle_z'] = aAS.actionsFreqsAngles(
+            #R,vR,vT,z,vz[,phi]
+            star_i['R_Rzphi']*u.kpc,
+            star_i['vR_Rzphi']*u.km/u.s,
+            star_i['vT_Rzphi']*u.km/u.s,
+            star_i['z_Rzphi']*u.kpc,
+            star_i['vz_Rzphi']*u.km/u.s,
+            star_i['phi_Rzphi']*u.rad,
+            ro=r_galactic_centre,vo=v_circular
         )
-        
-        #Galactocentric coordinates:
-        star_i['X_XYZ'] = o.helioX()#*u.kpc        
-        star_i['Y_XYZ'] = o.helioY()#*u.kpc
-        star_i['Z_XYZ'] = o.helioZ()#*u.kpc
-        star_i['U_UVW'] = o.U()#*u.km/u.s
-        star_i['V_UVW'] = o.V()#*u.km/u.s
-        star_i['W_UVW'] = o.W()#*u.km/u.s
-        star_i['R_Rzphi'] = o.R()#*u.kpc
-        star_i['phi_Rzphi'] = o.phi()#*u.rad
-        star_i['z_Rzphi'] = o.z()#*u.kpc
-        star_i['vR_Rzphi'] = o.vR()#*u.km/u.s
-        star_i['vT_Rzphi'] = o.vT()#*u.km/u.s        
-        star_i['vz_Rzphi'] = o.vz()#*u.km/u.s
-        
+    except:
+        star_i['omega_R'] = [np.nan]
+        star_i['omega_phi'] = [np.nan]
+        star_i['omega_z'] = [np.nan]
+        star_i['angle_R'] = [np.nan]
+        star_i['angle_phi'] = [np.nan]
+        star_i['angle_z'] = [np.nan]
         try:
-            star_i['J_R'], star_i['L_Z'],star_i['J_Z'], star_i['omega_R'], star_i['omega_phi'], star_i['omega_z'], star_i['angle_R'], star_i['angle_phi'], star_i['angle_z'] = aAS.actionsFreqsAngles(
+            star_i['J_R'], star_i['L_Z'],star_i['J_Z'] = aAS(
                 #R,vR,vT,z,vz[,phi]
                 star_i['R_Rzphi']*u.kpc,
                 star_i['vR_Rzphi']*u.km/u.s,
@@ -736,361 +717,66 @@ def estimate_orbit_parameters(MC_sample_6D, orbit_information, nr_stars, plot_dy
                 ro=r_galactic_centre,vo=v_circular
             )
         except:
-            star_i['omega_R'] = [np.nan]
-            star_i['omega_phi'] = [np.nan]
-            star_i['omega_z'] = [np.nan]
-            star_i['angle_R'] = [np.nan]
-            star_i['angle_phi'] = [np.nan]
-            star_i['angle_z'] = [np.nan]
-            try:
-                star_i['J_R'], star_i['L_Z'],star_i['J_Z'] = aAS(
-                    #R,vR,vT,z,vz[,phi]
-                    star_i['R_Rzphi']*u.kpc,
-                    star_i['vR_Rzphi']*u.km/u.s,
-                    star_i['vT_Rzphi']*u.km/u.s,
-                    star_i['z_Rzphi']*u.kpc,
-                    star_i['vz_Rzphi']*u.km/u.s,
-                    star_i['phi_Rzphi']*u.rad,
-                    ro=r_galactic_centre,vo=v_circular
-                )
-            except:
-                star_i['J_R'] = [np.nan]
-                star_i['L_Z'] = [np.nan]
-                star_i['J_Z'] = [np.nan]
+            star_i['J_R'] = [np.nan]
+            star_i['L_Z'] = [np.nan]
+            star_i['J_Z'] = [np.nan]
 
+    try:
+        star_i['ecc'], star_i['zmax'], star_i['R_peri'], star_i['R_ap'] = aAS.EccZmaxRperiRap(
+            #R,vR,vT,z,vz[,phi]
+            star_i['R_Rzphi']*u.kpc,
+            star_i['vR_Rzphi']*u.km/u.s,
+            star_i['vT_Rzphi']*u.km/u.s,
+            star_i['z_Rzphi']*u.kpc,
+            star_i['vz_Rzphi']*u.km/u.s,
+            star_i['phi_Rzphi']*u.rad,
+            ro=r_galactic_centre,vo=v_circular
+        )         
+        star_i['zmax']
+        star_i['R_peri']
+        star_i['R_peri']
+
+    except:
+        star_i['ecc'] = [np.nan]
+        star_i['zmax'] = [np.nan]
+        star_i['R_peri'] = [np.nan]
+        star_i['R_ap'] = [np.nan]
+
+    star_i['Energy'] = o.E(pot=pot,ro=r_galactic_centre,vo=v_circular,zo=z_galactic_plane)
+
+    return(star_i)
+
+
+# In[ ]:
+
+
+def get_orbit_information_each_star(orbit_information, star_index):
+    
+    best_values = get_orbit_calculation_input(data = galah_gaia[star_index], MC_size = 1)
+    star_i = estimate_orbit_parameters(star_index, orbit_calculation_input = best_values)
+
+    for each_label in orbit_labels:
         try:
-            star_i['ecc'], star_i['zmax'], star_i['R_peri'], star_i['R_ap'] = aAS.EccZmaxRperiRap(
-                #R,vR,vT,z,vz[,phi]
-                star_i['R_Rzphi']*u.kpc,
-                star_i['vR_Rzphi']*u.km/u.s,
-                star_i['vT_Rzphi']*u.km/u.s,
-                star_i['z_Rzphi']*u.kpc,
-                star_i['vz_Rzphi']*u.km/u.s,
-                star_i['phi_Rzphi']*u.rad,
-                ro=r_galactic_centre,vo=v_circular
-            )         
-            star_i['zmax']
-            star_i['R_peri']
-            star_i['R_peri']
-            
+            orbit_information[each_label][star_index] = star_i[each_label][0]
         except:
-            star_i['ecc'] = [np.nan]
-            star_i['zmax'] = [np.nan]
-            star_i['R_peri'] = [np.nan]
-            star_i['R_ap'] = [np.nan]
+            print('did not work for '+each_label)
 
-        star_i['Energy'] = o.E(pot=pot,ro=r_galactic_centre,vo=v_circular,zo=z_galactic_plane)
+    MC_values = get_orbit_calculation_input(data = galah_gaia[star_index], MC_size = MC_size)
+    star_i = estimate_orbit_parameters(star_index, orbit_calculation_input = MC_values)    
 
-        for each_label in orbit_labels:
-            if len(MC_sample_6D['ra'][0]) == 1:
-                try:
-                    orbit_information[each_label][each_star] = star_i[each_label][0]
-                except:
-                    print('did not work for '+each_label)
-            else:
-                try:
-                    percentiles = np.percentile(star_i[each_label], q=[5,50,95])
-                    orbit_information[each_label+'_5'][each_star] = percentiles[0]
-                    orbit_information[each_label+'_50'][each_star] = percentiles[1]
-                    orbit_information[each_label+'_95'][each_star] = percentiles[2]
-                except:
-                    print('did not work for '+each_label)
-                    
-        if plot_dynamics:
-            all_orbits.append(star_i)
-    if plot_dynamics:
-        return orbit_information, all_orbits
-    else:
-        return orbit_information
+    for each_label in orbit_labels:
+        try:
+            percentiles = np.percentile(star_i[each_label], q=[5,50,95])
+            orbit_information[each_label+'_5'][star_index] = percentiles[0]
+            orbit_information[each_label+'_50'][star_index] = percentiles[1]
+            orbit_information[each_label+'_95'][star_index] = percentiles[2]
+        except:
+            print('did not work for '+each_label)
+            
+[get_orbit_information_each_star(orbit_information, star_index) for star_index in range(nr_stars)];
 
 
-# In[ ]:
-
-
-if not plot_dynamics:
-    # We will first 'sample' only once with the best value
-    MC_sample_6D = sample_6d_uncertainty(six_dimensions,e_six_dimensions,MC_size=1,use_BSTEP=False,use_BailerJones=False)
-    orbit_information = estimate_orbit_parameters(MC_sample_6D, orbit_information, nr_stars, plot_dynamics)
-
-    # And now we sample with a certain Monte Carlo sampling size
-    #MC_sample_6D = sample_6d_uncertainty(six_dimensions,e_six_dimensions,MC_size=MC_size,use_BSTEP=False,use_BailerJones=False)
-    #orbit_information = estimate_orbit_parameters(MC_sample_6D, orbit_information, nr_stars, plot_dynamics)
-    
-else:
-    # We will first 'sample' only once with the best value
-    MC_sample_6D = sample_6d_uncertainty(six_dimensions,e_six_dimensions,MC_size=1,use_BSTEP=False,use_BailerJones=False)
-    orbit_information, best_data = estimate_orbit_parameters(MC_sample_6D, orbit_information, nr_stars, plot_dynamics)
-
-    # And now we sample with a certain Monte Carlo sampling size
-    MC_sample_6D = sample_6d_uncertainty(six_dimensions,e_six_dimensions,MC_size=MC_size,use_BSTEP=False,use_BailerJones=False)
-    orbit_information, mc_data = estimate_orbit_parameters(MC_sample_6D, orbit_information, nr_stars, plot_dynamics)
-
-
-# In[ ]:
-
-
-# plot difference of distance estimation choices
-if debug:
-    MC_sample_6D = sample_6d_uncertainty(six_dimensions,e_six_dimensions,MC_size=MC_size,use_BSTEP=True)
-    MC_sample_6D_1 = sample_6d_uncertainty(six_dimensions,e_six_dimensions,MC_size=MC_size,use_BailerJones=True)
-    MC_sample_6D_2 = sample_6d_uncertainty(six_dimensions,e_six_dimensions,MC_size=MC_size)
-
-    star_bla = 4
-
-    print(galah_gaia['sobject_id'][star_bla],galah_gaia['teff'][star_bla],galah_gaia['logg'][star_bla],galah_gaia['fe_h'][star_bla],galah_gaia['flag_sp'][star_bla])
-
-    if star_bla == 0:
-        kwargs = dict(bins=np.linspace(0.16,0.1725,100),histtype='step')
-    else:
-        kwargs = dict(bins=50,histtype='step')
-
-    print('Approach, best_dist, (best_dist-low_dist)/best_dist, low_dist, high_dist')
-    print('BSTEP: ',six_dimensions['dist_gbm'][star_bla],e_six_dimensions['dist_gbm'][star_bla]/six_dimensions['dist_gbm'][star_bla],six_dimensions['dist_gbm'][star_bla]-e_six_dimensions['dist_gbm'][star_bla],six_dimensions['dist_gbm'][star_bla]+e_six_dimensions['dist_gbm'][star_bla])
-    print('Bailer-Jones: ',six_dimensions['r_est'][star_bla],(six_dimensions['r_est'][star_bla]-e_six_dimensions['r_lo'][star_bla])/six_dimensions['r_est'][star_bla],e_six_dimensions['r_lo'][star_bla],e_six_dimensions['r_hi'][star_bla])
-    print('Parallax: ',1000./six_dimensions['parallax'][star_bla],e_six_dimensions['parallax'][star_bla]/six_dimensions['parallax'][star_bla],1000./(six_dimensions['parallax'][star_bla]+e_six_dimensions['parallax'][star_bla]),1000./(six_dimensions['parallax'][star_bla]-e_six_dimensions['parallax'][star_bla]))
-    print('BSTEP-Bailer-Jones',six_dimensions['dist_gbm'][star_bla]-six_dimensions['r_est'][star_bla],(six_dimensions['dist_gbm'][star_bla]-six_dimensions['r_est'][star_bla])/six_dimensions['dist_gbm'][star_bla])
-
-    plt.hist(MC_sample_6D['distance'][star_bla],label='BSTEP',**kwargs);
-    plt.hist(MC_sample_6D_1['distance'][star_bla],label='Bailer-Jones',**kwargs);
-    plt.hist(MC_sample_6D_2['distance'][star_bla],label='Parallax',**kwargs);
-    plt.legend()
-
-
-# In[ ]:
-
-
-def plot_sampling(data, star_index=1):
-    f = plt.figure(figsize=(15,10))
-
-    hist_kwarfs=dict(bins=25,cmin=1)
-    hist_k = dict(bins=25)
-    
-    ax=plt.subplot(6,6,31)
-    ax.hist(data['ra'][star_index],**hist_k);
-    ax.set_xlabel('ra')
-    ax.set_ylabel('ra')
-    ax.set_xticks([])
-    ax.set_yticks([])
-
-    ax=plt.subplot(6,6,32)
-    ax.hist2d(data['dec'][star_index],data['ra'][star_index],**hist_kwarfs);
-    ax.set_xlabel('dec')
-    ax.set_xticks([])
-    ax=plt.subplot(6,6,33)
-    ax.hist2d(data['distance'][star_index],data['ra'][star_index],**hist_kwarfs);
-    ax.set_xlabel('distance')
-    ax.set_yticks([])
-    ax=plt.subplot(6,6,34)
-    ax.hist2d(data['pmra'][star_index],data['ra'][star_index],**hist_kwarfs);
-    ax.set_xlabel('pmra')
-    ax.set_yticks([])
-    ax=plt.subplot(6,6,35)
-    ax.hist2d(data['pmdec'][star_index],data['ra'][star_index],**hist_kwarfs);
-    ax.set_xlabel('pmdec')
-    ax.set_yticks([])
-    ax=plt.subplot(6,6,36)
-    ax.hist2d(data['vrad'][star_index],data['ra'][star_index],**hist_kwarfs);
-    ax.set_xlabel('rv')
-    ax.set_yticks([])
-
-    ax=plt.subplot(6,6,26)
-    ax.set_ylabel('dec')
-    ax.hist(data['dec'][star_index],**hist_k);
-    ax.set_yticks([])
-    ax=plt.subplot(6,6,27)
-    ax.hist2d(data['distance'][star_index],data['dec'][star_index],**hist_kwarfs);
-    ax.set_yticks([])
-    ax=plt.subplot(6,6,28)
-    ax.hist2d(data['pmra'][star_index],data['dec'][star_index],**hist_kwarfs);
-    ax.set_yticks([])
-    ax=plt.subplot(6,6,29)
-    ax.hist2d(data['pmdec'][star_index],data['dec'][star_index],**hist_kwarfs);
-    ax.set_yticks([])
-    ax=plt.subplot(6,6,30)
-    ax.hist2d(data['vrad'][star_index],data['dec'][star_index],**hist_kwarfs);
-    ax.set_yticks([])
-
-    ax=plt.subplot(6,6,21)
-    ax.set_ylabel('parallax')
-    ax.hist(data['distance'][star_index],**hist_k);
-    ax=plt.subplot(6,6,22)
-    ax.hist2d(data['pmra'][star_index],data['distance'][star_index],**hist_kwarfs);
-    ax=plt.subplot(6,6,23)
-    ax.hist2d(data['pmdec'][star_index],data['distance'][star_index],**hist_kwarfs);
-    ax=plt.subplot(6,6,24)
-    ax.hist2d(data['vrad'][star_index],data['distance'][star_index],**hist_kwarfs);
-
-    ax=plt.subplot(6,6,16)
-    ax.set_ylabel('pmra')
-    ax.hist(data['pmra'][star_index],**hist_k);
-    ax=plt.subplot(6,6,17)
-    ax.hist2d(data['pmdec'][star_index],data['pmra'][star_index],**hist_kwarfs);
-    ax=plt.subplot(6,6,18)
-    ax.hist2d(data['vrad'][star_index],data['pmra'][star_index],**hist_kwarfs);
-
-    ax=plt.subplot(6,6,11)
-    ax.hist(data['pmdec'][star_index],**hist_k);
-    ax.set_ylabel('pmdec')
-    ax=plt.subplot(6,6,12)
-    ax.hist2d(data['vrad'][star_index],data['pmdec'][star_index],**hist_kwarfs);
-
-    ax=plt.subplot(6,6,6)
-    ax.set_ylabel('vrad')
-    ax.hist(data['vrad'][star_index],**hist_k);
-
-    plt.tight_layout()
-
-if debug==True:
-    plot_sampling(MC_sample_6D, star_index = 0)
-
-
-# In[ ]:
-
-
-if debug==True:
-    
-    star_index = 2
-    
-    print("XYZ = ({x:8.2f},{y:8.2f},{z:8.2f}) [kpc]".format(
-        x=orbit_information[XYZ_labels[0]][star_index],
-        y=orbit_information[XYZ_labels[1]][star_index],
-        z=orbit_information[XYZ_labels[2]][star_index]
-        ))
-          
-    print("UVW = ({u:8.2f},{v:8.2f},{w:8.2f}) [kpc km/s]".format(
-        u=orbit_information[UVW_labels[0]][star_index],
-        v=orbit_information[UVW_labels[1]][star_index],
-        w=orbit_information[UVW_labels[2]][star_index]
-        ))
-
-    print(r"R   = {r:6.2f} -{r_minus:6.2f} + {r_plus:6.2f} [kpc]".format(
-            r=orbit_information[Rphiz_labels[0]][star_index],
-            r_minus=orbit_information[Rphiz_labels[0]][star_index] - orbit_information[Rphiz_labels[0]+'_5'][star_index],
-            r_plus=orbit_information[Rphiz_labels[0]+'_95'][star_index] - orbit_information[Rphiz_labels[0]][star_index]
-            ))
-    print(r"phi = {phi:6.2f} -{phi_minus:6.2f} + {phi_plus:6.2f} [kpc]".format(
-            phi=orbit_information[Rphiz_labels[1]][star_index],
-            phi_minus=orbit_information[Rphiz_labels[1]][star_index] - orbit_information[Rphiz_labels[1]+'_5'][star_index],
-            phi_plus=orbit_information[Rphiz_labels[1]+'_95'][star_index] - orbit_information[Rphiz_labels[1]][star_index]
-            ))
-    print(r"z = {z:6.2f} -{z_minus:6.2f} + {z_plus:6.2f} [kpc]".format(
-            z=orbit_information[Rphiz_labels[2]][star_index],
-            z_minus=orbit_information[Rphiz_labels[2]][star_index] - orbit_information[Rphiz_labels[2]+'_5'][star_index],
-            z_plus=orbit_information[Rphiz_labels[2]+'_95'][star_index] - orbit_information[Rphiz_labels[2]][star_index]
-            ))
-
-    print("J_R = {jr:6.2f} - {jr_m:6.2f} + {jr_p:6.2f} [kpc km/s]".format(
-        jr=orbit_information['J_R'][star_index],
-        jr_m=orbit_information['J_R'][star_index]-orbit_information['J_R_5'][star_index],
-        jr_p=orbit_information['J_R_95'][star_index]-orbit_information['J_R'][star_index]
-        ))
-    print("L_Z = {lz:6.2f} - {lz_m:6.2f} + {lz_p:6.2f} [kpc km/s]".format(
-        lz=orbit_information['L_Z'][star_index],
-        lz_m=orbit_information['L_Z'][star_index]-orbit_information['L_Z_5'][star_index],
-        lz_p=orbit_information['L_Z_95'][star_index]-orbit_information['L_Z'][star_index]
-        ))
-    print("J_Z = {jz:6.2f} - {jz_m:6.2f} + {jz_p:6.2f} [kpc km/s]".format(
-        jz=orbit_information['J_Z'][star_index],
-        jz_m=orbit_information['J_Z'][star_index]-orbit_information['J_Z_5'][star_index],
-        jz_p=orbit_information['J_Z_95'][star_index]-orbit_information['J_Z'][star_index]
-        ))
-    print("e = {ecc:6.2f}, zmax = {zmax:6.2f}, Rperi = {rperi:6.2f}, Rapo = {rapo:6.2f}".format(
-        ecc=orbit_information['ecc'][star_index],
-        zmax=orbit_information['zmax'][star_index],
-        rperi=orbit_information['R_peri'][star_index],
-        rapo=orbit_information['R_ap'][star_index],
-        ))
-
-
-# In[ ]:
-
-
-def plot_distribution(each, xlabel, ylabel, yscale, ax):
-    ax=ax
-    
-    if ylabel == 'UW':
-        best_data[each][ylabel] = np.sqrt(best_data[each]['U_UVW']**2+best_data[each]['W_UVW']**2)
-        mc_data[each][ylabel] = np.sqrt(mc_data[each]['U_UVW']**2+mc_data[each]['W_UVW']**2)
-    if ylabel == 'vRZ':
-        best_data[each][ylabel] = np.sqrt(best_data[each]['vR_Rzphi']**2+best_data[each]['vz_Rzphi']**2)
-        mc_data[each][ylabel] = np.sqrt(mc_data[each]['vR_Rzphi']**2+mc_data[each]['vz_Rzphi']**2)
-        
-    if yscale == 'lin':
-        ax.scatter(
-            mc_data[each][xlabel],
-            mc_data[each][ylabel],
-            s=0.5,alpha=1,rasterized=True,c='C0',
-            label='MC'
-        )
-        x_perc = np.percentile(mc_data[each][xlabel],q=[5,50,95],axis=0)
-        y_perc = np.percentile(mc_data[each][ylabel],q=[5,50,95],axis=0)
-        
-        ax.errorbar(
-        x_perc[1],
-        y_perc[1],
-        xerr=[[x_perc[1]-x_perc[0]],[x_perc[2]-x_perc[1]]],
-        yerr=[[y_perc[1]-y_perc[0]],[y_perc[2]-y_perc[1]]],
-        label='5/50/95',
-        **errorbar_kwargs
-        )
-        ax.scatter(
-        best_data[each][xlabel],
-        best_data[each][ylabel],
-        c='k',rasterized=True,
-        zorder=2,
-        label='Best'
-        )
-
-
-# In[ ]:
-
-
-if plot_dynamics:
-    
-    f, ((ax1, ax2, ax3), (ax4, ax5, ax6)) = plt.subplots(2,3,figsize=(15,10))
-    errorbar_kwargs = dict(fmt='o', rasterized=True, ms=1, c='r')
-
-    for each in range(nr_stars):
-
-        plot_distribution(each, xlabel='X_XYZ', ylabel='Y_XYZ', yscale='lin', ax=ax1)
-        plot_distribution(each, xlabel='R_Rzphi', ylabel='z_Rzphi', yscale='lin', ax=ax2)
-        plot_distribution(each, xlabel='vphi_Rzphi', ylabel='vRZ', yscale='lin', ax=ax3)
-        plot_distribution(each, xlabel='R_ap', ylabel='zmax', yscale='lin', ax=ax4)
-        plot_distribution(each, xlabel='R_peri', ylabel='ecc', yscale='lin', ax=ax5)
-        plot_distribution(each, xlabel='L_Z', ylabel='J_R', yscale='lin', ax=ax6)
-
-        if each == 0:
-            legend = ax2.legend(loc='upper right',fontsize=15, markerscale=2)
-            for ind, legend_handle in enumerate(legend.legendHandles):
-                if ind==0:
-                    legend_handle.set_alpha(1)
-        
-    ax1.set_xlabel('$X_\odot$ [kpc]')
-    ax1.set_ylabel('$Y_\odot$ [kpc]')
-
-    ax2.set_xlabel('$R_{GC}$ [kpc]')
-    ax2.set_ylabel('$z_{GC}$ [kpc]')
-
-    ax3.set_xlim(233.1-600,233.1+200)
-    ax3.set_ylim(0,450)
-    ax3.set_xlabel(r'$v_\phi$ [km/s]')
-    ax3.set_ylabel(r'$\sqrt(v_R^2 + v_z^2)$ [km/s]')
-
-    ax4.set_xlabel(r'R (apocenter) [kpc]')
-    ax4.set_ylabel(r'$z_\text{max}$ [kpc]')
-
-    ax5.set_xlabel(r'R (pericenter) [kpc]')
-    ax5.set_ylabel('Eccentricity')
-
-    ax6.set_xlabel(r'$L_Z$ [kpc km/s]')
-    ax6.set_ylabel(r'$\sqrt{J_R \mathrm{[kpc km/s]}}$')
-    ax6.set_ylim(-10,75)
-    ax6.set_xlim(-1000,3000)
-
-    plt.tight_layout()
-    
-    plt.savefig('MC_output.png',dpi=300,bbox_inches='tight')
-
+# # Compute orbit information
 
 # In[ ]:
 
@@ -1099,8 +785,12 @@ galah_dynamics = collections.OrderedDict()
 
 if subset != -1:
     galah_dynamics['sobject_id'] = galah_gaia_input['sobject_id']
+    galah_dynamics['use_dist_flag'] = galah_gaia_input['use_dist_flag']
+    galah_dynamics['use_rv_flag'] = galah_gaia_input['use_rv_flag']
 else:
     galah_dynamics['sobject_id'] = galah_gaia['sobject_id']
+    galah_dynamics['use_dist_flag'] = galah_gaia['use_dist_flag']
+    galah_dynamics['use_rv_flag'] = galah_gaia['use_rv_flag']
 
 for each_orbit_label in orbit_labels:
     galah_dynamics[each_orbit_label] = np.zeros(nr_galah_stars, dtype=float)
