@@ -352,7 +352,8 @@ print(nr_galah_stars)
 
 nr_galah_stars_dynamics = np.where(
     (galah_gaia_input['use_dist_flag'] < 8) & # distance from BSTEP, BailerJones PhotoGeo/Geo, 1/Parallax
-    (galah_gaia_input['use_rv_flag'] < 4) # rv from Zwitter, GALAH, Gaia DR2
+    (galah_gaia_input['use_rv_flag'] < 4) & # rv from Zwitter, GALAH, Gaia DR2
+    np.isfinite(galah_gaia_input['pmra_pmdec_corr']) # Gaia eDR3 covariances available
 )[0]
 
 # This should only me activated for tests with subsets of GALAH DR3
@@ -602,18 +603,9 @@ def get_orbit_calculation_input(data, MC_size=1):
         sample['dec'] = mu_sigma_sample[:,1]
         
         if data['use_dist_flag'] == 0:
-            # Making sure e16 < distance_bstep < e84
-            # if not: sample symmetrically with e_distance_bstep
-            if (
-                (data['e16_distance_bstep'] < data['distance_bstep']) |
-                (data['e16_distance_bstep'] < data['distance_bstep'])
-            ):
-                data['e16_distance_bstep'] = data['distance_bstep'] - data['e_distance_bstep']
-                data['e84_distance_bstep'] = data['distance_bstep'] + data['e_distance_bstep']
-
             sample['distance'] = sample_distance_from2sidedGaussian_DMod(
                 data['e16_distance_bstep']*1000,
-                data['distance_bstep']*1000,
+                data['e50_distance_bstep']*1000,
                 data['e84_distance_bstep']*1000,
                 MC_size=MC_size
             )
@@ -695,7 +687,7 @@ def estimate_orbit_parameters(star_index, orbit_calculation_input):
     star_i['vR_Rzphi'] = o.vR()#*u.km/u.s
     star_i['vT_Rzphi'] = o.vT()#*u.km/u.s        
     star_i['vz_Rzphi'] = o.vz()#*u.km/u.s
-        
+
     try:
         star_i['J_R'], star_i['L_Z'],star_i['J_Z'], star_i['omega_R'], star_i['omega_phi'], star_i['omega_z'], star_i['angle_R'], star_i['angle_phi'], star_i['angle_z'] = aAS.actionsFreqsAngles(
             #R,vR,vT,z,vz[,phi]
